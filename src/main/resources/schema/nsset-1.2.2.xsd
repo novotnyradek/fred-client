@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/nsset-1.2"
+          xmlns:nsset="http://www.nic.cz/xml/epp/nsset-1.2"
+          xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified">
+
+    <!--
+    This schema defines object extension of EPP.
+
+    Nsset encapsulates a set of nameservers and this set can be manipulated
+    as a whole.
+    -->
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
+            schemaLocation="eppcom-1.0.xsd"/>
+    <import namespace="http://www.nic.cz/xml/epp/fredcom-1.2"
+            schemaLocation="fredcom-1.2.1.xsd"/>
+
+    <annotation>
+      <documentation>
+        Extension to Extensible Provisioning Protocol v1.0
+        nsset provisioning schema.
+      </documentation>
+    </annotation>
+
+    <!--
+    Child elements found in EPP commands.
+    These elements are input elements - it means, they are generated on
+    client's side and sent to server.
+    -->
+    <element name="check" type="nsset:mNameType"/>
+    <element name="create" type="nsset:crType"/>
+    <element name="delete" type="nsset:sIDType"/>
+    <element name="info" type="nsset:sIDType"/>
+    <element name="transfer" type="nsset:transferType"/>
+    <element name="update" type="nsset:updateType"/>
+    <!-- list command is DEPRECATED and will be removed in future -->
+    <element name="list"/>
+    <!-- extension commands -->
+    <element name="sendAuthInfo" type="nsset:sendAuthInfoType"/>
+    <element name="test" type="nsset:testType"/>
+
+    <!--
+    Child elements of the <create> command.
+    -->
+    <complexType name="crType">
+      <sequence>
+        <element name="id" type="fredcom:objIDCreateType"/>
+        <element name="ns" type="nsset:nsT"
+         maxOccurs="10"/>
+        <element name="tech" type="fredcom:objIDType"
+         maxOccurs="unbounded"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="reportlevel" type="nsset:reportlevelType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="reportlevelType">
+      <restriction base="unsignedByte">
+        <maxInclusive value="10"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="nsT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="addr" type="nsset:addrStringType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="addrStringType">
+      <restriction base="token">
+        <minLength value="3"/>
+        <maxLength value="45"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    Child element of commands that require only an identifier (delete and info).
+    -->
+    <complexType name="sIDType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child element of commands that accept multiple identifiers (check).
+    -->
+    <complexType name="mNameType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <transfer> command.
+    -->
+    <complexType name="transferType">
+      <sequence>
+        <element name="id" type="eppcom:labelType"/>
+        <element name="authInfo" type="fredcom:authInfoType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <update> command.
+    -->
+    <complexType name="updateType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="add" type="nsset:addType"
+         minOccurs="0"/>
+        <element name="rem" type="nsset:remType"
+         minOccurs="0"/>
+        <element name="chg" type="nsset:chgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="addType">
+      <sequence>
+        <element name="ns" type="nsset:nsT"
+         minOccurs="0" maxOccurs="10"/>
+        <element name="tech" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="remType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"
+         minOccurs="0" maxOccurs="10"/>
+        <element name="tech" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="chgType">
+      <sequence>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="reportlevel" type="nsset:reportlevelType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="sendAuthInfoType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="testType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="level" type="nsset:reportlevelType"
+         minOccurs="0"/>
+        <element name="name" type="eppcom:labelType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements found in EPP responses.
+    These elements are output elements - it means, they are generated on
+    server's side and sent to client.
+    -->
+    <element name="chkData" type="nsset:chkDataType"/>
+    <element name="creData" type="nsset:creDataType"/>
+    <element name="infData" type="nsset:infDataType"/>
+    <!-- list response is DEPRECATED and will be removed in future -->
+    <element name="listData" type="nsset:listDataType"/>
+
+    <!--
+    <check> response elements.
+    -->
+    <complexType name="chkDataType">
+      <sequence>
+        <element name="cd" type="nsset:checkType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkType">
+      <sequence>
+        <element name="id" type="nsset:checkNameType"/>
+        <element name="reason" type="fredcom:msgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkNameType">
+      <simpleContent>
+        <extension base="fredcom:objIDType">
+          <attribute name="avail" type="boolean" use="required"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <!--
+    <create> response elements.
+    -->
+    <complexType name="creDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="crDate" type="dateTime"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    <info> response elements.
+    -->
+    <complexType name="infDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="roid" type="eppcom:roidType"/>
+        <element name="status" type="nsset:statusType"
+         minOccurs="0" maxOccurs="6"/>
+        <element name="clID" type="eppcom:clIDType"/>
+        <element name="crID" type="eppcom:clIDType"
+         minOccurs="0"/>
+        <element name="crDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="upID" type="eppcom:clIDType"
+         minOccurs="0"/>
+        <element name="upDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="trDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="ns" type="nsset:nsT" minOccurs="0" maxOccurs="10"/>
+        <element name="tech" type="fredcom:objIDType"
+         maxOccurs="unbounded"/>
+        <element name="reportlevel" type="nsset:reportlevelType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Status is a combination of attributes and an optional human-readable
+    message.
+    -->
+    <complexType name="statusType">
+      <simpleContent>
+        <extension base="normalizedString">
+          <attribute name="s" type="nsset:statusValueType"
+           use="required"/>
+          <attribute name="lang" type="language"
+           default="en"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="statusValueType">
+      <restriction base="token">
+        <enumeration value="ok"/>
+        <enumeration value="linked"/>
+        <enumeration value="serverDeleteProhibited"/>
+        <enumeration value="serverTransferProhibited"/>
+        <enumeration value="serverUpdateProhibited"/>
+        <enumeration value="deleteCandidate"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="listDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Definition of nsset specific poll messages:
+      completed transfer
+      deletion of nsset because it was not used
+      result of technical test
+    -->
+    <element name="trnData" type="nsset:handleDateT"/>
+    <element name="idleDelData" type="nsset:idleDelDataT"/>
+    <element name="testData" type="nsset:testDataT"/>
+    <element name="updateData" type="nsset:updateDataT"/>
+
+    <complexType name="handleDateT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="trDate" type="dateTime"/>
+        <element name="clID" type="eppcom:clIDType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="idleDelDataT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="testDataT">
+      <sequence>
+        <element name="cltestid" type="nsset:trIDStringType"
+         minOccurs="0"/>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="name" type="eppcom:labelType"
+         minOccurs="0" maxOccurs="unbounded"/>
+        <element name="result" type="nsset:resultType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="resultType">
+      <sequence>
+        <element name="testname" type="eppcom:labelType"/>
+        <element name="status" type="boolean"/>
+        <element name="note" type="string"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="trIDStringType">
+      <restriction base="token">
+        <minLength value="3"/>
+        <maxLength value="64"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="updateDataT">
+      <sequence>
+        <element name="opTRID" type="nsset:trIDStringType"/>
+        <element name="oldData" type="nsset:infDataType"/>
+        <element name="newData" type="nsset:infDataType"/>
+      </sequence>
+    </complexType>
+
+  </schema>

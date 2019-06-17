@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/domain-1.4"
+          xmlns:domain="http://www.nic.cz/xml/epp/domain-1.4"
+          xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified">
+
+    <!--
+    This schema defines object extension of EPP.
+
+    Definition of object domain is very similar to the original EPP object
+    domain urn:ietf:params:xml:ns:domain-1.0.
+    -->
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
+            schemaLocation="eppcom-1.0.xsd"/>
+    <import namespace="http://www.nic.cz/xml/epp/fredcom-1.2"
+            schemaLocation="fredcom-1.2.1.xsd"/>
+
+    <annotation>
+      <documentation>
+        Extension to Extensible Provisioning Protocol v1.0
+        domain provisioning schema.
+      </documentation>
+    </annotation>
+
+    <!--
+    Child elements found in EPP commands.
+    These elements are input elements - it means, they are generated on
+    client's side and sent to server.
+    -->
+    <element name="check" type="domain:mNameType"/>
+    <element name="create" type="domain:createType"/>
+    <element name="delete" type="domain:sNameType"/>
+    <element name="info" type="domain:sNameType"/>
+    <element name="renew" type="domain:renewType"/>
+    <element name="transfer" type="domain:transferType"/>
+    <element name="update" type="domain:updateType"/>
+    <!-- list command is DEPRECATED and will be removed in future -->
+    <element name="list"/>
+    <!-- extension command -->
+    <element name="sendAuthInfo" type="domain:sendAuthInfoType"/>
+
+    <!--
+    Child elements of the <create> command.
+    -->
+    <complexType name="createType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="period" type="domain:periodType"
+         minOccurs="0"/>
+        <element name="nsset" type="fredcom:objIDType"
+         minOccurs="0"/>
+        <element name="keyset" type="fredcom:objIDType"
+         minOccurs="0"/>
+        <element name="registrant" type="fredcom:objIDType"/>
+        <element name="admin" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="periodType">
+      <simpleContent>
+        <extension base="domain:pLimitType">
+          <attribute name="unit" type="domain:pUnitType"
+           use="required"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="pLimitType">
+      <restriction base="unsignedShort">
+        <minInclusive value="1"/>
+        <maxInclusive value="99"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="pUnitType">
+      <restriction base="token">
+        <enumeration value="y"/>
+        <enumeration value="m"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    Child element of commands that require a single name (delete and info).
+    -->
+    <complexType name="sNameType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child element of commands that accept multiple names (check).
+    -->
+    <complexType name="mNameType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <renew> command.
+    -->
+    <complexType name="renewType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="curExpDate" type="date"/>
+        <element name="period" type="domain:periodType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <transfer> command.
+    -->
+    <complexType name="transferType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="authInfo" type="fredcom:authInfoType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <update> command.
+    -->
+    <complexType name="updateType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="add" type="domain:addType"
+         minOccurs="0"/>
+        <element name="rem" type="domain:remType"
+         minOccurs="0"/>
+        <element name="chg" type="domain:chgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Data elements that can be added by update command.
+    -->
+    <complexType name="addType">
+      <sequence>
+        <element name="admin" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Data elements that can be removed by update command.
+    -->
+    <complexType name="remType">
+      <sequence>
+        <element name="admin" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+        <element name="tempcontact" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Data elements that can be changed by update command.
+    -->
+    <complexType name="chgType">
+      <sequence>
+        <element name="nsset" type="fredcom:objIDChgType"
+         minOccurs="0"/>
+        <element name="keyset" type="fredcom:objIDChgType"
+         minOccurs="0"/>
+        <element name="registrant" type="fredcom:objIDType"
+         minOccurs="0"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Allow the registrant value to be nullified by changing the
+    minLength restriction to "0".
+    -->
+    <simpleType name="clIDChgType">
+      <restriction base="token">
+        <minLength value="0"/>
+        <maxLength value="16"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="sendAuthInfoType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child response elements.
+    -->
+    <element name="chkData" type="domain:chkDataType"/>
+    <element name="creData" type="domain:creDataType"/>
+    <element name="infData" type="domain:infDataType"/>
+    <element name="renData" type="domain:renDataType"/>
+    <!-- list response is DEPRECATED and will be removed in future -->
+    <element name="listData" type="domain:listDataType"/>
+
+    <!--
+    <check> response elements.
+    -->
+    <complexType name="chkDataType">
+      <sequence>
+        <element name="cd" type="domain:checkType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkType">
+      <sequence>
+        <element name="name" type="domain:checkNameType"/>
+        <element name="reason" type="fredcom:msgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkNameType">
+      <simpleContent>
+        <extension base="eppcom:labelType">
+          <attribute name="avail" type="boolean"
+           use="required"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <!--
+    <create> response elements.
+    -->
+    <complexType name="creDataType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="crDate" type="dateTime"/>
+        <element name="exDate" type="date"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    <info> response elements.
+    -->
+    <complexType name="infDataType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="roid" type="eppcom:roidType"/>
+        <element name="status" type="domain:statusType"
+         minOccurs="0" maxOccurs="13"/>
+        <!--
+        Optional registrant is a hack used to hide indentity of ENUM domain
+        holder.
+        -->
+        <element name="registrant" type="fredcom:objIDType"
+         minOccurs="0"/>
+        <element name="admin" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+        <element name="nsset" type="eppcom:labelType"
+         minOccurs="0"/>
+        <element name="keyset" type="eppcom:labelType"
+         minOccurs="0"/>
+        <element name="clID" type="eppcom:clIDType"/>
+        <element name="crID" type="eppcom:clIDType"
+         minOccurs="0"/>
+        <element name="crDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="upID" type="eppcom:clIDType"
+         minOccurs="0"/>
+        <element name="upDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="exDate" type="date"
+         minOccurs="0"/>
+        <element name="trDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="tempcontact" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Status is a combination of attributes and an optional human-readable
+    message.
+    -->
+    <complexType name="statusType">
+      <simpleContent>
+        <extension base="normalizedString">
+          <attribute name="s" type="domain:statusValueType"
+           use="required"/>
+          <attribute name="lang" type="language"
+           default="en"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="statusValueType">
+      <restriction base="token">
+        <enumeration value="ok"/>
+        <enumeration value="serverDeleteProhibited"/>
+        <enumeration value="serverRenewProhibited"/>
+        <enumeration value="serverTransferProhibited"/>
+        <enumeration value="serverUpdateProhibited"/>
+        <enumeration value="serverRegistrantChangeProhibited"/>
+        <enumeration value="serverBlocked"/>
+        <enumeration value="serverOutzoneManual"/>
+        <enumeration value="serverInzoneManual"/>
+        <enumeration value="expired"/>
+        <enumeration value="outzone"/>
+        <enumeration value="notValidated"/>
+        <enumeration value="deleteCandidate"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    <renew> response elements.
+    -->
+    <complexType name="renDataType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="exDate" type="date"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="listDataType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Definition of domain specific poll messages:
+      completed transfer
+      warning about impending expiration of a domain
+      domain has just expired
+      domain was outaged from DNS zone
+      domain was deleted from register
+    -->
+    <element name="trnData" type="domain:handleDateT"/>
+    <element name="impendingExpData" type="domain:impendingExpDataT"/>
+    <element name="expData" type="domain:expDataT"/>
+    <element name="dnsOutageData" type="domain:dnsOutageDataT"/>
+    <element name="delData" type="domain:delDataT"/>
+    <element name="updateData" type="domain:updateDataT"/>
+
+    <complexType name="handleDateT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="trDate" type="dateTime"/>
+        <element name="clID" type="eppcom:clIDType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="impendingExpDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="exDate" type="date"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="expDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="exDate" type="date"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="dnsOutageDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="exDate" type="date"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="delDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="exDate" type="date"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="trIDStringType">
+      <restriction base="token">
+        <minLength value="3"/>
+        <maxLength value="64"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="updateDataT">
+      <sequence>
+        <element name="opTRID" type="domain:trIDStringType"/>
+        <element name="oldData" type="domain:infDataType"/>
+        <element name="newData" type="domain:infDataType"/>
+      </sequence>
+    </complexType>
+
+  </schema>

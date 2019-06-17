@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/contact-1.6"
+          xmlns:contact="http://www.nic.cz/xml/epp/contact-1.6"
+          xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified">
+
+    <!--
+    This schema defines object extension of EPP.
+
+    Definition of object contact is very similar to the original EPP object
+    contact urn:ietf:params:xml:ns:contact-1.0.
+    -->
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
+            schemaLocation="eppcom-1.0.xsd"/>
+    <import namespace="http://www.nic.cz/xml/epp/fredcom-1.2"
+            schemaLocation="fredcom-1.2.1.xsd"/>
+
+    <annotation>
+      <documentation>
+        Extension to Extensible Provisioning Protocol v1.0
+        contact provisioning schema.
+      </documentation>
+    </annotation>
+
+    <!--
+    Child elements found in EPP commands.
+    These elements are input elements - it means, they are generated on
+    client's side and sent to server.
+    -->
+    <element name="check" type="contact:mIDType"/>
+    <element name="create" type="contact:createType"/>
+    <element name="delete" type="contact:sIDType"/>
+    <element name="info" type="contact:sIDType"/>
+    <element name="transfer" type="contact:transferType"/>
+    <element name="update" type="contact:updateType"/>
+    <!-- list command is DEPRECATED and will be removed in future -->
+    <element name="list"/>
+    <!-- extension command -->
+    <element name="sendAuthInfo" type="contact:sendAuthInfoType"/>
+
+    <!--
+    Utility types.
+    -->
+    <simpleType name="ccType">
+      <restriction base="token">
+        <length value="2"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="e164StringType">
+      <restriction base="token">
+        <pattern value="(\+[0-9]{1,3}\.[0-9]{1,14})?"/>
+        <maxLength value="17"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="pcType">
+      <restriction base="token">
+        <maxLength value="16"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="postalLineType">
+       <restriction base="normalizedString">
+         <minLength value="1"/>
+         <maxLength value="255"/>
+       </restriction>
+    </simpleType>
+
+    <simpleType name="optPostalLineType">
+       <restriction base="normalizedString">
+         <maxLength value="255"/>
+       </restriction>
+    </simpleType>
+
+    <simpleType name="vatT">
+      <restriction base="token">
+        <maxLength value="20"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="identValueT">
+      <restriction base="token">
+        <maxLength value="32"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="emailType">
+      <restriction base="token">
+        <pattern value="[^@]{1,64}@[^@]+"/>
+        <maxLength value="320"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="emailCommaListType">
+      <restriction base="token">
+          <pattern value="[^@, ]{1,64}@[^@, ]+(,[^@, ]{1,64}@[^@, ]+)*"/>
+        <maxLength value="320"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    Child elements of the <create> command.
+    -->
+    <complexType name="createType">
+      <sequence>
+        <element name="id" type="fredcom:objIDCreateType"/>
+        <element name="postalInfo" type="contact:postalInfoType"/>
+        <element name="voice" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="fax" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="email" type="contact:emailCommaListType"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="disclose" type="contact:discloseType"
+         minOccurs="0"/>
+        <element name="vat" type="contact:vatT"
+         minOccurs="0"/>
+        <element name="ident" type="contact:identT"
+         minOccurs="0"/>
+        <element name="notifyEmail" type="contact:emailCommaListType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="postalInfoType">
+      <sequence>
+        <element name="name" type="contact:postalLineType"/>
+        <element name="org" type="contact:optPostalLineType"
+         minOccurs="0"/>
+        <element name="addr" type="contact:addrType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="addrType">
+      <sequence>
+        <element name="street" type="contact:optPostalLineType"
+         minOccurs="1" maxOccurs="3"/>
+        <element name="city" type="contact:postalLineType"/>
+        <element name="sp" type="contact:optPostalLineType"
+         minOccurs="0"/>
+        <element name="pc" type="contact:pcType"/>
+        <element name="cc" type="contact:ccType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="postalInfoReadType">
+      <sequence>
+        <element name="name" type="contact:postalLineType"
+         minOccurs="0"/>
+        <element name="org" type="contact:optPostalLineType"
+         minOccurs="0"/>
+        <element name="addr" type="contact:addrReadType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="addrReadType">
+      <sequence>
+        <element name="street" type="contact:optPostalLineType"
+         minOccurs="0" maxOccurs="3"/>
+        <element name="city" type="contact:postalLineType"
+         minOccurs="0"/>
+        <element name="sp" type="contact:optPostalLineType"
+         minOccurs="0"/>
+        <element name="pc" type="contact:pcType"
+         minOccurs="0"/>
+        <element name="cc" type="contact:ccType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="discloseType">
+      <sequence>
+<!--        <element name="name" minOccurs="0"/> -->
+<!--        <element name="org" minOccurs="0"/> -->
+<!--        <element name="addr" minOccurs="0"/>  -->
+        <element name="voice" minOccurs="0"/>
+        <element name="fax" minOccurs="0"/>
+        <element name="email" minOccurs="0"/>
+        <element name="vat" minOccurs="0"/>
+        <element name="ident" minOccurs="0"/>
+        <element name="notifyEmail" minOccurs="0"/>
+      </sequence>
+      <attribute name="flag" type="boolean" use="required"/>
+    </complexType>
+
+    <!--
+      dislose type for info and update commands - allow disclose address
+    -->
+    <complexType name="infupdDiscloseType">
+      <sequence>
+        <element name="addr" minOccurs="0"/>
+        <element name="voice" minOccurs="0"/>
+        <element name="fax" minOccurs="0"/>
+        <element name="email" minOccurs="0"/>
+        <element name="vat" minOccurs="0"/>
+        <element name="ident" minOccurs="0"/>
+        <element name="notifyEmail" minOccurs="0"/>
+      </sequence>
+      <attribute name="flag" type="boolean" use="required"/>
+    </complexType>
+
+    <complexType name="identT">
+      <simpleContent>
+        <extension base="contact:identValueT">
+          <attribute name="type" type="contact:identTypeT" use="required"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="identTypeT">
+      <restriction base="token">
+        <enumeration value="op"/>
+        <enumeration value="passport"/>
+        <enumeration value="mpsv"/>
+        <enumeration value="ico"/>
+        <enumeration value="birthday"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    Child element of commands that require only an identifier (delete and info).
+    -->
+    <complexType name="sIDType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child element of commands that accept multiple identifiers (check).
+    -->
+    <complexType name="mIDType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of <transfer> command.
+    -->
+    <complexType name="transferType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="authInfo" type="fredcom:authInfoType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements of the <update> command.
+    -->
+    <complexType name="updateType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="chg" type="contact:chgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Data elements that can be changed by update command.
+    -->
+    <complexType name="chgType">
+      <sequence>
+        <element name="postalInfo" type="contact:chgPostalInfoType"
+         minOccurs="0"/>
+        <element name="voice" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="fax" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="email" type="contact:emailCommaListType"
+         minOccurs="0"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="disclose" type="contact:infupdDiscloseType"
+         minOccurs="0"/>
+        <element name="vat" type="contact:vatT"
+         minOccurs="0"/>
+        <element name="ident" type="contact:identUpdT"
+         minOccurs="0"/>
+        <element name="notifyEmail" type="contact:emailUpdCommaListType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="chgPostalInfoType">
+      <sequence>
+        <element name="name" type="contact:postalLineType"
+         minOccurs="0"/>
+        <element name="org" type="contact:optPostalLineType"
+         minOccurs="0"/>
+        <element name="addr" type="contact:addrType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="identUpdT">
+      <simpleContent>
+        <extension base="contact:identValueT">
+          <attribute name="type" type="contact:identTypeT"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="emailUpdType">
+      <restriction base="token">
+        <pattern value="([^@]{1,64}@[^@]+)?"/>
+        <maxLength value="320"/>
+        <minLength value="0"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="emailUpdCommaListType">
+      <restriction base="token">
+          <pattern value="([^@, ]{1,64}@[^@, ]+(,[^@, ]{1,64}@[^@, ]+)*)?"/>
+        <maxLength value="320"/>
+        <minLength value="0"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="sendAuthInfoType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child elements found in EPP responses.
+    These elements are output elements - it means, they are generated on
+    server's side and sent to client.
+    -->
+    <element name="chkData" type="contact:chkDataType"/>
+    <element name="creData" type="contact:creDataType"/>
+    <element name="infData" type="contact:infDataType"/>
+    <!-- list response is DEPRECATED and will be removed in future -->
+    <element name="listData" type="contact:listDataType"/>
+
+    <!--
+    <check> response elements.
+    -->
+    <complexType name="chkDataType">
+      <sequence>
+        <element name="cd" type="contact:checkType"
+         maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkType">
+      <sequence>
+        <element name="id" type="contact:checkIDType"/>
+        <element name="reason" type="fredcom:msgType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="checkIDType">
+      <simpleContent>
+        <extension base="fredcom:objIDType">
+          <attribute name="avail" type="boolean"
+           use="required"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <!--
+    <create> response elements.
+    -->
+    <complexType name="creDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="crDate" type="dateTime"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    <info> response elements.
+    -->
+    <complexType name="infDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="roid" type="eppcom:roidType"/>
+        <element name="status" type="contact:statusType"
+         minOccurs="0" maxOccurs="10"/>
+        <element name="postalInfo" type="contact:postalInfoReadType"/>
+        <element name="voice" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="fax" type="contact:e164StringType"
+         minOccurs="0"/>
+        <element name="email" type="contact:emailCommaListType"
+         minOccurs="0"/>
+        <element name="clID" type="eppcom:clIDType"/>
+        <element name="crID" type="eppcom:clIDType"/>
+        <element name="crDate" type="dateTime"/>
+        <element name="upID" type="eppcom:clIDType"
+         minOccurs="0"/>
+        <element name="upDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="trDate" type="dateTime"
+         minOccurs="0"/>
+        <element name="authInfo" type="fredcom:authInfoType"
+         minOccurs="0"/>
+        <element name="disclose" type="contact:infupdDiscloseType"
+         minOccurs="0"/>
+        <element name="vat" type="contact:vatT"
+         minOccurs="0"/>
+        <element name="ident" type="contact:identT"
+         minOccurs="0"/>
+        <element name="notifyEmail" type="contact:emailCommaListType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Status is a combination of attributes and an optional human-readable
+    message.
+    -->
+    <complexType name="statusType">
+      <simpleContent>
+        <extension base="normalizedString">
+          <attribute name="s" type="contact:statusValueType"
+           use="required"/>
+          <attribute name="lang" type="language"
+           default="en"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <!--
+    Do not forget update maxOccurs attribute in status element in infDataType
+    when making changes.
+    -->
+    <simpleType name="statusValueType">
+      <restriction base="token">
+        <enumeration value="ok"/>
+        <enumeration value="linked"/>
+        <enumeration value="serverTransferProhibited"/>
+        <enumeration value="serverDeleteProhibited"/>
+        <enumeration value="serverUpdateProhibited"/>
+        <enumeration value="deleteCandidate"/>
+        <enumeration value="conditionallyIdentifiedContact"/>
+        <enumeration value="identifiedContact"/>
+        <enumeration value="validatedContact"/>
+        <enumeration value="mojeidContact"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="listDataType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Definition of contact specific poll messages:
+      completed transfer
+      deletion of contact because it was not used
+    -->
+    <element name="trnData" type="contact:handleDateT"/>
+    <element name="idleDelData" type="contact:idleDelDataT"/>
+    <element name="updateData" type="contact:updateDataT"/>
+
+    <complexType name="handleDateT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="trDate" type="dateTime"/>
+        <element name="clID" type="eppcom:clIDType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="idleDelDataT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="trIDStringType">
+      <restriction base="token">
+        <minLength value="3"/>
+        <maxLength value="64"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="updateDataT">
+      <sequence>
+        <element name="opTRID" type="contact:trIDStringType"/>
+        <element name="oldData" type="contact:infDataType"/>
+        <element name="newData" type="contact:infDataType"/>
+      </sequence>
+    </complexType>
+
+  </schema>

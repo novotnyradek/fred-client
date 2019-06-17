@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/enumval-1.2"
+        xmlns:enumval="http://www.nic.cz/xml/epp/enumval-1.2"
+        xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified">
+
+    <!--
+    This schema defines extension of domain object used for ENUM domains.
+    -->
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
+            schemaLocation="eppcom-1.0.xsd"/>
+
+    <annotation>
+      <documentation>
+        Extension to Extensible Provisioning Protocol v1.0
+        Domain extension schema for enum numbers.
+      </documentation>
+    </annotation>
+
+    <!--
+    Extensions of domain commands.
+    -->
+    <element name="create" type="enumval:exValType"/>
+    <element name="update" type="enumval:updateType"/>
+    <element name="renew" type="enumval:exValType"/>
+
+    <complexType name="exValType">
+      <sequence>
+        <element name="valExDate" type="date" minOccurs="0" maxOccurs="1"/>
+        <element name="publish" type="boolean" default="false" minOccurs="0" maxOccurs="1"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="updateType">
+      <sequence>
+        <element name="chg" type="enumval:exValType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Extension of domain response.
+    -->
+    <element name="infData" type="enumval:exValType"/>
+
+    <!--
+    ENUM domain specific poll messages:
+      Warning about impending expiration of ENUM domain validation
+      Validation of ENUM domain has just expired
+    -->
+    <element name="impendingValExpData" type="enumval:impendingValExpDataT"/>
+    <element name="valExpData" type="enumval:valExpDataT"/>
+
+    <complexType name="impendingValExpDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="valExDate" type="date"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="valExpDataT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="valExDate" type="date"/>
+      </sequence>
+    </complexType>
+
+  </schema>

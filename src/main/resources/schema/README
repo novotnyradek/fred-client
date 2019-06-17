@@ -1,0 +1,62 @@
+This directory contains XML schemas defining EPP protocol and its extensions.
+
+Content:
+
+  1. Versioning
+  2. Compat
+  3. For editors
+
+
+ 1. Versioning
+------------------
+
+The versioning of schemas is a bit confusing and will be explained in this
+text. Each schema file has its own version, major and minor. Client and
+server must always adhere to the same version of particular schema in order
+to avoid any misunderstanding and proper operation. The version of schemas
+is announced in greeting from server.
+
+Versions in ChangeLog enclosed in brackets are derived from versions of
+mod_eppd, which is an apache module parsing EPP requests. For enduser are
+these versions meaningless and serve only as identifiers of particular points
+in time. If you use official epp client provided by CZ.NIC and want to know,
+if your particular client of version x.y.z is compatible with server (mod_eppd)
+of version a.b.c, check Compat chapter in this README.
+
+
+ 2. Compat
+------------
+
+ _______________________________________________________________________ 
+|   Server's (mod_eppd's) version    |   Compatible client's version    |
+|____________________________________|__________________________________|
+|------------------------------------|----------------------------------|
+|       ... dark ages                |       ... dark ages              |
+|------------------------------------|----------------------------------|
+|           1.1.1                    |           1.0.0                  |
+|------------------------------------|----------------------------------|
+|           1.2.0                    |           1.3.1                  |
+|------------------------------------|----------------------------------|
+|           1.3.0                    |           1.3.2                  |
+|------------------------------------|----------------------------------|
+|           1.4.0                    |           1.4.0                  |
+|------------------------------------|----------------------------------|
+|           1.8.0                    |           1.7.0                  |
+|____________________________________|__________________________________|
+
+
+ 3. Edit notes
+---------------
+
+Here are few advices for editors of schemas. If you edit the schema file
+make sure that you adhere to following rules:
+
+ *) Indentation is 2 spaces long
+ *) Always use spaces, not tabs.
+ *) Try to define top level elements first and then the elements contained
+    in them.
+ *) First half of schema should be about input elements (elements generated
+    on client's side) and the second about output elements (generated on
+    server's side).
+ *) After a change use xmllint to valide schemas.
+

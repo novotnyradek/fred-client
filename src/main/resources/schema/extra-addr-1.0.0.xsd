@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+        targetNamespace="http://www.nic.cz/xml/epp/extra-addr-1.0"
+        xmlns:extra-addr="http://www.nic.cz/xml/epp/extra-addr-1.0"
+        xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified">
+
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="eppcom-1.0.xsd"/>
+
+
+    <annotation>
+        <documentation>
+            Extension to Extensible Provisioning Protocol v1.0
+            Additional contact addresses
+        </documentation>
+    </annotation>
+
+
+    <!-- country code -->
+    <simpleType name="ccType">
+        <restriction base="token">
+            <length value="2"/>
+        </restriction>
+    </simpleType>
+
+    <!-- postal code -->
+    <simpleType name="pcType">
+        <restriction base="token">
+            <maxLength value="16"/>
+        </restriction>
+    </simpleType>
+
+    <!-- not empty line -->
+    <simpleType name="postalLineType">
+        <restriction base="normalizedString">
+            <minLength value="1"/>
+            <maxLength value="255"/>
+        </restriction>
+    </simpleType>
+
+    <!-- address type -->
+    <complexType name="addrType">
+        <sequence>
+            <element name="addr">
+                <complexType>
+                    <sequence>
+                        <element name="street" type="extra-addr:postalLineType" minOccurs="1" maxOccurs="3"/>
+                        <element name="city" type="extra-addr:postalLineType"/>
+                        <element name="sp" type="extra-addr:postalLineType" minOccurs="0"/>
+                        <element name="pc" type="extra-addr:pcType"/>
+                        <element name="cc" type="extra-addr:ccType"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+
+    <!--
+         update data
+            - <set> element add new or update actual record
+            - <rem> element removes defined address type
+    -->
+    <complexType name="updateType">
+        <sequence>
+            <element name="set" type="extra-addr:addrListType" minOccurs="0"/>
+            <element name="rem" type="extra-addr:remType" minOccurs="0"/>
+        </sequence>
+    </complexType>
+
+    <!--
+         used type of addreses - here just mailing address is used
+    -->
+    <complexType name="addrListType">
+        <sequence>
+            <element name="mailing" type="extra-addr:addrType"/>
+            <!-- place to add new address types -->
+        </sequence>
+    </complexType>
+
+    <complexType name="remType">
+        <sequence>
+            <element name="mailing"/>
+            <!-- place to add new address types -->
+        </sequence>
+    </complexType>
+
+    <!-- commands and data extended -->
+    <element name="create" type="extra-addr:addrListType"/>
+    <element name="update" type="extra-addr:updateType"/>
+    <element name="infData" type="extra-addr:addrListType"/>
+
+</schema>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <configuration>
+        <stop-on-errors>true</stop-on-errors>
+        <date-format>MM/dd/yyyy HH:mm</date-format>
+        <wildcard>true</wildcard>
+    </configuration>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.domain_1.InfDataType</class-a>
+        <class-b>fred.client.data.info.domain.DomainInfoResponse</class-b>
+        <field custom-converter="fred.client.data.info.domain.DomainStatusValueTypeCustomConverter">
+            <a>status</a>
+            <b>status</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.InfDataType</class-a>
+        <class-b>fred.client.data.info.contact.ContactInfoResponse</class-b>
+        <field custom-converter="fred.client.data.info.contact.ContactStatusValueTypeCustomConverter">
+            <a>status</a>
+            <b>status</b>
+        </field>
+        <field custom-converter="fred.client.data.info.contact.PostalInfoReadTypeCustomConverter">
+            <a>postalInfo</a>
+            <b>postalInfo</b>
+        </field>
+    </mapping>
+
+</mappings>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified">
+
+    <annotation>
+      <documentation>
+        Extension to Extensible Provisioning Protocol v1.0
+        shared types schema.
+      </documentation>
+    </annotation>
+
+    <!--
+    Object identifier type.
+    -->
+    <simpleType name="objIDType">
+      <restriction base="token">
+        <minLength value="1"/>
+        <maxLength value="63"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="objIDChgType">
+      <restriction base="token">
+        <minLength value="0"/>
+        <maxLength value="63"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="objIDCreateType">
+      <restriction base="token">
+        <pattern value="[a-zA-Z0-9](-?[a-zA-Z0-9])*"/>
+        <minLength value="1"/>
+        <maxLength value="30"/>
+        </restriction>
+    </simpleType>
+
+    <!--
+    Message of unbounded length (now used only in check-reason)
+    -->
+    <complexType name="msgType">
+      <simpleContent>
+        <extension base="normalizedString">
+          <attribute name="lang" type="language"
+           default="en"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <!--
+    Authorization information of object.
+    -->
+    <simpleType name="authInfoType">
+      <restriction base="normalizedString">
+        <minLength value="0"/>
+        <maxLength value="300"/>
+      </restriction>
+    </simpleType>
+
+  </schema>

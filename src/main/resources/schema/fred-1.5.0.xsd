@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <schema targetNamespace="http://www.nic.cz/xml/epp/fred-1.5"
+          xmlns:fred="http://www.nic.cz/xml/epp/fred-1.5"
+          xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+          xmlns="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified">
+
+    <!--
+    This schema defines protocol extensions (new commands).
+    -->
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
+            schemaLocation="eppcom-1.0.xsd"/>
+    <import namespace="http://www.nic.cz/xml/epp/fredcom-1.2"
+            schemaLocation="fredcom-1.2.1.xsd"/>
+
+    <annotation>
+      <documentation>
+        Extensions for Extensible Provisioning Protocol.
+      </documentation>
+    </annotation>
+
+    <!--
+    'extcommand' element encapsulates all command extensions defined by
+    this schema.
+    -->
+    <element name="extcommand" type="fred:extcommandType"/>
+
+    <complexType name="extcommandType">
+      <sequence>
+        <choice>
+          <!--
+            content of 'sendAuthInfo' and 'test' is defined by object mapping
+          -->
+          <element name="sendAuthInfo" type="fred:readWriteType"/>
+          <element name="test" type="fred:readWriteType"/>
+          <element name="creditInfo"/>
+          <!-- info commands -->
+          <element name="listDomains"/>
+          <element name="listContacts"/>
+          <element name="listNssets"/>
+          <element name="listKeysets"/>
+          <element name="domainsByNsset" type="fred:domainsByNssetT"/>
+          <element name="domainsByKeyset" type="fred:domainsByNssetT"/>
+          <element name="domainsByContact" type="fred:domainsByContactT"/>
+          <element name="nssetsByContact" type="fred:nssetsByContactT"/>
+          <element name="keysetsByContact" type="fred:nssetsByContactT"/>
+          <element name="nssetsByNs" type="fred:nssetsByNsT"/>
+          <element name="getResults"/>
+        </choice>
+        <element name="clTRID" type="fred:trIDStringType"
+         minOccurs="0"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="domainsByNssetT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="domainsByContactT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+  
+    <complexType name="nssetsByContactT">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+      </sequence>
+    </complexType>
+  
+    <complexType name="nssetsByNsT">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="readWriteType">
+      <sequence>
+        <any namespace="##other"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="trIDStringType">
+      <restriction base="token">
+        <minLength value="3"/>
+        <maxLength value="64"/>
+      </restriction>
+    </simpleType>
+
+    <!--
+    Response extensions defined by this schema.
+    -->
+    <element name="resCreditInfo" type="fred:resCreditType"/>
+    <!-- info responses -->
+    <element name="infoResponse" type="fred:infoResponseT"/>
+    <element name="resultsList" type="fred:resultsListT"/>
+
+    <complexType name="resCreditType">
+      <sequence>
+        <element name="zoneCredit" type="fred:creditType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="creditType">
+      <sequence>
+        <element name="zone" type="eppcom:labelType"/>
+        <element name="credit" type="fred:amountType"/>
+      </sequence>
+    </complexType>
+
+    <simpleType name="amountType">
+      <restriction base="decimal">
+      <totalDigits value="10"/>
+      <fractionDigits value="2"/>
+      </restriction>
+    </simpleType>
+
+    <complexType name="infoResponseT">
+      <sequence>
+        <element name="count" type="unsignedLong"/>
+      </sequence>
+    </complexType>
+
+    <complexType name="resultsListT">
+      <sequence>
+        <element name="item" type="token"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Definition of non-object specific poll messages:
+      warning about low credit
+    -->
+
+    <element name="lowCreditData" type="fred:lowCreditDataT"/>
+
+    <complexType name="lowCreditDataT">
+      <sequence>
+        <element name="zone" type="eppcom:labelType"/>
+        <element name="limit" type="fred:creditType"/>
+        <element name="credit" type="fred:creditType"/>
+      </sequence>
+    </complexType>
+
+
+    <!--
+      information about requests counts and price
+    -->
+
+    <element name="requestFeeInfoData" type="fred:requestFeeInfoDataT"/>
+
+    <complexType name="requestFeeInfoDataT">
+      <sequence>
+        <!-- timestamp of period begining -->
+        <element name="periodFrom" type="dateTime"/>
+        <!-- timesatamp of usedCount computation -->
+        <element name="periodTo" type="dateTime"/>
+        <!-- count of total charge free requests -->
+        <element name="totalFreeCount" type="unsignedLong"/>
+        <!-- count of used requests within periodFrom, periodTo interval -->
+        <element name="usedCount" type="unsignedLong"/>
+        <!-- price to be paid for request over totalFreeCount -->
+        <element name="price" type="fred:amountType"/>
+      </sequence>
+    </complexType>
+
+</schema>
+
