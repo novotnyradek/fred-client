@@ -26,10 +26,6 @@
             <a>status</a>
             <b>status</b>
         </field>
-        <field custom-converter="fred.client.data.info.contact.PostalInfoReadTypeCustomConverter">
-            <a>postalInfo</a>
-            <b>postalInfo</b>
-        </field>
     </mapping>
 
 </mappings>

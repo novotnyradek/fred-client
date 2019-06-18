@@ -3,14 +3,16 @@ package fred.client.eppClient.objectStrategy;
 import cz.nic.xml.epp.contact_1.InfDataType;
 import cz.nic.xml.epp.contact_1.ObjectFactory;
 import cz.nic.xml.epp.contact_1.SIDType;
-import fred.client.data.info.contact.ContactInfoRequest;
-import fred.client.data.info.contact.ContactInfoResponse;
-import fred.client.eppClient.EppCommandBuilder;
-import fred.client.eppClient.EppClientImpl;
+import cz.nic.xml.epp.extra_addr_1.AddrListType;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
+import fred.client.data.info.contact.AddressData;
+import fred.client.data.info.contact.ContactInfoRequest;
+import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.eppClient.EppClientImpl;
+import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
@@ -76,7 +78,15 @@ public class ContactStrategy implements ServerObjectStrategy {
         result.setClientTransactionId(responseType.getTrID().getClTRID());
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
-        // TODO mailing address extension
+        if (responseType.getExtension() != null){
+            JAXBElement extraAddr = (JAXBElement) responseType.getExtension().getAny().get(0);
+
+            AddrListType addrListType = (AddrListType) extraAddr.getValue();
+
+            AddressData addressData = mapper.map(addrListType.getMailing().getAddr(), AddressData.class);
+
+            result.setMailingAddress(addressData);
+        }
 
         return result;
     }

@@ -30,6 +30,7 @@ import java.util.List;
  * <li>{@link ContactInfoResponse#vat} – the VAT-payer identifier as a contact:vatT</li>
  * <li>{@link ContactInfoResponse#ident} – identity-document identification, see {@link IdentificationData}</li>
  * <li>{@link ContactInfoResponse#notifyEmail} – a comma-separated list of email addresses for notification as contact:emailCommaListType</li>
+ * <li>{@link ContactInfoResponse#mailingAddress} – mailing address container</li>
  * </ul>
  * </p>
  *
@@ -73,7 +74,7 @@ public class ContactInfoResponse extends EppResponse implements Serializable, In
 
     private String notifyEmail;
 
-    private PostalInfoData mailingAddress;
+    private AddressData mailingAddress;
 
     public ContactInfoResponse() {
         setServerObjectType(ServerObjectType.CONTACT);
@@ -223,11 +224,11 @@ public class ContactInfoResponse extends EppResponse implements Serializable, In
         this.notifyEmail = notifyEmail;
     }
 
-    public PostalInfoData getMailingAddress() {
+    public AddressData getMailingAddress() {
         return mailingAddress;
     }
 
-    public void setMailingAddress(PostalInfoData mailingAddress) {
+    public void setMailingAddress(AddressData mailingAddress) {
         this.mailingAddress = mailingAddress;
     }
 

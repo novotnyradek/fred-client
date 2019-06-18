@@ -1,22 +1,14 @@
 package fred.client;
 
-import fred.client.data.info.contact.ContactInfoRequest;
-import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
+import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
-import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
+import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Service for using FRED client.
