@@ -25,7 +25,7 @@ import java.util.List;
  * <li>{@link DomainInfoResponse#upDate} - the timestamp of the last update</li>
  * <li>{@link DomainInfoResponse#exDate} - the date of expiration</li>
  * <li>{@link DomainInfoResponse#trDate} - the timestamp of the last transfer</li>
- * <li>{@link DomainInfoResponse#authInfo} - authorization information (transfer password)</li>
+ * <li>{@link DomainInfoResponse#authInfo} - authorization information (transfer password) - is displayed only to the designated registrar</li>
  * <li>{@link DomainInfoResponse#tempcontact} - a temporary contact handle</li>
  * </ul>
  *
@@ -33,37 +33,39 @@ import java.util.List;
  */
 public class DomainInfoResponse extends EppResponse implements Serializable, InfoResponse {
 
-    protected String name;
+    private String name;
 
-    protected String roid;
+    private String roid;
 
-    protected List<DomainStatusValueType> status;
+    private List<DomainStatusValueType> status;
 
-    protected String registrant;
+    private String registrant;
 
-    protected List<String> admin;
+    private List<String> admin;
 
-    protected String nsset;
+    private String nsset;
 
-    protected String keyset;
+    private String keyset;
 
-    protected String clID;
+    private String clID;
 
-    protected String crID;
+    private String crID;
 
-    protected Date crDate;
+    private Date crDate;
 
-    protected String upID;
+    private String upID;
 
-    protected Date upDate;
+    private Date upDate;
 
-    protected Date exDate;
+    private Date exDate;
 
-    protected Date trDate;
+    private Date trDate;
 
-    protected String authInfo;
+    private String authInfo;
 
-    protected List<String> tempcontact;
+    private List<String> tempcontact;
+
+    private EnumValData enumval;
 
     public DomainInfoResponse() {
         setServerObjectType(ServerObjectType.DOMAIN);
@@ -197,6 +199,14 @@ public class DomainInfoResponse extends EppResponse implements Serializable, Inf
         this.status = status;
     }
 
+    public EnumValData getEnumval() {
+        return enumval;
+    }
+
+    public void setEnumval(EnumValData enumval) {
+        this.enumval = enumval;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainInfoResponse{");
@@ -216,6 +226,7 @@ public class DomainInfoResponse extends EppResponse implements Serializable, Inf
         sb.append(", trDate=").append(trDate);
         sb.append(", authInfo='").append(authInfo).append('\'');
         sb.append(", tempcontact=").append(tempcontact);
+        sb.append(", enumval=").append(enumval);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
         sb.append(", code=").append(getCode());
