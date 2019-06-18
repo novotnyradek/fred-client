@@ -13,7 +13,7 @@ import java.io.Serializable;
  * <li>{@link DomainInfoRequest#domainName} - domain name
  * </ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html">FRED documentation</a>
  */
 public class DomainInfoRequest extends EppRequest implements Serializable, InfoRequest {
 

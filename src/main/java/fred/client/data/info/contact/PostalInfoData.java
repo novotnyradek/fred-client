@@ -12,7 +12,7 @@ import java.util.List;
  * <li>{@link PostalInfoData#addr} – see {@link AddressData}</li>
  *</ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
 public class PostalInfoData implements Serializable {
 

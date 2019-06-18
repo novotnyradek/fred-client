@@ -110,48 +110,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         client.checkSession();
 
-//        String response = client.proceedCommand(xml);
-        String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<epp xmlns=\"urn:ietf:params:xml:ns:epp-1.0\"" +
-                " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
-                " xsi:schemaLocation=\"urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd\">" +
-                "   <response>" +
-                "      <result code=\"1000\">" +
-                "         <msg>Command completed successfully</msg>" +
-                "      </result>" +
-                "      <resData>" +
-                "         <domain:infData xmlns:domain=\"http://www.nic.cz/xml/epp/domain-1.4\"" +
-                "          xsi:schemaLocation=\"http://www.nic.cz/xml/epp/domain-1.4 domain-1.4.2.xsd\">" +
-                "            <domain:name>1.1.1.7.4.5.2.2.2.0.2.4.e164.arpa</domain:name>" +
-                "            <domain:roid>D0009907598-CZ</domain:roid>" +
-                "            <domain:status s=\"ok\">Object is without restrictions</domain:status>" +
-                "            <domain:registrant>CID-MYOWN</domain:registrant>" +
-                "            <domain:admin>CID-ADMIN1</domain:admin>" +
-                "            <domain:admin>CID-ADMIN2</domain:admin>" +
-                "            <domain:nsset>NID-MYNSSET</domain:nsset>" +
-                "            <domain:keyset>KID-MYKEYSET</domain:keyset>" +
-                "            <domain:clID>REG-MYREG</domain:clID>" +
-                "            <domain:crID>REG-MYREG</domain:crID>" +
-                "            <domain:crDate>2017-07-14T16:22:32+02:00</domain:crDate>" +
-                "            <domain:upID>REG-MYREG</domain:upID>" +
-                "            <domain:upDate>2017-07-18T10:49:43+02:00</domain:upDate>" +
-                "            <domain:exDate>2021-07-14</domain:exDate>" +
-                "            <domain:authInfo>c8n9hraq</domain:authInfo>" +
-                "         </domain:infData>" +
-                "      </resData>" +
-                "      <extension>" +
-                "         <enumval:infData xmlns:enumval=\"http://www.nic.cz/xml/epp/enumval-1.2\"" +
-                "          xsi:schemaLocation=\"http://www.nic.cz/xml/epp/enumval-1.2 enumval-1.2.0.xsd\">" +
-                "            <enumval:valExDate>2018-01-02</enumval:valExDate>" +
-                "            <enumval:publish>0</enumval:publish>" +
-                "         </enumval:infData>" +
-                "      </extension>" +
-                "      <trID>" +
-                "         <clTRID>ites005#17-07-31at10:26:32</clTRID>" +
-                "         <svTRID>ReqID-0000140992</svTRID>" +
-                "      </trID>" +
-                "   </response>" +
-                "</epp>";
+        String response = client.proceedCommand(xml);
 
         JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
 

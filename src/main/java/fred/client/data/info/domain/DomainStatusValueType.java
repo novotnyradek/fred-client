@@ -19,7 +19,7 @@ package fred.client.data.info.domain;
  * <li>{@link DomainStatusValueType#DELETE_CANDIDATE} – the domain is scheduled for deletion</li>
  * </ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Domains.html#mng-domain-stat>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Domains.html#mng-domain-stat">FRED documentation</a>
  */
 public enum DomainStatusValueType {
 

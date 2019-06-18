@@ -17,7 +17,7 @@ package fred.client.data.info.contact;
  * <li>SERVER_BLOCKED – the contact is blocked by administration - not used in schemas</li>
  * </ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Contacts.html#mng-contact-stat>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Contacts.html#mng-contact-stat">FRED documentation</a>
  */
 public enum ContactStatusValueType {
 

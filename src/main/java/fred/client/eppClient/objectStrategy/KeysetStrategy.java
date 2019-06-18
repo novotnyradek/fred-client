@@ -1,5 +1,10 @@
 package fred.client.eppClient.objectStrategy;
 
+import cz.nic.xml.epp.keyset_1.InfDataType;
+import cz.nic.xml.epp.keyset_1.ObjectFactory;
+import cz.nic.xml.epp.keyset_1.SIDType;
+import fred.client.data.info.keyset.KeysetInfoRequest;
+import fred.client.data.info.keyset.KeysetInfoResponse;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.data.info.InfoRequest;
@@ -8,8 +13,12 @@ import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
+import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.xml.bind.JAXBElement;
 
 /**
  * Class for handling actions on keyset.
@@ -32,7 +41,41 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
     public InfoResponse callInfo(InfoRequest request) throws FredClientException {
         log.debug("keysetInfo called with request(" + request + ")");
-        throw new UnsupportedOperationException("Not implemented yet!");
+
+        // downcast
+        KeysetInfoRequest keysetInfoRequest = (KeysetInfoRequest) request;
+
+        SIDType sidType = new SIDType();
+        sidType.setId(keysetInfoRequest.getId());
+
+        JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createInfoEppCommand(wrapper, keysetInfoRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        InfDataType infDataType = (InfDataType) wrapperBack.getValue();
+
+        KeysetInfoResponse result = mapper.map(infDataType, KeysetInfoResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {

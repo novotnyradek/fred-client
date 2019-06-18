@@ -2,7 +2,7 @@ package fred.client.data.info.contact;
 
 /**
  * @see IdentificationData
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
 public enum IdentType {
 

@@ -11,7 +11,7 @@ import java.util.Date;
  * <li>{@link EnumValData#publish} – the setting for publishing the ENUM domain in a public directory as xs:boolean; true – display, false – hide</li>
  *</ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html">FRED documentation</a>
  */
 public class EnumValData implements Serializable {
 

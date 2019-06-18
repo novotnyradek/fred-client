@@ -28,4 +28,13 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.InfDataType</class-a>
+        <class-b>fred.client.data.info.keyset.KeysetInfoResponse</class-b>
+        <field custom-converter="fred.client.data.info.keyset.KeysetStatusValueTypeCustomConverter">
+            <a>status</a>
+            <b>status</b>
+        </field>
+    </mapping>
+
 </mappings>

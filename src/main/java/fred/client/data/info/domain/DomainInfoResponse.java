@@ -29,7 +29,7 @@ import java.util.List;
  * <li>{@link DomainInfoResponse#tempcontact} - a temporary contact handle</li>
  * </ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html">FRED documentation</a>
  */
 public class DomainInfoResponse extends EppResponse implements Serializable, InfoResponse {
 

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * <li>{@link DiscloseData#notifyEmail} – the notification email disclosure setting as an empty element</li>
  * <li>{@link DiscloseData#flag} – disclose flag as a xs:boolean: 0 – listed items are hidden, 1 – listed items are published</li>
  * </ul>
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
 public class DiscloseData implements Serializable {
 

@@ -15,7 +15,7 @@ package fred.client.data.info.contact;
  * <li>{@link IdentificationData#value} - the identification number as a contact:identValueT</li>
  * </ul>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
 public class IdentificationData {
 

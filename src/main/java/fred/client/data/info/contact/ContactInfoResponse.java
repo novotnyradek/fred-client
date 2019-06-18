@@ -34,7 +34,7 @@ import java.util.List;
  * </ul>
  * </p>
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html>FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
 public class ContactInfoResponse extends EppResponse implements Serializable, InfoResponse {
 
