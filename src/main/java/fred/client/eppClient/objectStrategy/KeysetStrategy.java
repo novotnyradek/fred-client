@@ -106,30 +106,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareKeysetsByContactCommand((KeysetsByContactListRequest) listRequest);
         }
 
-        JAXBElement<EppType> listRequestElement = eppCommandBuilder.createFredExtensionEppCommand(extcommandType);
-
-        String xml = client.marshall(listRequestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaulateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        InfoResponseT countResponse = (InfoResponseT) wrapperBack.getValue();
-
-        // get results if count > 0
-        if (countResponse.getCount().intValue() > 0) {
-            return listResultsUtil.getResults(responseType.getTrID().getClTRID());
-        }
-
-        return new ListResultsResponse();
+        return listResultsUtil.prepareListAndGetResults(extcommandType);
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

@@ -17,9 +17,9 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     private final static Log log = LogFactory.getLog(NotImplementedStrategy.class);
 
-    public InfoResponse callInfo(InfoRequest request) throws FredClientException {
-        log.error("No strategy found for type " + request.getServerObjectType());
-        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
+        log.error("No strategy found for type " + infoRequest.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + infoRequest.getServerObjectType());
     }
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest request) throws FredClientException {

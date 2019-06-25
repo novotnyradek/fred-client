@@ -1,4 +1,4 @@
-package fred.client.data.info.keyset;
+package fred.client.data.info.nsset;
 
 import fred.client.data.EppResponse;
 import fred.client.data.info.InfoResponse;
@@ -9,32 +9,33 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Keyset info response.
+ * Nsset info response.
  * <p>
  * <ul>
- * <li>{@link KeysetInfoResponse#id} – a keyset handle</li>
- * <li>{@link KeysetInfoResponse#roid} – the keyset repository identifier</li>
- * <li>{@link KeysetInfoResponse#status} – the state name, see {@link KeysetStatusValueType}</li>
- * <li>{@link KeysetInfoResponse#clID} – the designated registrar’s handle</li>
- * <li>{@link KeysetInfoResponse#crID} – the handle of the registrar who created this keyset</li>
- * <li>{@link KeysetInfoResponse#crDate} – the timestamp of creation</li>
- * <li>{@link KeysetInfoResponse#upID} – the handle of the registrar who was the last to update this keyset</li>
- * <li>{@link KeysetInfoResponse#upDate} – the timestamp of the last update</li>
- * <li>{@link KeysetInfoResponse#trDate} – the timestamp of the last transfer</li>
- * <li>{@link KeysetInfoResponse#authInfo} – authorization information (transfer password)</li>
- * <li>{@link KeysetInfoResponse#dnskey} – a DNS key</li>
- * <li>{@link KeysetInfoResponse#tech} – a technical contact handle</li>
+ * <li>{@link NssetInfoResponse#id} – a nsset handle</li>
+ * <li>{@link NssetInfoResponse#roid} – the nsset repository identifier</li>
+ * <li>{@link NssetInfoResponse#status} – the state name, see {@link NssetStatusValueType}</li>
+ * <li>{@link NssetInfoResponse#clID} – the designated registrar’s handle</li>
+ * <li>{@link NssetInfoResponse#crID} – the handle of the registrar who created this nsset</li>
+ * <li>{@link NssetInfoResponse#crDate} – the timestamp of creation</li>
+ * <li>{@link NssetInfoResponse#upID} – the handle of the registrar who was the last to update this nsset</li>
+ * <li>{@link NssetInfoResponse#upDate} – the timestamp of the last update</li>
+ * <li>{@link NssetInfoResponse#trDate} – the timestamp of the last transfer</li>
+ * <li>{@link NssetInfoResponse#authInfo} – authorization information (transfer password)</li>
+ * <li>{@link NssetInfoResponse#ns} – a nameserver, see {@link NameserverData}</li>
+ * <li>{@link NssetInfoResponse#tech} – a technical contact handle</li>
+ * <li>{@link NssetInfoResponse#reportLevel} – the report level of technical checks</li>
  *</ul>
  *
- * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoKeyset.html">FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoNsset.html">FRED documentation</a>
  */
-public class KeysetInfoResponse extends EppResponse implements Serializable, InfoResponse {
+public class NssetInfoResponse extends EppResponse implements Serializable, InfoResponse {
 
     private String id;
 
     private String roid;
 
-    private List<KeysetStatusValueType> status;
+    private List<NssetStatusValueType> status;
 
     private String clID;
 
@@ -50,12 +51,14 @@ public class KeysetInfoResponse extends EppResponse implements Serializable, Inf
 
     private String authInfo;
 
-    private List<DnsKeyData> dnskey;
+    private List<NameserverData> ns;
 
     private List<String> tech;
 
-    public KeysetInfoResponse() {
-        setServerObjectType(ServerObjectType.KEYSET);
+    private Integer reportLevel;
+
+    public NssetInfoResponse() {
+        setServerObjectType(ServerObjectType.NSSET);
     }
 
     public String getId() {
@@ -74,11 +77,11 @@ public class KeysetInfoResponse extends EppResponse implements Serializable, Inf
         this.roid = roid;
     }
 
-    public List<KeysetStatusValueType> getStatus() {
+    public List<NssetStatusValueType> getStatus() {
         return status;
     }
 
-    public void setStatus(List<KeysetStatusValueType> status) {
+    public void setStatus(List<NssetStatusValueType> status) {
         this.status = status;
     }
 
@@ -138,12 +141,12 @@ public class KeysetInfoResponse extends EppResponse implements Serializable, Inf
         this.authInfo = authInfo;
     }
 
-    public List<DnsKeyData> getDnskey() {
-        return dnskey;
+    public List<NameserverData> getNs() {
+        return ns;
     }
 
-    public void setDnskey(List<DnsKeyData> dnskey) {
-        this.dnskey = dnskey;
+    public void setNs(List<NameserverData> ns) {
+        this.ns = ns;
     }
 
     public List<String> getTech() {
@@ -154,9 +157,17 @@ public class KeysetInfoResponse extends EppResponse implements Serializable, Inf
         this.tech = tech;
     }
 
+    public Integer getReportLevel() {
+        return reportLevel;
+    }
+
+    public void setReportLevel(Integer reportLevel) {
+        this.reportLevel = reportLevel;
+    }
+
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("KeysetInfoResponse{");
+        final StringBuffer sb = new StringBuffer("NssetInfoResponse{");
         sb.append("id='").append(id).append('\'');
         sb.append(", roid='").append(roid).append('\'');
         sb.append(", status=").append(status);
@@ -167,8 +178,9 @@ public class KeysetInfoResponse extends EppResponse implements Serializable, Inf
         sb.append(", upDate=").append(upDate);
         sb.append(", trDate=").append(trDate);
         sb.append(", authInfo='").append(authInfo).append('\'');
-        sb.append(", dnskey=").append(dnskey);
+        sb.append(", ns=").append(ns);
         sb.append(", tech=").append(tech);
+        sb.append(", reportLevel=").append(reportLevel);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
         sb.append(", code=").append(getCode());

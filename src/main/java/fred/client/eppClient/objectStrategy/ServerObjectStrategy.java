@@ -13,7 +13,7 @@ import fred.client.exception.FredClientException;
  */
 public interface ServerObjectStrategy {
 
-    InfoResponse callInfo(InfoRequest request) throws FredClientException;
+    InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException;
 
     SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException;
 

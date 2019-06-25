@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * <ul>
  * <li>
- * {@link DomainSendAuthInfoRequest#domainName} - a domain name as eppcom:labelType
+ * {@link DomainSendAuthInfoRequest#domainName} - a domain name
  * </li>
  * </ul>
  *

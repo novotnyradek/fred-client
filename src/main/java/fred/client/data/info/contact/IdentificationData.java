@@ -12,7 +12,7 @@ package fred.client.data.info.contact;
  * <li value="4">ico (company number),</li>
  * <li value="5">birthday (the date of birth).</li>
  * </ol>
- * <li>{@link IdentificationData#value} - the identification number as a contact:identValueT</li>
+ * <li>{@link IdentificationData#value} - the identification number</li>
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>

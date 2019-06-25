@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Data for command info for contact.
  * <p>
  * <ul>
- * <li>{@link ContactInfoRequest#contactId} - the contact handle as fredcom:objIDType</li>
+ * <li>{@link ContactInfoRequest#contactId} - the contact handle</li>
  * </ul>
  * </p>
  *

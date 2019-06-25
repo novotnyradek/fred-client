@@ -37,4 +37,13 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.InfDataType</class-a>
+        <class-b>fred.client.data.info.nsset.NssetInfoResponse</class-b>
+        <field custom-converter="fred.client.data.info.nsset.NssetStatusValueTypeCustomConverter">
+            <a>status</a>
+            <b>status</b>
+        </field>
+    </mapping>
+
 </mappings>

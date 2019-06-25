@@ -5,7 +5,7 @@ import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsResponse;
-import fred.client.data.list.keyset.KeysetsByContactListRequest;
+import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
@@ -51,9 +51,10 @@ public class FredClientImpl implements FredClient {
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl();
 //
-//        DomainInfoRequest domainInfoRequest = new DomainInfoRequest("nic.cz", "INFO-123456789");
-//        DomainInfoResponse domainInfoResponse = (DomainInfoResponse) fredService.callInfo(domainInfoRequest);
+//        NssetInfoRequest domainInfoRequest = new NssetInfoRequest("NSID-SZN01", "INFO-123456789");
+//        NssetInfoResponse domainInfoResponse = (NssetInfoResponse) fredService.callInfo(domainInfoRequest);
 
+//        log.debug(domainInfoResponse);
 
 //        ContactInfoRequest contactInfoRequest = new ContactInfoRequest("CID:MONITORING", "INFO-123456789");
 //        log.debug(fredService.callInfo(contactInfoRequest));
@@ -64,7 +65,7 @@ public class FredClientImpl implements FredClient {
 //        log.debug(response);
 //        System.out.println(new String(Base64.encodeBase64((response.getDnskey().get(0).getPubKey()))));
 
-        KeysetsByContactListRequest listRequest = new KeysetsByContactListRequest("KTECH11549253286","LIST-123456789");
+        NssetsByContactListRequest listRequest = new NssetsByContactListRequest("CID-SZNREG-TECH01", "LIST-123456789");
         ListResultsResponse result = (ListResultsResponse) fredService.callList(listRequest);
 
         System.out.println(result.getResults());

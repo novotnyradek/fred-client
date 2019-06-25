@@ -1,14 +1,13 @@
 package fred.client.data.info.contact;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Data about contact postal information.
  * <p>
  * <ul>
- * <li>{@link PostalInfoData#name} – the person name as contact:postalLineType</li>
- * <li>{@link PostalInfoData#org} – the organization name as contact:optPostalLineType</li>
+ * <li>{@link PostalInfoData#name} – the person name</li>
+ * <li>{@link PostalInfoData#org} – the organization name</li>
  * <li>{@link PostalInfoData#addr} – see {@link AddressData}</li>
  *</ul>
  *

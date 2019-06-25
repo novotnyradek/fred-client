@@ -43,11 +43,11 @@ public class ContactStrategy implements ServerObjectStrategy {
         mapper = FredClientDozerMapper.getInstance();
     }
 
-    public InfoResponse callInfo(InfoRequest request) throws FredClientException {
-        log.debug("contactInfo called with request(" + request + ")");
+    public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
+        log.debug("contactInfo called with request(" + infoRequest + ")");
 
         // downcast
-        ContactInfoRequest contactInfoRequest = (ContactInfoRequest) request;
+        ContactInfoRequest contactInfoRequest = (ContactInfoRequest) infoRequest;
 
         SIDType sidType = new SIDType();
         sidType.setId(contactInfoRequest.getContactId());

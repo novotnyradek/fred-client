@@ -1,4 +1,4 @@
-package fred.client.data.list.keyset;
+package fred.client.data.list.nsset;
 
 import fred.client.data.EppRequest;
 import fred.client.data.list.ListRequest;
@@ -8,24 +8,24 @@ import fred.client.eppClient.objectStrategy.ServerObjectType;
 import java.io.Serializable;
 
 /**
- * Keyset list request - select keysets by technical contact which are managed by the authenticated client.
+ * Nsset list request - select nssets by technical contact which are managed by the authenticated client.
  * <p>
  * <ul>
  * <li>
- * {@link KeysetsByContactListRequest#contactId} - a contact handle
+ * {@link NssetsByContactListRequest#contactId} - a contact handle
  * </li>
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/List/Prepare.html">FRED documentation</a>
  */
-public class KeysetsByContactListRequest extends EppRequest implements Serializable, ListRequest {
+public class NssetsByContactListRequest extends EppRequest implements Serializable, ListRequest {
 
     private String contactId;
 
-    public KeysetsByContactListRequest(String contactId, String clientTransactionId) {
-        setServerObjectType(ServerObjectType.KEYSET);
+    public NssetsByContactListRequest(String contactId, String clientTransactionId) {
+        setServerObjectType(ServerObjectType.NSSET);
         setClientTransactionId(clientTransactionId);
-        setContactId(contactId);
+        this.contactId = contactId;
     }
 
     public String getContactId() {
@@ -38,12 +38,12 @@ public class KeysetsByContactListRequest extends EppRequest implements Serializa
 
     @Override
     public ListType getListType() {
-        return ListType.KEYSETS_BY_CONTACT;
+        return ListType.NSSETS_BY_CONTACT;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("KeysetsByContactListRequest{");
+        final StringBuffer sb = new StringBuffer("NssetsByContactListRequest{");
         sb.append("contactId='").append(contactId).append('\'');
         sb.append(", listType=").append(getListType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');

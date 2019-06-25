@@ -9,27 +9,27 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Response for command info for domain.
+ * Response for command info for contact.
  * <p>
  * <ul>
- * <li>{@link ContactInfoResponse#id} - the contact handle as fredcom:objIDType</li>
- * <li>{@link ContactInfoResponse#roid} – the contact repository identifier as eppcom:roidType</li>
+ * <li>{@link ContactInfoResponse#id} - the contact handle</li>
+ * <li>{@link ContactInfoResponse#roid} – the contact repository identifier</li>
  * <li>{@link ContactInfoResponse#status} – the state name, see {@link ContactStatusValueType}</li>
  * <li>{@link ContactInfoResponse#postalInfo} – the contact’s postal information, see {@link PostalInfoData}</li>
- * <li>{@link ContactInfoResponse#voice} – the phone number as contact:e164StringType</li>
- * <li>{@link ContactInfoResponse#fax} – the fax number as contact:e164StringType</li>
- * <li>{@link ContactInfoResponse#email} – a comma-separated list of email addresses as contact:emailCommaListType</li>
- * <li>{@link ContactInfoResponse#clID} – the designated registrar’s handle as eppcom:clIDType</li>
- * <li>{@link ContactInfoResponse#crID} – the handle of the registrar who created this contact as eppcom:clIDType</li>
- * <li>{@link ContactInfoResponse#crDate} – the timestamp of creation as xs:dateTime</li>
- * <li>{@link ContactInfoResponse#upID} – the handle of the registrar who was the last to update this contact as eppcom:clIDType</li>
- * <li>{@link ContactInfoResponse#upDate} – the timestamp of the last update as xs:dateTime</li>
- * <li>{@link ContactInfoResponse#trDate} – the timestamp of the last transfer as xs:dateTime</li>
- * <li>{@link ContactInfoResponse#authInfo} – authorization information (transfer password) as fredcom:authInfoType</li>
+ * <li>{@link ContactInfoResponse#voice} – the phone number</li>
+ * <li>{@link ContactInfoResponse#fax} – the fax number</li>
+ * <li>{@link ContactInfoResponse#email} – a comma-separated list of email addresses</li>
+ * <li>{@link ContactInfoResponse#clID} – the designated registrar’s handle</li>
+ * <li>{@link ContactInfoResponse#crID} – the handle of the registrar who created this contact</li>
+ * <li>{@link ContactInfoResponse#crDate} – the timestamp of creation</li>
+ * <li>{@link ContactInfoResponse#upID} – the handle of the registrar who was the last to update this contact</li>
+ * <li>{@link ContactInfoResponse#upDate} – the timestamp of the last update</li>
+ * <li>{@link ContactInfoResponse#trDate} – the timestamp of the last transfer</li>
+ * <li>{@link ContactInfoResponse#authInfo} – authorization information (transfer password)</li>
  * <li>{@link ContactInfoResponse#disclose} – contact information disclosure settings, see {@link DiscloseData}</li>
- * <li>{@link ContactInfoResponse#vat} – the VAT-payer identifier as a contact:vatT</li>
+ * <li>{@link ContactInfoResponse#vat} – the VAT-payer identifier</li>
  * <li>{@link ContactInfoResponse#ident} – identity-document identification, see {@link IdentificationData}</li>
- * <li>{@link ContactInfoResponse#notifyEmail} – a comma-separated list of email addresses for notification as contact:emailCommaListType</li>
+ * <li>{@link ContactInfoResponse#notifyEmail} – a comma-separated list of email addresses for notification</li>
  * <li>{@link ContactInfoResponse#mailingAddress} – mailing address container</li>
  * </ul>
  * </p>

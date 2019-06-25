@@ -47,11 +47,11 @@ public class DomainStrategy implements ServerObjectStrategy {
         mapper = FredClientDozerMapper.getInstance();
     }
 
-    public InfoResponse callInfo(InfoRequest request) throws FredClientException {
-        log.debug("domainInfo called with request(" + request + ")");
+    public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
+        log.debug("domainInfo called with request(" + infoRequest + ")");
 
         // downcast
-        DomainInfoRequest domainInfoRequest = (DomainInfoRequest) request;
+        DomainInfoRequest domainInfoRequest = (DomainInfoRequest) infoRequest;
 
         SNameType sNameType = new SNameType();
         sNameType.setName(domainInfoRequest.getDomainName());

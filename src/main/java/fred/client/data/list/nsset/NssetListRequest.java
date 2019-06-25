@@ -1,4 +1,4 @@
-package fred.client.data.list.keyset;
+package fred.client.data.list.nsset;
 
 import fred.client.data.EppRequest;
 import fred.client.data.list.ListRequest;
@@ -8,14 +8,14 @@ import fred.client.eppClient.objectStrategy.ServerObjectType;
 import java.io.Serializable;
 
 /**
- * Keyset list request - select all keysets which are managed by the authenticated client.
+ * Nsset list request - select all nssets which are managed by the authenticated client.
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/List/Prepare.html">FRED documentation</a>
  */
-public class KeysetListRequest extends EppRequest implements Serializable, ListRequest {
+public class NssetListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public KeysetListRequest(String clientTransactionId) {
-        setServerObjectType(ServerObjectType.KEYSET);
+    public NssetListRequest(String clientTransactionId) {
+        setServerObjectType(ServerObjectType.NSSET);
         setClientTransactionId(clientTransactionId);
     }
 
@@ -26,7 +26,7 @@ public class KeysetListRequest extends EppRequest implements Serializable, ListR
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("KeysetListRequest{");
+        final StringBuffer sb = new StringBuffer("NssetListRequest{");
         sb.append("listType=").append(getListType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverObjectType=").append(getServerObjectType());

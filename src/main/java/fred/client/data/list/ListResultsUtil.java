@@ -1,6 +1,7 @@
 package fred.client.data.list;
 
 import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.InfoResponseT;
 import cz.nic.xml.epp.fred_1.ResultsListT;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppCommandBuilder;
@@ -31,6 +32,44 @@ public class ListResultsUtil {
     }
 
     /**
+     * todo
+     * @param extcommandType
+     * @return
+     * @throws FredClientException
+     */
+    public ListResponse prepareListAndGetResults(ExtcommandType extcommandType) throws FredClientException {
+
+        if (extcommandType == null){
+            return new ListResultsResponse();
+        }
+
+        JAXBElement<EppType> listRequestElement = eppCommandBuilder.createFredExtensionEppCommand(extcommandType);
+
+        String xml = client.marshall(listRequestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        InfoResponseT countResponse = (InfoResponseT) wrapperBack.getValue();
+
+        // get results if count > 0
+        if (countResponse.getCount().intValue() > 0) {
+            return this.getResults(responseType.getTrID().getClTRID());
+        }
+
+        return new ListResultsResponse();
+    }
+
+    /**
      * This command is used to retrieve a chunk of the results that were prepared in a previous step with a list command.
      * The command must be called repeatedly to collect all results until the returned results list is empty.
      *
@@ -38,7 +77,7 @@ public class ListResultsUtil {
      * @return list with data or empty one
      * @throws FredClientException
      */
-    public ListResponse getResults(String clientTransactionId) throws FredClientException {
+    private ListResponse getResults(String clientTransactionId) throws FredClientException {
         log.debug("getResults called for client transaction id " + clientTransactionId);
 
         ListResultsResponse listResultsResponse = new ListResultsResponse();
