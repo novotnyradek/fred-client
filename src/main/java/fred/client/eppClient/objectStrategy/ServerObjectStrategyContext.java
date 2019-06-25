@@ -2,6 +2,8 @@ package fred.client.eppClient.objectStrategy;
 
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
@@ -44,5 +46,9 @@ public class ServerObjectStrategyContext {
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {
         return serverObjectStrategy.callSendAuthInfo(sendAuthInfoRequest);
+    }
+
+    public ListResponse callList(ListRequest listRequest) throws FredClientException {
+        return serverObjectStrategy.callList(listRequest);
     }
 }

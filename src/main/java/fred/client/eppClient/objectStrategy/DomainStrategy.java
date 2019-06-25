@@ -10,6 +10,8 @@ import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
 import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.info.domain.EnumValData;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
@@ -125,6 +127,12 @@ public class DomainStrategy implements ServerObjectStrategy {
         sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
 
         return sendAuthInfoResponse;
+    }
+
+    @Override
+    public ListResponse callList(ListRequest listRequest) {
+        log.debug("callList for domain called with request(" + listRequest + ")");
+        throw new UnsupportedOperationException("Not implemented yet!");
     }
 
 }

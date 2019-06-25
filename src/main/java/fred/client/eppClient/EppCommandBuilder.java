@@ -87,6 +87,8 @@ public class EppCommandBuilder {
     }
 
     public JAXBElement<EppType> createSendAuthInfoEppCommand(Object any, String clientTransactionId) {
+
+        // todo refactor to send authinfo method
         cz.nic.xml.epp.fred_1.ReadWriteType readWriteType = new cz.nic.xml.epp.fred_1.ReadWriteType();
         readWriteType.setAny(any);
 
@@ -94,6 +96,10 @@ public class EppCommandBuilder {
         extcommandType.setSendAuthInfo(readWriteType);
         extcommandType.setClTRID(clientTransactionId);
 
+        return createFredExtensionEppCommand(extcommandType);
+    }
+
+    public JAXBElement<EppType> createFredExtensionEppCommand(ExtcommandType extcommandType) {
         cz.nic.xml.epp.fred_1.ObjectFactory fredObjectFactory = new cz.nic.xml.epp.fred_1.ObjectFactory();
         JAXBElement<ExtcommandType> extcommandTypeElement = fredObjectFactory.createExtcommand(extcommandType);
 

@@ -1,11 +1,13 @@
 package fred.client.eppClient.objectStrategy;
 
-import fred.client.eppClient.EppClientImpl;
-import fred.client.eppClient.EppCommandBuilder;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.eppClient.EppClientImpl;
+import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import org.apache.commons.logging.Log;
@@ -37,6 +39,12 @@ public class NssetStrategy implements ServerObjectStrategy {
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {
         log.debug("sendAuthInfo for nsset called with request(" + sendAuthInfoRequest + ")");
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    @Override
+    public ListResponse callList(ListRequest listRequest) {
+        log.debug("callList for nsset called with request(" + listRequest + ")");
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 }

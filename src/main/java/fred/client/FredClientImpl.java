@@ -2,9 +2,10 @@ package fred.client;
 
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.info.contact.ContactInfoRequest;
-import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.data.info.keyset.KeysetInfoRequest;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
+import fred.client.data.list.ListResultsResponse;
+import fred.client.data.list.keyset.KeysetsByContactListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
@@ -33,6 +34,14 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callSendAuthInfo(sendAuthInfoRequest);
     }
 
+    public ListResponse callList(ListRequest listRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(listRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callList(listRequest);
+
+    }
+
     /**
      * Method for testing simple scenarios.
      *
@@ -41,17 +50,26 @@ public class FredClientImpl implements FredClient {
      */
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl();
-//        DomainSendAuthInfoRequest domainSendAuthInfoRequest = new DomainSendAuthInfoRequest("nic.cz", "INFO-123456789");
-//        log.debug(fredService.callSendAuthInfo(domainSendAuthInfoRequest));
+//
+//        DomainInfoRequest domainInfoRequest = new DomainInfoRequest("nic.cz", "INFO-123456789");
+//        DomainInfoResponse domainInfoResponse = (DomainInfoResponse) fredService.callInfo(domainInfoRequest);
 
-//        DomainInfoRequest domainInfoRequest = new DomainInfoRequest("1.1.1.7.4.5.2.2.2.0.2.4.e164.arpa", "INFO-123456789");
-//        log.debug(fredService.callInfo(domainInfoRequest));
 
 //        ContactInfoRequest contactInfoRequest = new ContactInfoRequest("CID:MONITORING", "INFO-123456789");
 //        log.debug(fredService.callInfo(contactInfoRequest));
 
-        KeysetInfoRequest keysetInfoRequest = new KeysetInfoRequest("KID-MYKEYSET", "INFO-123456789");
-        log.debug(fredService.callInfo(keysetInfoRequest));
+//        KeysetInfoRequest keysetInfoRequest = new KeysetInfoRequest("KEYSET1549253286", "INFO-123456789");
+//        KeysetInfoResponse response = (KeysetInfoResponse) fredService.callInfo(keysetInfoRequest);
+//
+//        log.debug(response);
+//        System.out.println(new String(Base64.encodeBase64((response.getDnskey().get(0).getPubKey()))));
+
+        KeysetsByContactListRequest listRequest = new KeysetsByContactListRequest("KTECH11549253286","LIST-123456789");
+        ListResultsResponse result = (ListResultsResponse) fredService.callList(listRequest);
+
+        System.out.println(result.getResults());
+
+
     }
 
 }

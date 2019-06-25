@@ -9,6 +9,8 @@ import fred.client.data.info.InfoResponse;
 import fred.client.data.info.contact.AddressData;
 import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.eppClient.EppClientImpl;
@@ -93,6 +95,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {
         log.debug("sendAuthInfo for contact called with request(" + sendAuthInfoRequest + ")");
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    @Override
+    public ListResponse callList(ListRequest listRequest) {
+        log.debug("callList for contact called with request(" + listRequest + ")");
         throw new UnsupportedOperationException("Not implemented yet!");
     }
 
