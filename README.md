@@ -10,6 +10,5 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 
 Version: 0.1.0
-* Initial commit
 * Possibility to connect to epp.demo.regtest.nic.cz from main method
-* WIP
+* Done 8 use cases out of 45
