@@ -46,4 +46,108 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.ChkDataType</class-a>
+        <class-b>fred.client.data.check.contact.ContactCheckResponse</class-b>
+        <field>
+            <a>cd</a>
+            <b>checkData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.CheckType</class-a>
+        <class-b>fred.client.data.check.contact.ContactCheckData</class-b>
+        <field>
+            <a>id.value</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>id.avail</a>
+            <b>avail</b>
+        </field>
+        <field>
+            <a>reason.value</a>
+            <b>reason</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.domain_1.ChkDataType</class-a>
+        <class-b>fred.client.data.check.domain.DomainCheckResponse</class-b>
+        <field>
+            <a>cd</a>
+            <b>checkData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.domain_1.CheckType</class-a>
+        <class-b>fred.client.data.check.domain.DomainCheckData</class-b>
+        <field>
+            <a>name.value</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>name.avail</a>
+            <b>avail</b>
+        </field>
+        <field>
+            <a>reason.value</a>
+            <b>reason</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.ChkDataType</class-a>
+        <class-b>fred.client.data.check.nsset.NssetCheckResponse</class-b>
+        <field>
+            <a>cd</a>
+            <b>checkData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.CheckType</class-a>
+        <class-b>fred.client.data.check.nsset.NssetCheckData</class-b>
+        <field>
+            <a>id.value</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>id.avail</a>
+            <b>avail</b>
+        </field>
+        <field>
+            <a>reason.value</a>
+            <b>reason</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.ChkDataType</class-a>
+        <class-b>fred.client.data.check.keyset.KeysetCheckResponse</class-b>
+        <field>
+            <a>cd</a>
+            <b>checkData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.CheckType</class-a>
+        <class-b>fred.client.data.check.keyset.KeysetCheckData</class-b>
+        <field>
+            <a>id.value</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>id.avail</a>
+            <b>avail</b>
+        </field>
+        <field>
+            <a>reason.value</a>
+            <b>reason</b>
+        </field>
+    </mapping>
+
 </mappings>

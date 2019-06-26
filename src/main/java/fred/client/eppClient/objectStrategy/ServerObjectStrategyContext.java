@@ -1,5 +1,7 @@
 package fred.client.eppClient.objectStrategy;
 
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
@@ -50,5 +52,9 @@ public class ServerObjectStrategyContext {
 
     public ListResponse callList(ListRequest listRequest) throws FredClientException {
         return serverObjectStrategy.callList(listRequest);
+    }
+
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+        return serverObjectStrategy.callCheck(checkRequest);
     }
 }

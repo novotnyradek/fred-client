@@ -2,9 +2,11 @@ package fred.client.eppClient.objectStrategy;
 
 import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.nic.xml.epp.fred_1.NssetsByContactT;
-import cz.nic.xml.epp.keyset_1.InfDataType;
-import cz.nic.xml.epp.keyset_1.ObjectFactory;
-import cz.nic.xml.epp.keyset_1.SIDType;
+import cz.nic.xml.epp.keyset_1.*;
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
+import fred.client.data.check.keyset.KeysetCheckRequest;
+import fred.client.data.check.keyset.KeysetCheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.keyset.KeysetInfoRequest;
@@ -106,6 +108,47 @@ public class KeysetStrategy implements ServerObjectStrategy {
         }
 
         return listResultsUtil.prepareListAndGetResults(extcommandType);
+    }
+
+    @Override
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+        log.debug("nssetCheck called with request(" + checkRequest + ")");
+
+        // downcast
+        KeysetCheckRequest keysetCheckRequest = (KeysetCheckRequest) checkRequest;
+
+        MNameType mNameType = new MNameType();
+        mNameType.getId().addAll(keysetCheckRequest.getKeysetIds());
+
+        JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, keysetCheckRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        // connect to server or use established connection
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+
+        KeysetCheckResponse result = mapper.map(chkDataType, KeysetCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

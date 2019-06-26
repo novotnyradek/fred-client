@@ -1,10 +1,12 @@
 package fred.client.eppClient.objectStrategy;
 
-import cz.nic.xml.epp.contact_1.InfDataType;
-import cz.nic.xml.epp.contact_1.ObjectFactory;
-import cz.nic.xml.epp.contact_1.SIDType;
+import cz.nic.xml.epp.contact_1.*;
 import cz.nic.xml.epp.extra_addr_1.AddrListType;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
+import fred.client.data.check.contact.ContactCheckRequest;
+import fred.client.data.check.contact.ContactCheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.contact.AddressData;
@@ -117,4 +119,44 @@ public class ContactStrategy implements ServerObjectStrategy {
         return listResultsUtil.prepareListAndGetResults(extcommandType);
     }
 
+    @Override
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+        log.debug("contactCheck called with request(" + checkRequest + ")");
+
+        // downcast
+        ContactCheckRequest contactCheckRequest = (ContactCheckRequest) checkRequest;
+
+        MIDType midType = new MIDType();
+        midType.getId().addAll(contactCheckRequest.getContactIds());
+
+        JAXBElement<MIDType> wrapper = new ObjectFactory().createCheck(midType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, contactCheckRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        // connect to server or use established connection
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+
+        ContactCheckResponse result = mapper.map(chkDataType, ContactCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
 }

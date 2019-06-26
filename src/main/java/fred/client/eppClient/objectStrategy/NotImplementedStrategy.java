@@ -1,5 +1,7 @@
 package fred.client.eppClient.objectStrategy;
 
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
@@ -29,6 +31,12 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     @Override
     public ListResponse callList(ListRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public CheckResponse callCheck(CheckRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }

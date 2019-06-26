@@ -1,13 +1,14 @@
 package fred.client.eppClient.objectStrategy;
 
-import cz.nic.xml.epp.domain_1.InfDataType;
-import cz.nic.xml.epp.domain_1.ObjectFactory;
-import cz.nic.xml.epp.domain_1.SNameType;
-import cz.nic.xml.epp.domain_1.SendAuthInfoType;
+import cz.nic.xml.epp.domain_1.*;
 import cz.nic.xml.epp.enumval_1.ExValType;
 import cz.nic.xml.epp.fred_1.DomainsByContactT;
 import cz.nic.xml.epp.fred_1.DomainsByNssetT;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
+import fred.client.data.check.domain.DomainCheckRequest;
+import fred.client.data.check.domain.DomainCheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
@@ -163,6 +164,47 @@ public class DomainStrategy implements ServerObjectStrategy {
         }
 
         return listResultsUtil.prepareListAndGetResults(extcommandType);
+    }
+
+    @Override
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+        log.debug("domainCheck called with request(" + checkRequest + ")");
+
+        // downcast
+        DomainCheckRequest domainCheckRequest = (DomainCheckRequest) checkRequest;
+
+        MNameType mNameType = new MNameType();
+        mNameType.getName().addAll(domainCheckRequest.getNames());
+
+        JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, domainCheckRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        // connect to server or use established connection
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+
+        DomainCheckResponse result = mapper.map(chkDataType, DomainCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {

@@ -22,7 +22,7 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
-    public JAXBElement<EppType> getCheckEppCommand(Object any, String clientTransactionId) throws FredClientException {
+    public JAXBElement<EppType> createCheckEppCommand(Object any, String clientTransactionId) throws FredClientException {
         ReadWriteType readWriteType = new ReadWriteType();
         readWriteType.setAny(any);
 

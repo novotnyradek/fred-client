@@ -1,16 +1,13 @@
 package fred.client;
 
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
+import fred.client.data.check.keyset.KeysetCheckRequest;
+import fred.client.data.check.keyset.KeysetCheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.list.ListResultsResponse;
-import fred.client.data.list.domain.DomainsByContactListRequest;
-import fred.client.data.list.domain.DomainsByKeysetListRequest;
-import fred.client.data.list.domain.DomainsByNssetListRequest;
-import fred.client.data.list.domain.DomainsListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
@@ -44,7 +41,13 @@ public class FredClientImpl implements FredClient {
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(listRequest.getServerObjectType());
 
         return serverObjectStrategyContext.callList(listRequest);
+    }
 
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(checkRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callCheck(checkRequest);
     }
 
     /**
@@ -64,10 +67,10 @@ public class FredClientImpl implements FredClient {
 //        ContactInfoRequest contactInfoRequest = new ContactInfoRequest("CID:MONITORING", "INFO-123456789");
 //        log.debug(fredService.callInfo(contactInfoRequest));
 
-        DomainInfoRequest keysetInfoRequest = new DomainInfoRequest("nova-testovaci-instance.cz", "INFO-123456789");
-        DomainInfoResponse response = (DomainInfoResponse) fredService.callInfo(keysetInfoRequest);
-
-        log.debug(response);
+//        DomainInfoRequest keysetInfoRequest = new DomainInfoRequest("nova-testovaci-instance.cz", "INFO-123456789");
+//        DomainInfoResponse response = (DomainInfoResponse) fredService.callInfo(keysetInfoRequest);
+//
+//        log.debug(response);
 //        System.out.println(new String(Base64.encodeBase64((response.getDnskey().get(0).getPubKey()))));
 
 //        DomainsByKeysetListRequest listRequest = new DomainsByKeysetListRequest("CHOKEBORE","LIST-123456789");
@@ -75,6 +78,10 @@ public class FredClientImpl implements FredClient {
 //
 //        System.out.println(result.getResults());
 
+        CheckRequest request = new KeysetCheckRequest("CHECK-123456789", "KEYSET1549252756", "niccz");
+        KeysetCheckResponse response = (KeysetCheckResponse) fredService.callCheck(request);
+
+        System.out.println(response);
 
     }
 

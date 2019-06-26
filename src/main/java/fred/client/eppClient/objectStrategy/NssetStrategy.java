@@ -3,9 +3,11 @@ package fred.client.eppClient.objectStrategy;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.nic.xml.epp.fred_1.NssetsByContactT;
 import cz.nic.xml.epp.fred_1.NssetsByNsT;
-import cz.nic.xml.epp.nsset_1.InfDataType;
-import cz.nic.xml.epp.nsset_1.ObjectFactory;
-import cz.nic.xml.epp.nsset_1.SIDType;
+import cz.nic.xml.epp.nsset_1.*;
+import fred.client.data.check.CheckRequest;
+import fred.client.data.check.CheckResponse;
+import fred.client.data.check.nsset.NssetCheckRequest;
+import fred.client.data.check.nsset.NssetCheckResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.nsset.NssetInfoRequest;
@@ -114,6 +116,47 @@ public class NssetStrategy implements ServerObjectStrategy {
         }
 
         return listResultsUtil.prepareListAndGetResults(extcommandType);
+    }
+
+    @Override
+    public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
+        log.debug("nssetCheck called with request(" + checkRequest + ")");
+
+        // downcast
+        NssetCheckRequest nssetCheckRequest = (NssetCheckRequest) checkRequest;
+
+        MNameType mNameType = new MNameType();
+        mNameType.getId().addAll(nssetCheckRequest.getNssetIds());
+
+        JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, nssetCheckRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        // connect to server or use established connection
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+
+        NssetCheckResponse result = mapper.map(chkDataType, NssetCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {
