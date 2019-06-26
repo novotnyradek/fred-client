@@ -1,4 +1,4 @@
-package fred.client.data.list.nsset;
+package fred.client.data.list.domain;
 
 import fred.client.data.EppRequest;
 import fred.client.data.list.ListRequest;
@@ -8,14 +8,14 @@ import fred.client.eppClient.objectStrategy.ServerObjectType;
 import java.io.Serializable;
 
 /**
- * Nsset list request - select all nssets which are managed by the authenticated client.
+ * Domain list request - select all domains which are managed by the authenticated client.
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/List/Prepare.html">FRED documentation</a>
  */
-public class NssetListRequest extends EppRequest implements Serializable, ListRequest {
+public class DomainsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public NssetListRequest(String clientTransactionId) {
-        setServerObjectType(ServerObjectType.NSSET);
+    public DomainsListRequest(String clientTransactionId) {
+        setServerObjectType(ServerObjectType.DOMAIN);
         setClientTransactionId(clientTransactionId);
     }
 
@@ -26,7 +26,7 @@ public class NssetListRequest extends EppRequest implements Serializable, ListRe
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("NssetListRequest{");
+        final StringBuffer sb = new StringBuffer("DomainsListRequest{");
         sb.append("listType=").append(getListType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverObjectType=").append(getServerObjectType());

@@ -4,6 +4,7 @@ import cz.nic.xml.epp.contact_1.InfDataType;
 import cz.nic.xml.epp.contact_1.ObjectFactory;
 import cz.nic.xml.epp.contact_1.SIDType;
 import cz.nic.xml.epp.extra_addr_1.AddrListType;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.contact.AddressData;
@@ -11,6 +12,8 @@ import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.contact.ContactsListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.eppClient.EppClientImpl;
@@ -35,11 +38,14 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private EppCommandBuilder eppCommandBuilder;
 
+    private ListResultsUtil listResultsUtil;
+
     private FredClientDozerMapper mapper;
 
     public ContactStrategy() {
         this.client = new EppClientImpl();
         this.eppCommandBuilder = new EppCommandBuilder();
+        this.listResultsUtil = new ListResultsUtil(client, eppCommandBuilder);
         mapper = FredClientDozerMapper.getInstance();
     }
 
@@ -99,9 +105,16 @@ public class ContactStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public ListResponse callList(ListRequest listRequest) {
+    public ListResponse callList(ListRequest listRequest) throws FredClientException {
         log.debug("callList for contact called with request(" + listRequest + ")");
-        throw new UnsupportedOperationException("Not implemented yet!");
+
+        ContactsListRequest contactsListRequest = (ContactsListRequest) listRequest;
+
+        ExtcommandType extcommandType = new ExtcommandType();
+        extcommandType.setListContacts("");
+        extcommandType.setClTRID(contactsListRequest.getClientTransactionId());
+
+        return listResultsUtil.prepareListAndGetResults(extcommandType);
     }
 
 }

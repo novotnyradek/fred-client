@@ -1,7 +1,6 @@
 package fred.client.eppClient.objectStrategy;
 
 import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.nic.xml.epp.fred_1.InfoResponseT;
 import cz.nic.xml.epp.fred_1.NssetsByContactT;
 import cz.nic.xml.epp.keyset_1.InfDataType;
 import cz.nic.xml.epp.keyset_1.ObjectFactory;
@@ -11,7 +10,7 @@ import fred.client.data.info.InfoResponse;
 import fred.client.data.info.keyset.KeysetInfoRequest;
 import fred.client.data.info.keyset.KeysetInfoResponse;
 import fred.client.data.list.*;
-import fred.client.data.list.keyset.KeysetListRequest;
+import fred.client.data.list.keyset.KeysetsListRequest;
 import fred.client.data.list.keyset.KeysetsByContactListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
@@ -99,7 +98,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
-            extcommandType = this.prepareAllKeysetsCommand((KeysetListRequest) listRequest);
+            extcommandType = this.prepareAllKeysetsCommand((KeysetsListRequest) listRequest);
         }
 
         if (ListType.KEYSETS_BY_CONTACT.equals(listRequest.getListType())) {
@@ -122,12 +121,12 @@ public class KeysetStrategy implements ServerObjectStrategy {
         return extcommandType;
     }
 
-    private ExtcommandType prepareAllKeysetsCommand(KeysetListRequest keysetListRequest) {
-        log.debug("listAllKeysets called with request(" + keysetListRequest + ")");
+    private ExtcommandType prepareAllKeysetsCommand(KeysetsListRequest keysetsListRequest) {
+        log.debug("listAllKeysets called with request(" + keysetsListRequest + ")");
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListKeysets("");
-        extcommandType.setClTRID(keysetListRequest.getClientTransactionId());
+        extcommandType.setClTRID(keysetsListRequest.getClientTransactionId());
 
         return extcommandType;
     }

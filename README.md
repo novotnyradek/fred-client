@@ -11,4 +11,4 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 
 Version: 0.1.0
 * Possibility to connect to epp.demo.regtest.nic.cz from main method
-* Done 12 use cases out of 45
+* Done 17 use cases out of 45

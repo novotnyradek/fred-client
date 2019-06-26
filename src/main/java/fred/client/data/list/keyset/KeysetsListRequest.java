@@ -12,9 +12,9 @@ import java.io.Serializable;
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/List/Prepare.html">FRED documentation</a>
  */
-public class KeysetListRequest extends EppRequest implements Serializable, ListRequest {
+public class KeysetsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public KeysetListRequest(String clientTransactionId) {
+    public KeysetsListRequest(String clientTransactionId) {
         setServerObjectType(ServerObjectType.KEYSET);
         setClientTransactionId(clientTransactionId);
     }
@@ -26,7 +26,7 @@ public class KeysetListRequest extends EppRequest implements Serializable, ListR
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("KeysetListRequest{");
+        final StringBuffer sb = new StringBuffer("KeysetsListRequest{");
         sb.append("listType=").append(getListType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverObjectType=").append(getServerObjectType());

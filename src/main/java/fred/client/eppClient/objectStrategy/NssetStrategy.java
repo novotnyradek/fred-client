@@ -14,7 +14,7 @@ import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
 import fred.client.data.list.ListType;
-import fred.client.data.list.nsset.NssetListRequest;
+import fred.client.data.list.nsset.NssetsListRequest;
 import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
@@ -102,7 +102,7 @@ public class NssetStrategy implements ServerObjectStrategy {
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
-            extcommandType = this.prepareAllNssetsCommand((NssetListRequest) listRequest);
+            extcommandType = this.prepareAllNssetsCommand((NssetsListRequest) listRequest);
         }
 
         if (ListType.NSSETS_BY_CONTACT.equals(listRequest.getListType())) {
@@ -142,12 +142,12 @@ public class NssetStrategy implements ServerObjectStrategy {
         return extcommandType;
     }
 
-    private ExtcommandType prepareAllNssetsCommand(NssetListRequest nssetListRequest) {
-        log.debug("listAllNssets called with request(" + nssetListRequest + ")");
+    private ExtcommandType prepareAllNssetsCommand(NssetsListRequest nssetsListRequest) {
+        log.debug("listAllNssets called with request(" + nssetsListRequest + ")");
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListNssets("");
-        extcommandType.setClTRID(nssetListRequest.getClientTransactionId());
+        extcommandType.setClTRID(nssetsListRequest.getClientTransactionId());
 
         return extcommandType;
     }
