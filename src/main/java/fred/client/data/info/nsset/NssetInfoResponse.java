@@ -1,6 +1,7 @@
 package fred.client.data.info.nsset;
 
 import fred.client.data.EppResponse;
+import fred.client.data.common.nsset.NameserverData;
 import fred.client.data.info.InfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 

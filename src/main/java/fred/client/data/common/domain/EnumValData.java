@@ -1,4 +1,4 @@
-package fred.client.data.info.domain;
+package fred.client.data.common.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -7,8 +7,8 @@ import java.util.Date;
  * The enum data extension is used to display the validation of an ENUM domain and/or its publish flag.
  * <p>
  * <ul>
- * <li>{@link EnumValData#valExDate} – the validation expiration date as xs:date</li>
- * <li>{@link EnumValData#publish} – the setting for publishing the ENUM domain in a public directory as xs:boolean; true – display, false – hide</li>
+ * <li>{@link EnumValData#valExDate} – the validation expiration date</li>
+ * <li>{@link EnumValData#publish} – the setting for publishing the ENUM domain in a public directory; true – display, false – hide</li>
  *</ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html">FRED documentation</a>
@@ -19,7 +19,11 @@ public class EnumValData implements Serializable {
 
     private boolean publish;
 
-    public EnumValData() {
+    protected EnumValData(){}
+
+    public EnumValData(Date valExDate, boolean publish) {
+        this.valExDate = valExDate;
+        this.publish = publish;
     }
 
     public Date getValExDate() {

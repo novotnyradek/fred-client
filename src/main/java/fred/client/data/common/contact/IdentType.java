@@ -1,4 +1,4 @@
-package fred.client.data.info.contact;
+package fred.client.data.common.contact;
 
 /**
  * @see IdentificationData

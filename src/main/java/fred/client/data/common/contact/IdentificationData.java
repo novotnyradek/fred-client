@@ -1,4 +1,4 @@
-package fred.client.data.info.contact;
+package fred.client.data.common.contact;
 
 /**
  * Identity-document identification.
@@ -23,7 +23,11 @@ public class IdentificationData {
 
     private String value;
 
-    public IdentificationData() {
+    protected IdentificationData() {}
+
+    public IdentificationData(IdentType type, String value) {
+        this.setType(type);
+        this.setValue(value);
     }
 
     public IdentType getType() {

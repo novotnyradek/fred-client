@@ -1,4 +1,4 @@
-package fred.client.data.info.contact;
+package fred.client.data.common.contact;
 
 import java.io.Serializable;
 
@@ -13,9 +13,10 @@ import java.io.Serializable;
  * <li>{@link DiscloseData#vat} – the VAT number disclosure setting as an empty element</li>
  * <li>{@link DiscloseData#ident} – the identity document disclosure setting as an empty element</li>
  * <li>{@link DiscloseData#notifyEmail} – the notification email disclosure setting as an empty element</li>
- * <li>{@link DiscloseData#flag} – disclose flag as a xs:boolean: 0 – listed items are hidden, 1 – listed items are published</li>
+ * <li>{@link DiscloseData#flag} – disclose flag; false – listed items are hidden, true – listed items are published</li>
  * </ul>
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/PoliciesRules.html">Policies & Rules Of Disclosure</a>
  */
 public class DiscloseData implements Serializable {
 
@@ -94,7 +95,7 @@ public class DiscloseData implements Serializable {
         this.notifyEmail = notifyEmail;
     }
 
-    public boolean isFlag() {
+    public boolean getFlag() {
         return flag;
     }
 

@@ -1,4 +1,4 @@
-package fred.client.data.info.keyset;
+package fred.client.data.common.keyset;
 
 import java.io.Serializable;
 
@@ -24,7 +24,14 @@ public class DnsKeyData implements Serializable {
 
     private byte[] pubKey;
 
-    public DnsKeyData() {
+    protected DnsKeyData() {
+    }
+
+    public DnsKeyData(int flags, short protocol, short alg, byte[] pubKey) {
+        this.flags = flags;
+        this.protocol = protocol;
+        this.alg = alg;
+        this.pubKey = pubKey;
     }
 
     public int getFlags() {

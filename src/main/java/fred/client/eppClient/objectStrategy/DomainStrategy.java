@@ -9,11 +9,15 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.check.domain.DomainCheckRequest;
 import fred.client.data.check.domain.DomainCheckResponse;
+import fred.client.data.create.CreateRequest;
+import fred.client.data.create.CreateResponse;
+import fred.client.data.create.domain.DomainCreateRequest;
+import fred.client.data.create.domain.DomainCreateResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
 import fred.client.data.info.domain.DomainInfoResponse;
-import fred.client.data.info.domain.EnumValData;
+import fred.client.data.common.domain.EnumValData;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
@@ -32,6 +36,7 @@ import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +68,6 @@ public class DomainStrategy implements ServerObjectStrategy {
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
         log.debug("domainInfo called with request(" + infoRequest + ")");
 
-        // downcast
         DomainInfoRequest domainInfoRequest = (DomainInfoRequest) infoRequest;
 
         SNameType sNameType = new SNameType();
@@ -170,7 +174,6 @@ public class DomainStrategy implements ServerObjectStrategy {
     public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
         log.debug("domainCheck called with request(" + checkRequest + ")");
 
-        // downcast
         DomainCheckRequest domainCheckRequest = (DomainCheckRequest) checkRequest;
 
         MNameType mNameType = new MNameType();
@@ -182,7 +185,6 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
 
-        // connect to server or use established connection
         client.checkSession();
 
         String response = client.proceedCommand(xml);
@@ -198,6 +200,77 @@ public class DomainStrategy implements ServerObjectStrategy {
         ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
 
         DomainCheckResponse result = mapper.map(chkDataType, DomainCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public CreateResponse callCreate(CreateRequest createRequest) throws FredClientException {
+        log.debug("domainCreate called with request(" + createRequest + ")");
+
+        DomainCreateRequest domainCreateRequest = (DomainCreateRequest) createRequest;
+
+        CreateType createType = mapper.map(domainCreateRequest, CreateType.class);
+
+        JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
+
+        if (domainCreateRequest.getEnumValData() != null){
+            ExValType exValType = mapper.map(domainCreateRequest.getEnumValData(), ExValType.class);
+            JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(enumWrapper);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
+
+//        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                "<epp xmlns:ns2=\"http://www.nic.cz/xml/epp/domain-1.4\" xmlns=\"urn:ietf:params:xml:ns:epp-1.0\" xmlns:ns3=\"http://www.nic.cz/xml/epp/enumval-1.2\">" +
+                "    <command>" +
+                "        <create>" +
+                "            <ns2:create>" +
+                "                <ns2:name>2.1.1.7.4.5.2.2.2.0.2.4.e164.arpa</ns2:name>" +
+                "                <ns2:period unit=\"y\">1</ns2:period>" +
+                "                <ns2:nsset>A24-NSSET</ns2:nsset>" +
+                "                <ns2:keyset>A24-KEYSET</ns2:keyset>" +
+                "                <ns2:registrant>A24-CONTACT</ns2:registrant>" +
+                "                <ns2:admin>A24-CONTACT</ns2:admin>" +
+                "            </ns2:create>" +
+                "        </create>" +
+                "        <extension>" +
+                "            <ns3:create>" +
+                "                <ns3:valExDate>2020-01-04</ns3:valExDate>" +
+                "                <ns3:publish>true</ns3:publish>" +
+                "            </ns3:create>" +
+                "        </extension>" +
+                "        <clTRID>CREATE-123456789</clTRID>" +
+                "    </command>" +
+                "</epp>";
+        
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+
+        DomainCreateResponse result = mapper.map(creDataType, DomainCreateResponse.class);
 
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());

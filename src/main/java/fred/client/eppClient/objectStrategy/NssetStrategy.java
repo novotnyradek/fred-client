@@ -8,6 +8,10 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.check.nsset.NssetCheckRequest;
 import fred.client.data.check.nsset.NssetCheckResponse;
+import fred.client.data.create.CreateRequest;
+import fred.client.data.create.CreateResponse;
+import fred.client.data.create.nsset.NssetCreateRequest;
+import fred.client.data.create.nsset.NssetCreateResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.nsset.NssetInfoRequest;
@@ -57,7 +61,6 @@ public class NssetStrategy implements ServerObjectStrategy {
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
         log.debug("nssetInfo called with request(" + infoRequest + ")");
 
-        // downcast
         NssetInfoRequest nssetInfoRequest = (NssetInfoRequest) infoRequest;
 
         SIDType sidType = new SIDType();
@@ -122,7 +125,6 @@ public class NssetStrategy implements ServerObjectStrategy {
     public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
         log.debug("nssetCheck called with request(" + checkRequest + ")");
 
-        // downcast
         NssetCheckRequest nssetCheckRequest = (NssetCheckRequest) checkRequest;
 
         MNameType mNameType = new MNameType();
@@ -134,7 +136,6 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
 
-        // connect to server or use established connection
         client.checkSession();
 
         String response = client.proceedCommand(xml);
@@ -150,6 +151,44 @@ public class NssetStrategy implements ServerObjectStrategy {
         ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
 
         NssetCheckResponse result = mapper.map(chkDataType, NssetCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public CreateResponse callCreate(CreateRequest createRequest) throws FredClientException {
+        log.debug("nssetCreate called with request(" + createRequest + ")");
+
+        NssetCreateRequest nssetCreateRequest = (NssetCreateRequest) createRequest;
+
+        CrType crType = mapper.map(nssetCreateRequest, CrType.class, "NssetCreateRequestMapping");
+
+        JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, nssetCreateRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+
+        NssetCreateResponse result = mapper.map(creDataType, NssetCreateResponse.class);
 
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());

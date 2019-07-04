@@ -20,7 +20,9 @@ public class DomainStatusValueTypeCustomConverter implements CustomConverter {
                 List<DomainStatusValueType> domainStatuses = new ArrayList<DomainStatusValueType>();
                 for (Object statusType : sourceList) {
                     StatusType statusType1 = (StatusType) statusType;
-                    domainStatuses.add(DomainStatusValueType.fromValue(statusType1.getS().value()));
+                    DomainStatusValueType domainStatusValueType = DomainStatusValueType.fromValue(statusType1.getS().value());
+                    domainStatusValueType.setMessage(statusType1.getValue());
+                    domainStatuses.add(domainStatusValueType);
                 }
                 return domainStatuses;
             } else if (sourceList.get(0) != null && sourceList.get(0) instanceof DomainStatusValueType) {

@@ -1,17 +1,18 @@
-package fred.client.data.info.contact;
+package fred.client.data.common.contact;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Data about contact address information.
  * <p>
  * <ul>
- * <li>{@link AddressData#street} – the street line(s) as contact:optPostalLineType,</li>
- * <li>{@link AddressData#city} – the city as contact:postalLineType,</li>
- * <li>{@link AddressData#sp} – the state or province as contact:optPostalLineType,</li>
- * <li>{@link AddressData#pc} – the postal code as contact:pcType,</li>
- * <li>{@link AddressData#cc} – the country code as contact:ccType</li>
+ * <li>{@link AddressData#street} – the street line(s)</li>
+ * <li>{@link AddressData#city} – the city</li>
+ * <li>{@link AddressData#sp} – the state or province</li>
+ * <li>{@link AddressData#pc} – the postal code</li>
+ * <li>{@link AddressData#cc} – the country code</li>
  *</ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
@@ -28,7 +29,13 @@ public class AddressData implements Serializable {
 
     private String cc;
 
-    public AddressData() {
+    protected AddressData(){}
+
+    public AddressData(String city, String pc, String cc, String... street) {
+        this.setCc(cc);
+        this.setCity(city);
+        this.setPc(pc);
+        this.setStreet(Arrays.asList(street));
     }
 
     public List<String> getStreet() {

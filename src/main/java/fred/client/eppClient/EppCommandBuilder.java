@@ -1,5 +1,6 @@
 package fred.client.eppClient;
 
+import cz.nic.xml.epp.enumval_1.ExValType;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
 import fred.client.exception.FredClientException;
 import ietf.params.xml.ns.epp_1.*;
@@ -33,7 +34,7 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
-    private JAXBElement<EppType> getCreateEppCommand(Object any, String clientTransactionId) throws FredClientException {
+    public JAXBElement<EppType> createCreateEppCommand(Object any, String clientTransactionId) throws FredClientException {
         ReadWriteType readWriteType = new ReadWriteType();
         readWriteType.setAny(any);
 

@@ -7,9 +7,13 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.check.contact.ContactCheckRequest;
 import fred.client.data.check.contact.ContactCheckResponse;
+import fred.client.data.create.CreateRequest;
+import fred.client.data.create.CreateResponse;
+import fred.client.data.create.contact.ContactCreateRequest;
+import fred.client.data.create.contact.ContactCreateResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.info.contact.AddressData;
+import fred.client.data.common.contact.AddressData;
 import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.list.ListRequest;
@@ -23,6 +27,7 @@ import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +59,6 @@ public class ContactStrategy implements ServerObjectStrategy {
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
         log.debug("contactInfo called with request(" + infoRequest + ")");
 
-        // downcast
         ContactInfoRequest contactInfoRequest = (ContactInfoRequest) infoRequest;
 
         SIDType sidType = new SIDType();
@@ -66,7 +70,6 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
 
-        // connect to server or use established connection
         client.checkSession();
 
         String response = client.proceedCommand(xml);
@@ -123,7 +126,6 @@ public class ContactStrategy implements ServerObjectStrategy {
     public CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException {
         log.debug("contactCheck called with request(" + checkRequest + ")");
 
-        // downcast
         ContactCheckRequest contactCheckRequest = (ContactCheckRequest) checkRequest;
 
         MIDType midType = new MIDType();
@@ -135,7 +137,6 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
 
-        // connect to server or use established connection
         client.checkSession();
 
         String response = client.proceedCommand(xml);
@@ -151,6 +152,61 @@ public class ContactStrategy implements ServerObjectStrategy {
         ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
 
         ContactCheckResponse result = mapper.map(chkDataType, ContactCheckResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public CreateResponse callCreate(CreateRequest createRequest) throws FredClientException {
+        log.debug("contactCreate called with request(" + createRequest + ")");
+
+        ContactCreateRequest contactCreateRequest = (ContactCreateRequest) createRequest;
+
+        CreateType createType = mapper.map(contactCreateRequest, CreateType.class);
+
+        JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, contactCreateRequest.getClientTransactionId());
+
+        if (contactCreateRequest.getMailingAddress() != null){
+            cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.map(contactCreateRequest.getMailingAddress(), cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
+
+            cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
+            addrType.setAddr(addr);
+
+            AddrListType addrListType = new AddrListType();
+            addrListType.setMailing(addrType);
+
+            JAXBElement<AddrListType> addrWrapper = new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createCreate(addrListType);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(addrWrapper);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.extra_addr_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+
+        ContactCreateResponse result = mapper.map(creDataType, ContactCreateResponse.class);
 
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());

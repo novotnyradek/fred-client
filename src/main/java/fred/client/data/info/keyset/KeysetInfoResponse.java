@@ -1,6 +1,7 @@
 package fred.client.data.info.keyset;
 
 import fred.client.data.EppResponse;
+import fred.client.data.common.keyset.DnsKeyData;
 import fred.client.data.info.InfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 

@@ -1,6 +1,10 @@
 package fred.client.data.info.contact;
 
 import fred.client.data.EppResponse;
+import fred.client.data.common.contact.AddressData;
+import fred.client.data.common.contact.DiscloseData;
+import fred.client.data.common.contact.IdentificationData;
+import fred.client.data.common.contact.PostalInfoData;
 import fred.client.data.info.InfoResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 

@@ -37,6 +37,8 @@ public enum DomainStatusValueType {
     NOT_VALIDATED("notValidated"),
     DELETE_CANDIDATE("deleteCandidate");
 
+    private String message;
+
     private final String value;
 
     DomainStatusValueType(String v) {
@@ -54,5 +56,22 @@ public enum DomainStatusValueType {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DomainStatusValueType{");
+        sb.append("message='").append(message).append('\'');
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

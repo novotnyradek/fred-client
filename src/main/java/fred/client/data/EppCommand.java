@@ -18,7 +18,7 @@ public abstract class EppCommand {
         return serverObjectType;
     }
 
-    public void setServerObjectType(ServerObjectType serverObjectType) {
+    protected void setServerObjectType(ServerObjectType serverObjectType) {
         this.serverObjectType = serverObjectType;
     }
 }

@@ -1,4 +1,4 @@
-package fred.client.data.info.contact;
+package fred.client.data.common.contact;
 
 import java.io.Serializable;
 
@@ -21,7 +21,11 @@ public class PostalInfoData implements Serializable {
 
     private AddressData addr;
 
-    public PostalInfoData() {
+    protected PostalInfoData() {}
+
+    public PostalInfoData(String name, AddressData addressData) {
+        this.setName(name);
+        this.setAddr(addressData);
     }
 
     public String getName() {

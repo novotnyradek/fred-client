@@ -1,4 +1,4 @@
-package fred.client.data.info.nsset;
+package fred.client.data.common.nsset;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +22,10 @@ public class NameserverData implements Serializable {
     private List<String> addr;
 
     public NameserverData() {
+    }
+
+    public NameserverData(String name) {
+        this.setName(name);
         this.addr = new ArrayList<String>();
     }
 

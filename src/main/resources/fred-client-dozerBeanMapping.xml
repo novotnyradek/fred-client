@@ -8,6 +8,16 @@
         <stop-on-errors>true</stop-on-errors>
         <date-format>MM/dd/yyyy HH:mm</date-format>
         <wildcard>true</wildcard>
+        <custom-converters>
+            <converter type="fred.client.data.common.contact.DiscloseDataCustomConverter">
+                <class-a>fred.client.data.common.contact.DiscloseData</class-a>
+                <class-b>cz.nic.xml.epp.contact_1.DiscloseType</class-b>
+            </converter>
+            <converter type="fred.client.data.common.contact.DiscloseDataCustomConverter">
+                <class-a>fred.client.data.common.contact.DiscloseData</class-a>
+                <class-b>cz.nic.xml.epp.contact_1.InfupdDiscloseType</class-b>
+            </converter>
+        </custom-converters>
     </configuration>
 
     <mapping>
@@ -147,6 +157,73 @@
         <field>
             <a>reason.value</a>
             <b>reason</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.common.contact.AddressData</class-a>
+        <class-b>cz.nic.xml.epp.extra_addr_1.AddrType$Addr</class-b>
+        <field>
+            <a>street</a>
+            <b>street</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.common.contact.AddressData</class-a>
+        <class-b>cz.nic.xml.epp.contact_1.AddrType</class-b>
+        <field>
+            <a>street</a>
+            <b>street</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="NssetCreateRequestMapping">
+        <class-a>fred.client.data.create.nsset.NssetCreateRequest</class-a>
+        <class-b>cz.nic.xml.epp.nsset_1.CrType</class-b>
+        <field map-id="NameserverDataMapping">
+            <a>ns</a>
+            <b>ns</b>
+        </field>
+        <field>
+            <a>tech</a>
+            <b>tech</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="NameserverDataMapping">
+        <class-a>fred.client.data.common.nsset.NameserverData</class-a>
+        <class-b>cz.nic.xml.epp.nsset_1.NsT</class-b>
+        <field>
+            <a>addr</a>
+            <b>addr</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="KeysetCreateRequestMapping">
+        <class-a>fred.client.data.create.keyset.KeysetCreateRequest</class-a>
+        <class-b>cz.nic.xml.epp.keyset_1.CrType</class-b>
+        <field>
+            <a>tech</a>
+            <b>tech</b>
+        </field>
+        <field map-id="DnsKeyDataMapping">
+            <a>dnskey</a>
+            <b>dnskey</b>
+        </field>
+    </mapping>
+
+    <mapping map-id="DnsKeyDataMapping">
+        <class-a>fred.client.data.common.keyset.DnsKeyData</class-a>
+        <class-b>cz.nic.xml.epp.keyset_1.DnskeyT</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.create.domain.DomainCreateRequest</class-a>
+        <class-b>cz.nic.xml.epp.domain_1.CreateType</class-b>
+        <field>
+            <a>admin</a>
+            <b>admin</b>
         </field>
     </mapping>
 
