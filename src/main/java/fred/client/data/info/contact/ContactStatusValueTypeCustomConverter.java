@@ -20,7 +20,9 @@ public class ContactStatusValueTypeCustomConverter implements CustomConverter {
                 List<ContactStatusValueType> contactStatusValueTypes = new ArrayList<ContactStatusValueType>();
                 for (Object statusType : sourceList) {
                     StatusType statusType1 = (StatusType) statusType;
-                    contactStatusValueTypes.add(ContactStatusValueType.fromValue(statusType1.getS().value()));
+                    ContactStatusValueType contactStatusValueType = ContactStatusValueType.fromValue(statusType1.getS().value());
+                    contactStatusValueType.setMessage(statusType1.getValue());
+                    contactStatusValueTypes.add(contactStatusValueType);
                 }
                 return contactStatusValueTypes;
             } else if (sourceList.get(0) != null && sourceList.get(0) instanceof ContactStatusValueType) {

@@ -23,6 +23,8 @@ public enum NssetStatusValueType {
     SERVER_UPDATE_PROHIBITED("serverUpdateProhibited"),
     DELETE_CANDIDATE("deleteCandidate");
 
+    private String message;
+
     private final String value;
 
     NssetStatusValueType(String v) {
@@ -33,6 +35,14 @@ public enum NssetStatusValueType {
         return value;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public static NssetStatusValueType fromValue(String v) {
         for (NssetStatusValueType c : NssetStatusValueType.values()) {
             if (c.value.equals(v)) {
@@ -40,5 +50,14 @@ public enum NssetStatusValueType {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("NssetStatusValueType{");
+        sb.append("message='").append(message).append('\'');
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

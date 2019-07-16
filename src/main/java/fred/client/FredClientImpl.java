@@ -96,10 +96,10 @@ public class FredClientImpl implements FredClient {
 //        ContactInfoRequest contactInfoRequest = new ContactInfoRequest("A24-CONTACT", "INFO-123456789");
 //        log.debug(fredService.callInfo(contactInfoRequest));
 
-        DomainInfoRequest keysetInfoRequest = new DomainInfoRequest("2.1.1.7.4.5.2.2.2.0.2.4.e164.arpa", "INFO-123456789");
-        DomainInfoResponse response = (DomainInfoResponse) fredService.callInfo(keysetInfoRequest);
+//        DomainInfoRequest keysetInfoRequest = new DomainInfoRequest("2.1.1.7.4.5.2.2.2.0.2.4.e164.arpa", "INFO-123456789");
+//        DomainInfoResponse response = (DomainInfoResponse) fredService.callInfo(keysetInfoRequest);
 
-        log.debug(response);
+//        log.debug(response);
 //        System.out.println(new String(Base64.encodeBase64((response.getDnskey().get(0).getPubKey()))));
 
 //        DomainsByKeysetListRequest listRequest = new DomainsByKeysetListRequest("CHOKEBORE","LIST-123456789");
@@ -112,18 +112,22 @@ public class FredClientImpl implements FredClient {
 
 //        System.out.println(response);
 
-//        DomainCreateRequest domainCreateRequest = new DomainCreateRequest("2.1.1.7.4.5.2.2.2.0.2.4.e164.arpa", "A24-CONTACT", "CREATE-123456789");
-//        domainCreateRequest.setPeriod(new PeriodType(1, PeriodUnit.Y));
-//        domainCreateRequest.setNsset("A24-NSSET");
-//        domainCreateRequest.setKeyset("A24-KEYSET");
-//        domainCreateRequest.setAdmin(Arrays.asList("A24-CONTACT"));
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(new Date());
-//        cal.add(Calendar.MONTH, 6);
-////        cal.add(Calendar.DAY_OF_MONTH, );
-//        domainCreateRequest.setEnumValData(new EnumValData(cal.getTime(), true));
-//
-//        log.debug(fredService.callCreate(domainCreateRequest));
+        DomainCreateRequest domainCreateRequest = new DomainCreateRequest("3.1.1.7.4.5.2.2.2.0.2.4.e164.arpa", "A24-CONTACT", "CREATE-123456789");
+        domainCreateRequest.setPeriod(new PeriodType(1, PeriodUnit.Y));
+        domainCreateRequest.setNsset("A24-NSSET");
+        domainCreateRequest.setKeyset("A24-KEYSET");
+        domainCreateRequest.setAdmin(Arrays.asList("A24-CONTACT"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, 6);
+//        cal.set(Calendar.HOUR, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//        cal.add(Calendar.DAY_OF_MONTH, );
+        domainCreateRequest.setEnumValData(new EnumValData(cal.getTime(), true));
+
+        log.debug(fredService.callCreate(domainCreateRequest));
 
 //        ContactCreateRequest contactCreateRequest = new ContactCreateRequest(
 //                "A24-CONTACT",
@@ -150,10 +154,11 @@ public class FredClientImpl implements FredClient {
 //        log.debug(response);
 
 //        List<NameserverData> nameserverData = new ArrayList<NameserverData>();
-//        NameserverData nameserverData1 = new NameserverData("alfa.ns.active24.cz");
-//        nameserverData1.getAddr().add("81.95.96.2");
-//        nameserverData1.getAddr().add("2a02:4a8:ac24:100::96:2");
-//        NameserverData nameserverData2 = new NameserverData("beta.ns.active24.cz");
+//        NameserverData nameserverData1 = new NameserverData("ipv6.cz");
+//        nameserverData1.getAddr().add("4.4.4.4");
+//        nameserverData1.getAddr().add("2001:718:1:1::144:205");
+        // todo napsat na nic at si opravi dokumentaci!
+//        NameserverData nameserverData2 = new NameserverData("ipv62.cz");
 //        nameserverData2.getAddr().add("81.0.238.27");
 //        nameserverData2.getAddr().add("2001:1528:151::12");
 //        NameserverData nameserverData3 = new NameserverData("gama.ns.active24.cz");
@@ -162,7 +167,7 @@ public class FredClientImpl implements FredClient {
 //        nameserverData.add(nameserverData1);
 //        nameserverData.add(nameserverData2);
 //        nameserverData.add(nameserverData3);
-//        NssetCreateRequest nssetCreateRequest = new NssetCreateRequest("A24-NSSET", nameserverData, Arrays.asList("A24-CONTACT"), "CREATE-12345679");
+//        NssetCreateRequest nssetCreateRequest = new NssetCreateRequest("A24-NSSET3", nameserverData, Arrays.asList("A24-CONTACT"), "CREATE-12345679");
 //        log.debug(fredService.callCreate(nssetCreateRequest));
 
 //        KeysetCreateRequest createRequest = new KeysetCreateRequest("A24-KEYSET", Arrays.asList("A24-CONTACT"), "CREATE-123456789");
@@ -179,11 +184,11 @@ public class FredClientImpl implements FredClient {
 
 
         // todo
-        // add status message to enum
+        // add status message to enum - done
         // make constructors for dozer protected
-        // solve enum creation with date (possible elsewhere)
-        // solve info enum publish parameter
-        // prepare commit with info commit
+        // solve enum creation with date (possible elsewhere) - done
+        // solve info enum publish parameter - done
+        // prepare commit with info commit - done
 
     }
 

@@ -23,6 +23,8 @@ public enum KeysetStatusValueType {
     SERVER_UPDATE_PROHIBITED("serverUpdateProhibited"),
     DELETE_CANDIDATE("deleteCandidate");
 
+    private String message;
+
     private final String value;
 
     KeysetStatusValueType(String v) {
@@ -33,6 +35,14 @@ public enum KeysetStatusValueType {
         return value;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public static KeysetStatusValueType fromValue(String v) {
         for (KeysetStatusValueType c : KeysetStatusValueType.values()) {
             if (c.value.equals(v)) {
@@ -40,5 +50,14 @@ public enum KeysetStatusValueType {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("KeysetStatusValueType{");
+        sb.append("message='").append(message).append('\'');
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

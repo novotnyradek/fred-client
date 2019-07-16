@@ -9,6 +9,7 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.check.domain.DomainCheckRequest;
 import fred.client.data.check.domain.DomainCheckResponse;
+import fred.client.data.common.domain.EnumValData;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.domain.DomainCreateRequest;
@@ -17,15 +18,14 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
 import fred.client.data.info.domain.DomainInfoResponse;
-import fred.client.data.common.domain.EnumValData;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
 import fred.client.data.list.ListType;
-import fred.client.data.list.domain.DomainsListRequest;
 import fred.client.data.list.domain.DomainsByContactListRequest;
 import fred.client.data.list.domain.DomainsByKeysetListRequest;
 import fred.client.data.list.domain.DomainsByNssetListRequest;
+import fred.client.data.list.domain.DomainsListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
@@ -34,6 +34,7 @@ import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
+import fred.client.exception.SystemException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
@@ -42,6 +43,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Class for handling actions on domain.
@@ -222,7 +228,19 @@ public class DomainStrategy implements ServerObjectStrategy {
         JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
 
         if (domainCreateRequest.getEnumValData() != null){
-            ExValType exValType = mapper.map(domainCreateRequest.getEnumValData(), ExValType.class);
+            ExValType exValType = new ExValType();
+
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+            XMLGregorianCalendar xmlGregorianCalendarDate = null;
+            try {
+                 xmlGregorianCalendarDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(format.format(domainCreateRequest.getEnumValData().getValExDate()));
+            } catch (DatatypeConfigurationException e) {
+                throw new SystemException("Unable to get XML gregorian date for input " + domainCreateRequest.getEnumValData().getValExDate());
+            }
+            exValType.setValExDate(xmlGregorianCalendarDate);
+
+
             JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
 
             ExtAnyType extAnyType = new ExtAnyType();
@@ -231,33 +249,10 @@ public class DomainStrategy implements ServerObjectStrategy {
             requestElement.getValue().getCommand().setExtension(extAnyType);
         }
 
-//        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
 
         client.checkSession();
 
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-                "<epp xmlns:ns2=\"http://www.nic.cz/xml/epp/domain-1.4\" xmlns=\"urn:ietf:params:xml:ns:epp-1.0\" xmlns:ns3=\"http://www.nic.cz/xml/epp/enumval-1.2\">" +
-                "    <command>" +
-                "        <create>" +
-                "            <ns2:create>" +
-                "                <ns2:name>2.1.1.7.4.5.2.2.2.0.2.4.e164.arpa</ns2:name>" +
-                "                <ns2:period unit=\"y\">1</ns2:period>" +
-                "                <ns2:nsset>A24-NSSET</ns2:nsset>" +
-                "                <ns2:keyset>A24-KEYSET</ns2:keyset>" +
-                "                <ns2:registrant>A24-CONTACT</ns2:registrant>" +
-                "                <ns2:admin>A24-CONTACT</ns2:admin>" +
-                "            </ns2:create>" +
-                "        </create>" +
-                "        <extension>" +
-                "            <ns3:create>" +
-                "                <ns3:valExDate>2020-01-04</ns3:valExDate>" +
-                "                <ns3:publish>true</ns3:publish>" +
-                "            </ns3:create>" +
-                "        </extension>" +
-                "        <clTRID>CREATE-123456789</clTRID>" +
-                "    </command>" +
-                "</epp>";
-        
         String response = client.proceedCommand(xml);
 
         JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);

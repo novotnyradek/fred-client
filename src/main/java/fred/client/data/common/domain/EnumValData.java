@@ -17,7 +17,7 @@ public class EnumValData implements Serializable {
 
     private Date valExDate;
 
-    private boolean publish;
+    private Boolean publish;
 
     protected EnumValData(){}
 
@@ -34,7 +34,7 @@ public class EnumValData implements Serializable {
         this.valExDate = valExDate;
     }
 
-    public boolean isPublish() {
+    public boolean getPublish() {
         return publish;
     }
 

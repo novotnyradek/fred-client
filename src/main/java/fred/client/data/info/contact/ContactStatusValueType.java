@@ -33,6 +33,8 @@ public enum ContactStatusValueType {
     MOJEID_CONTACT("mojeidContact");
     // SERVER_BLOCKED("serverBlocked");
 
+    private String message;
+
     private final String value;
 
     ContactStatusValueType(String v) {
@@ -43,6 +45,14 @@ public enum ContactStatusValueType {
         return value;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public static ContactStatusValueType fromValue(String v) {
         for (ContactStatusValueType c : ContactStatusValueType.values()) {
             if (c.value.equals(v)) {
@@ -50,5 +60,14 @@ public enum ContactStatusValueType {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ContactStatusValueType{");
+        sb.append("message='").append(message).append('\'');
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

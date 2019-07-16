@@ -25,6 +25,7 @@
                             <goal>xjc</goal>
                         </goals>
                         <configuration>
+                            <enableIntrospection>true</enableIntrospection>
                             <sources>
                                 <source>src/main/resources/schema/all.xsd</source>
                             </sources>

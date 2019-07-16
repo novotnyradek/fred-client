@@ -20,7 +20,9 @@ public class NssetStatusValueTypeCustomConverter implements CustomConverter {
                 List<NssetStatusValueType> nssetStatuses = new ArrayList<NssetStatusValueType>();
                 for (Object statusType : sourceList) {
                     StatusType statusType1 = (StatusType) statusType;
-                    nssetStatuses.add(NssetStatusValueType.fromValue(statusType1.getS().value()));
+                    NssetStatusValueType nssetStatusValueType = NssetStatusValueType.fromValue(statusType1.getS().value());
+                    nssetStatusValueType.setMessage(statusType1.getValue());
+                    nssetStatuses.add(nssetStatusValueType);
                 }
                 return nssetStatuses;
             } else if (sourceList.get(0) != null && sourceList.get(0) instanceof NssetStatusValueType) {

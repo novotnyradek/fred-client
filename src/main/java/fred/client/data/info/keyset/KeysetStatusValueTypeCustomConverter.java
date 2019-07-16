@@ -20,7 +20,9 @@ public class KeysetStatusValueTypeCustomConverter implements CustomConverter {
                 List<KeysetStatusValueType> keysetStatuses = new ArrayList<KeysetStatusValueType>();
                 for (Object statusType : sourceList) {
                     StatusType statusType1 = (StatusType) statusType;
-                    keysetStatuses.add(KeysetStatusValueType.fromValue(statusType1.getS().value()));
+                    KeysetStatusValueType keysetStatusValueType = KeysetStatusValueType.fromValue(statusType1.getS().value());
+                    keysetStatusValueType.setMessage(statusType1.getValue());
+                    keysetStatuses.add(keysetStatusValueType);
                 }
                 return keysetStatuses;
             } else if (sourceList.get(0) != null && sourceList.get(0) instanceof KeysetStatusValueType) {
