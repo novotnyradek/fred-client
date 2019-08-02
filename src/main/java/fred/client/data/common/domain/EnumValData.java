@@ -21,16 +21,15 @@ public class EnumValData implements Serializable {
 
     protected EnumValData(){}
 
-    public EnumValData(Date valExDate, boolean publish) {
+    public EnumValData(Date valExDate) {
         this.valExDate = valExDate;
-        this.publish = publish;
     }
 
     public Date getValExDate() {
         return valExDate;
     }
 
-    public void setValExDate(Date valExDate) {
+    protected void setValExDate(Date valExDate) {
         this.valExDate = valExDate;
     }
 

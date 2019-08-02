@@ -21,9 +21,8 @@ public class DomainSendAuthInfoRequest extends EppRequest implements Serializabl
 
     private String domainName;
 
-    public DomainSendAuthInfoRequest(String domainName, String clientTransactionId) {
+    public DomainSendAuthInfoRequest(String domainName) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         this.domainName = domainName;
     }
 
@@ -31,7 +30,7 @@ public class DomainSendAuthInfoRequest extends EppRequest implements Serializabl
         return domainName;
     }
 
-    public void setDomainName(String domainName) {
+    protected void setDomainName(String domainName) {
         this.domainName = domainName;
     }
 
@@ -39,8 +38,6 @@ public class DomainSendAuthInfoRequest extends EppRequest implements Serializabl
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainSendAuthInfoRequest{");
         sb.append("domainName='").append(domainName).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

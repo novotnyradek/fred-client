@@ -17,21 +17,20 @@ public class ContactCheckRequest extends EppRequest implements Serializable, Che
 
     private List<String> contactIds;
 
-    public ContactCheckRequest( String clientTransactionId, List<String> contactIds) {
+    public ContactCheckRequest(List<String> contactIds) {
         setServerObjectType(ServerObjectType.CONTACT);
-        setClientTransactionId(clientTransactionId);
         setContactIds(contactIds);
     }
 
-    public ContactCheckRequest(String clientTransactionId, String... contactIds) {
-        this(clientTransactionId, Arrays.asList(contactIds));
+    public ContactCheckRequest(String... contactIds) {
+        this(Arrays.asList(contactIds));
     }
 
     public List<String> getContactIds() {
         return contactIds;
     }
 
-    public void setContactIds(List<String> contactIds) {
+    protected void setContactIds(List<String> contactIds) {
         this.contactIds = contactIds;
     }
 
@@ -39,8 +38,6 @@ public class ContactCheckRequest extends EppRequest implements Serializable, Che
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactCheckRequest{");
         sb.append("contactIds=").append(contactIds);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

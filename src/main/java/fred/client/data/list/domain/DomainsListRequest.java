@@ -14,9 +14,8 @@ import java.io.Serializable;
  */
 public class DomainsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public DomainsListRequest(String clientTransactionId) {
+    public DomainsListRequest() {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
     }
 
     @Override
@@ -28,8 +27,6 @@ public class DomainsListRequest extends EppRequest implements Serializable, List
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainsListRequest{");
         sb.append("listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

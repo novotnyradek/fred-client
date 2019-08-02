@@ -283,7 +283,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByNsset(domainsByNssetT);
-        extcommandType.setClTRID(domainsByNssetListRequest.getClientTransactionId());
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByNssetListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -296,7 +296,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByKeyset(domainsByKeyset);
-        extcommandType.setClTRID(domainsByKeysetListRequest.getClientTransactionId());
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByKeysetListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -309,7 +309,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByContact(domainsByContactT);
-        extcommandType.setClTRID(domainsByContactListRequest.getClientTransactionId());
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByContactListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -319,7 +319,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListDomains("");
-        extcommandType.setClTRID(domainsListRequest.getClientTransactionId());
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsListRequest.getClientTransactionId()));
 
         return extcommandType;
     }

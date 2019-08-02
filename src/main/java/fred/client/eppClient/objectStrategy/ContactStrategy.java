@@ -117,7 +117,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListContacts("");
-        extcommandType.setClTRID(contactsListRequest.getClientTransactionId());
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", contactsListRequest.getClientTransactionId()));
 
         return listResultsUtil.prepareListAndGetResults(extcommandType);
     }

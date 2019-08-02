@@ -22,9 +22,8 @@ public class NssetsByNsListRequest extends EppRequest implements Serializable, L
 
     private String nameserver;
 
-    public NssetsByNsListRequest(String nameserver, String clientTransactionId) {
+    public NssetsByNsListRequest(String nameserver) {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
         this.nameserver = nameserver;
     }
 
@@ -32,7 +31,7 @@ public class NssetsByNsListRequest extends EppRequest implements Serializable, L
         return nameserver;
     }
 
-    public void setNameserver(String nameserver) {
+    protected void setNameserver(String nameserver) {
         this.nameserver = nameserver;
     }
 
@@ -43,11 +42,9 @@ public class NssetsByNsListRequest extends EppRequest implements Serializable, L
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("NssetsByContactListRequest{");
+        final StringBuffer sb = new StringBuffer("NssetsByNsListRequest{");
         sb.append("nameserver='").append(nameserver).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

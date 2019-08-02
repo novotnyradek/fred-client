@@ -19,9 +19,8 @@ public class KeysetInfoRequest extends EppRequest implements Serializable, InfoR
 
     private String id;
 
-    public KeysetInfoRequest(String keysetId, String clientTransactionId) {
+    public KeysetInfoRequest(String keysetId) {
         setServerObjectType(ServerObjectType.KEYSET);
-        setClientTransactionId(clientTransactionId);
         this.id = keysetId;
     }
 
@@ -29,7 +28,7 @@ public class KeysetInfoRequest extends EppRequest implements Serializable, InfoR
         return id;
     }
 
-    public void setId(String id) {
+    protected void setId(String id) {
         this.id = id;
     }
 
@@ -37,8 +36,6 @@ public class KeysetInfoRequest extends EppRequest implements Serializable, InfoR
     public String toString() {
         final StringBuffer sb = new StringBuffer("KeysetInfoRequest{");
         sb.append("id='").append(id).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

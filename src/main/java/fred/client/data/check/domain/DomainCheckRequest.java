@@ -17,21 +17,20 @@ public class DomainCheckRequest extends EppRequest implements Serializable, Chec
 
     private List<String> names;
 
-    public DomainCheckRequest(String clientTransactionId, List<String> domainNames) {
+    public DomainCheckRequest(List<String> domainNames) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         setNames(domainNames);
     }
 
-    public DomainCheckRequest(String clientTransactionId, String... domainNames) {
-        this(clientTransactionId, Arrays.asList(domainNames));
+    public DomainCheckRequest(String... domainNames) {
+        this(Arrays.asList(domainNames));
     }
 
     public List<String> getNames() {
         return names;
     }
 
-    public void setNames(List<String> names) {
+    protected void setNames(List<String> names) {
         this.names = names;
     }
 
@@ -39,8 +38,6 @@ public class DomainCheckRequest extends EppRequest implements Serializable, Chec
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainCheckRequest{");
         sb.append("names=").append(names);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

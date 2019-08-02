@@ -53,9 +53,8 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
 
     private AddressData mailingAddress;
 
-    public ContactCreateRequest(String contactId, PostalInfoData postalInfoData, String email, String clientTransactionId) {
+    public ContactCreateRequest(String contactId, PostalInfoData postalInfoData, String email) {
         setServerObjectType(ServerObjectType.CONTACT);
-        setClientTransactionId(clientTransactionId);
 
         this.setId(contactId);
         this.setPostalInfo(postalInfoData);
@@ -66,7 +65,7 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
         return id;
     }
 
-    public void setId(String id) {
+    protected void setId(String id) {
         this.id = id;
     }
 
@@ -74,7 +73,7 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
         return postalInfo;
     }
 
-    public void setPostalInfo(PostalInfoData postalInfo) {
+    protected void setPostalInfo(PostalInfoData postalInfo) {
         this.postalInfo = postalInfo;
     }
 
@@ -98,7 +97,7 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
         return email;
     }
 
-    public void setEmail(String email) {
+    protected void setEmail(String email) {
         this.email = email;
     }
 
@@ -164,8 +163,6 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
         sb.append(", ident=").append(ident);
         sb.append(", notifyEmail='").append(notifyEmail).append('\'');
         sb.append(", mailingAddress=").append(mailingAddress);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

@@ -22,9 +22,8 @@ public class DomainsByKeysetListRequest extends EppRequest implements Serializab
 
     private String keysetId;
 
-    public DomainsByKeysetListRequest(String keysetId, String clientTransactionId) {
+    public DomainsByKeysetListRequest(String keysetId) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         setKeysetId(keysetId);
     }
 
@@ -32,7 +31,7 @@ public class DomainsByKeysetListRequest extends EppRequest implements Serializab
         return keysetId;
     }
 
-    public void setKeysetId(String keysetId) {
+    protected void setKeysetId(String keysetId) {
         this.keysetId = keysetId;
     }
 
@@ -46,8 +45,6 @@ public class DomainsByKeysetListRequest extends EppRequest implements Serializab
         final StringBuffer sb = new StringBuffer("DomainsByKeysetListRequest{");
         sb.append("keysetId='").append(keysetId).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

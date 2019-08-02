@@ -20,7 +20,7 @@ public class PeriodType {
         return value;
     }
 
-    public void setValue(int value) {
+    protected void setValue(int value) {
         this.value = value;
     }
 
@@ -28,7 +28,7 @@ public class PeriodType {
         return unit;
     }
 
-    public void setUnit(PeriodUnit unit) {
+    protected void setUnit(PeriodUnit unit) {
         this.unit = unit;
     }
 

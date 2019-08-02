@@ -22,9 +22,8 @@ public class DomainsByNssetListRequest extends EppRequest implements Serializabl
 
     private String nssetId;
 
-    public DomainsByNssetListRequest(String nssetId, String clientTransactionId) {
+    public DomainsByNssetListRequest(String nssetId) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         setNssetId(nssetId);
     }
 
@@ -32,7 +31,7 @@ public class DomainsByNssetListRequest extends EppRequest implements Serializabl
         return nssetId;
     }
 
-    public void setNssetId(String nssetId) {
+    protected void setNssetId(String nssetId) {
         this.nssetId = nssetId;
     }
 
@@ -46,8 +45,6 @@ public class DomainsByNssetListRequest extends EppRequest implements Serializabl
         final StringBuffer sb = new StringBuffer("DomainsByNssetListRequest{");
         sb.append("nssetId='").append(nssetId).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

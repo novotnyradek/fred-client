@@ -14,9 +14,8 @@ import java.io.Serializable;
  */
 public class KeysetsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public KeysetsListRequest(String clientTransactionId) {
+    public KeysetsListRequest() {
         setServerObjectType(ServerObjectType.KEYSET);
-        setClientTransactionId(clientTransactionId);
     }
 
     @Override
@@ -28,8 +27,6 @@ public class KeysetsListRequest extends EppRequest implements Serializable, List
     public String toString() {
         final StringBuffer sb = new StringBuffer("KeysetsListRequest{");
         sb.append("listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

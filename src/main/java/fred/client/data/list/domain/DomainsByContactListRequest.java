@@ -22,9 +22,8 @@ public class DomainsByContactListRequest extends EppRequest implements Serializa
 
     private String contactId;
 
-    public DomainsByContactListRequest(String contactId, String clientTransactionId) {
+    public DomainsByContactListRequest(String contactId) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         setContactId(contactId);
     }
 
@@ -32,7 +31,7 @@ public class DomainsByContactListRequest extends EppRequest implements Serializa
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    protected void setContactId(String contactId) {
         this.contactId = contactId;
     }
 
@@ -46,8 +45,6 @@ public class DomainsByContactListRequest extends EppRequest implements Serializa
         final StringBuffer sb = new StringBuffer("DomainsByContactListRequest{");
         sb.append("contactId='").append(contactId).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

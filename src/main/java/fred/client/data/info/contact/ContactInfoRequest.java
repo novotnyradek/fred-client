@@ -20,9 +20,8 @@ public class ContactInfoRequest extends EppRequest implements Serializable, Info
 
     private String contactId;
 
-    public ContactInfoRequest(String contactId, String clientTransactionId) {
+    public ContactInfoRequest(String contactId) {
         setServerObjectType(ServerObjectType.CONTACT);
-        setClientTransactionId(clientTransactionId);
         this.contactId = contactId;
     }
 
@@ -30,7 +29,7 @@ public class ContactInfoRequest extends EppRequest implements Serializable, Info
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    protected void setContactId(String contactId) {
         this.contactId = contactId;
     }
 
@@ -38,8 +37,6 @@ public class ContactInfoRequest extends EppRequest implements Serializable, Info
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactInfoRequest{");
         sb.append("contactId='").append(contactId).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

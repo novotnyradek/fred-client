@@ -14,9 +14,8 @@ import java.io.Serializable;
  */
 public class NssetsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public NssetsListRequest(String clientTransactionId) {
+    public NssetsListRequest() {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
     }
 
     @Override
@@ -28,8 +27,6 @@ public class NssetsListRequest extends EppRequest implements Serializable, ListR
     public String toString() {
         final StringBuffer sb = new StringBuffer("NssetsListRequest{");
         sb.append("listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

@@ -19,9 +19,8 @@ public class NssetInfoRequest extends EppRequest implements Serializable, InfoRe
 
     private String id;
 
-    public NssetInfoRequest(String nssetId, String clientTransactionId) {
+    public NssetInfoRequest(String nssetId) {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
         this.id = nssetId;
     }
 
@@ -29,7 +28,7 @@ public class NssetInfoRequest extends EppRequest implements Serializable, InfoRe
         return id;
     }
 
-    public void setId(String id) {
+    protected void setId(String id) {
         this.id = id;
     }
 
@@ -37,8 +36,6 @@ public class NssetInfoRequest extends EppRequest implements Serializable, InfoRe
     public String toString() {
         final StringBuffer sb = new StringBuffer("NssetInfoRequest{");
         sb.append("id='").append(id).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

@@ -9,7 +9,7 @@ import java.util.List;
  * <p>
  * <ul>
  * <li>{@link NameserverData#name} - a nameserver hostname</li>
- * <li>{@link NameserverData#addr} - a namesever’s IP address</li>
+ * <li>{@link NameserverData#addr} - a namesever’s IP address(es)</li>
  * </ul>
  * </p>
  *
@@ -21,7 +21,7 @@ public class NameserverData implements Serializable {
 
     private List<String> addr;
 
-    public NameserverData() {
+    protected NameserverData() {
     }
 
     public NameserverData(String name) {
@@ -33,7 +33,7 @@ public class NameserverData implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 

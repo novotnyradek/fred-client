@@ -24,3 +24,7 @@ Version: 0.1.0
     * Create
 * Custom commands
     * Listing
+    
+> Changes
+
+Removed clientTransactionId attribute from constructors. Can be set using setClientTransactionId method on any request, otherwise will be generated automatically.

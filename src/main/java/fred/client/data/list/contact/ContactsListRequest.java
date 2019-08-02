@@ -14,9 +14,8 @@ import java.io.Serializable;
  */
 public class ContactsListRequest extends EppRequest implements Serializable, ListRequest {
 
-    public ContactsListRequest(String clientTransactionId) {
+    public ContactsListRequest() {
         setServerObjectType(ServerObjectType.CONTACT);
-        setClientTransactionId(clientTransactionId);
     }
 
     @Override
@@ -28,8 +27,6 @@ public class ContactsListRequest extends EppRequest implements Serializable, Lis
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactsListRequest{");
         sb.append("listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

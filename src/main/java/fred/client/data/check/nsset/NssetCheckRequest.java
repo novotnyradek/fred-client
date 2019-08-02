@@ -17,21 +17,20 @@ public class NssetCheckRequest extends EppRequest implements Serializable, Check
 
     private List<String> nssetIds;
 
-    public NssetCheckRequest(String clientTransactionId, List<String> nssetIds) {
+    public NssetCheckRequest(List<String> nssetIds) {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
         setNssetIds(nssetIds);
     }
 
-    public NssetCheckRequest(String clientTransactionId, String... nssetIds) {
-        this(clientTransactionId, Arrays.asList(nssetIds));
+    public NssetCheckRequest(String... nssetIds) {
+        this(Arrays.asList(nssetIds));
     }
 
     public List<String> getNssetIds() {
         return nssetIds;
     }
 
-    public void setNssetIds(List<String> nssetIds) {
+    protected void setNssetIds(List<String> nssetIds) {
         this.nssetIds = nssetIds;
     }
 
@@ -39,8 +38,6 @@ public class NssetCheckRequest extends EppRequest implements Serializable, Check
     public String toString() {
         final StringBuffer sb = new StringBuffer("NssetCheckRequest{");
         sb.append("nssetIds=").append(nssetIds);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

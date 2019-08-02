@@ -22,9 +22,8 @@ public class NssetsByContactListRequest extends EppRequest implements Serializab
 
     private String contactId;
 
-    public NssetsByContactListRequest(String contactId, String clientTransactionId) {
+    public NssetsByContactListRequest(String contactId) {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
         this.contactId = contactId;
     }
 
@@ -32,7 +31,7 @@ public class NssetsByContactListRequest extends EppRequest implements Serializab
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    protected void setContactId(String contactId) {
         this.contactId = contactId;
     }
 
@@ -46,8 +45,6 @@ public class NssetsByContactListRequest extends EppRequest implements Serializab
         final StringBuffer sb = new StringBuffer("NssetsByContactListRequest{");
         sb.append("contactId='").append(contactId).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

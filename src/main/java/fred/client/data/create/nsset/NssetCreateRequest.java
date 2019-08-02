@@ -6,6 +6,7 @@ import fred.client.data.common.nsset.NameserverData;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,20 +34,23 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
 
     private Integer reportLevel;
 
-    public NssetCreateRequest(String nssetId, List<NameserverData> nameservers, List<String> technicalContacts, String clientTransactionId) {
+    public NssetCreateRequest(String nssetId, List<NameserverData> nameservers, List<String> technicalContacts) {
         setServerObjectType(ServerObjectType.NSSET);
-        setClientTransactionId(clientTransactionId);
 
         this.setId(nssetId);
         this.setNs(nameservers);
         this.setTech(technicalContacts);
     }
 
+    public NssetCreateRequest(String nssetId, List<NameserverData> nameservers, String... technicalContacts) {
+        this(nssetId, nameservers, Arrays.asList(technicalContacts));
+    }
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    protected void setId(String id) {
         this.id = id;
     }
 
@@ -54,7 +58,7 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
         return ns;
     }
 
-    public void setNs(List<NameserverData> ns) {
+    protected void setNs(List<NameserverData> ns) {
         this.ns = ns;
     }
 
@@ -62,7 +66,7 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
         return tech;
     }
 
-    public void setTech(List<String> tech) {
+    protected void setTech(List<String> tech) {
         this.tech = tech;
     }
 
@@ -90,8 +94,6 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
         sb.append(", tech=").append(tech);
         sb.append(", authInfo='").append(authInfo).append('\'');
         sb.append(", reportLevel=").append(reportLevel);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

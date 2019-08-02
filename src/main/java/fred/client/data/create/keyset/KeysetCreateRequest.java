@@ -7,6 +7,7 @@ import fred.client.eppClient.objectStrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,20 +32,23 @@ public class KeysetCreateRequest extends EppRequest implements Serializable, Cre
 
     private String authInfo;
 
-    public KeysetCreateRequest(String keysetId, List<String> technicalContacts, String clientTransactionId) {
+    public KeysetCreateRequest(String keysetId, List<String> technicalContacts) {
         setServerObjectType(ServerObjectType.KEYSET);
-        setClientTransactionId(clientTransactionId);
 
         this.setId(keysetId);
         this.setTech(technicalContacts);
         this.dnskey = new ArrayList<DnsKeyData>();
     }
 
+    public KeysetCreateRequest(String keysetId, String... technicalContacts) {
+        this(keysetId, Arrays.asList(technicalContacts));
+    }
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    protected void setId(String id) {
         this.id = id;
     }
 
@@ -60,7 +64,7 @@ public class KeysetCreateRequest extends EppRequest implements Serializable, Cre
         return tech;
     }
 
-    public void setTech(List<String> tech) {
+    protected void setTech(List<String> tech) {
         this.tech = tech;
     }
 
@@ -79,8 +83,6 @@ public class KeysetCreateRequest extends EppRequest implements Serializable, Cre
         sb.append(", dnskey=").append(dnskey);
         sb.append(", tech=").append(tech);
         sb.append(", authInfo='").append(authInfo).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

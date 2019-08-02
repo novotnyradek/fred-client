@@ -41,9 +41,8 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
 
     private EnumValData enumValData;
 
-    public DomainCreateRequest(String domainName, String registrant, String clientTransactionId) {
+    public DomainCreateRequest(String domainName, String registrant) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         this.name = domainName;
         this.registrant = registrant;
     }
@@ -52,7 +51,7 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
         return name;
     }
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
@@ -84,7 +83,7 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
         return registrant;
     }
 
-    public void setRegistrant(String registrant) {
+    protected void setRegistrant(String registrant) {
         this.registrant = registrant;
     }
 
@@ -123,8 +122,6 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
         sb.append(", admin=").append(admin);
         sb.append(", authInfo='").append(authInfo).append('\'');
         sb.append(", enumValData=").append(enumValData);
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

@@ -19,9 +19,8 @@ public class DomainInfoRequest extends EppRequest implements Serializable, InfoR
 
     private String domainName;
 
-    public DomainInfoRequest(String domainName, String clientTransactionId) {
+    public DomainInfoRequest(String domainName) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setClientTransactionId(clientTransactionId);
         this.domainName = domainName;
     }
 
@@ -29,7 +28,7 @@ public class DomainInfoRequest extends EppRequest implements Serializable, InfoR
         return domainName;
     }
 
-    public void setDomainName(String domainName) {
+    protected void setDomainName(String domainName) {
         this.domainName = domainName;
     }
 
@@ -37,8 +36,6 @@ public class DomainInfoRequest extends EppRequest implements Serializable, InfoR
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainInfoRequest{");
         sb.append("domainName='").append(domainName).append('\'');
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }

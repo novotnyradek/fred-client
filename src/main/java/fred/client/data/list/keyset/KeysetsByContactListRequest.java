@@ -22,9 +22,8 @@ public class KeysetsByContactListRequest extends EppRequest implements Serializa
 
     private String contactId;
 
-    public KeysetsByContactListRequest(String contactId, String clientTransactionId) {
+    public KeysetsByContactListRequest(String contactId) {
         setServerObjectType(ServerObjectType.KEYSET);
-        setClientTransactionId(clientTransactionId);
         setContactId(contactId);
     }
 
@@ -32,7 +31,7 @@ public class KeysetsByContactListRequest extends EppRequest implements Serializa
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    protected void setContactId(String contactId) {
         this.contactId = contactId;
     }
 
@@ -46,8 +45,6 @@ public class KeysetsByContactListRequest extends EppRequest implements Serializa
         final StringBuffer sb = new StringBuffer("KeysetsByContactListRequest{");
         sb.append("contactId='").append(contactId).append('\'');
         sb.append(", listType=").append(getListType());
-        sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
-        sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
     }
