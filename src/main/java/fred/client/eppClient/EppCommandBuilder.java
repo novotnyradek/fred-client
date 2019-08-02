@@ -88,13 +88,12 @@ public class EppCommandBuilder {
 
     public JAXBElement<EppType> createSendAuthInfoEppCommand(Object any, String clientTransactionId) {
 
-        // todo refactor to send authinfo method
         cz.nic.xml.epp.fred_1.ReadWriteType readWriteType = new cz.nic.xml.epp.fred_1.ReadWriteType();
         readWriteType.setAny(any);
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setSendAuthInfo(readWriteType);
-        extcommandType.setClTRID(this.resolveClTRID("SAI", clientTransactionId));
+        extcommandType.setClTRID(this.resolveClTRID("AUTH", clientTransactionId));
 
         return createFredExtensionEppCommand(extcommandType);
     }

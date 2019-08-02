@@ -1,0 +1,31 @@
+package fred.client.data.sendAuthInfo.nsset;
+
+import fred.client.data.EppResponse;
+import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.eppClient.objectStrategy.ServerObjectType;
+
+import java.io.Serializable;
+
+/**
+ * A nsset sendAuthInfo command is used to provide the transfer password of an nsset to the technical contacts of the nsset.
+ *
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/SendAuthInfo/SendAuthInfoNsset.html">FRED documentation</a>
+ */
+public class NssetSendAuthInfoResponse extends EppResponse implements Serializable, SendAuthInfoResponse {
+
+    public NssetSendAuthInfoResponse() {
+        setServerObjectType(ServerObjectType.NSSET);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("NssetSendAuthInfoResponse{");
+        sb.append("clientTransactionId='").append(getClientTransactionId()).append('\'');
+        sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
+        sb.append(", code=").append(getCode());
+        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", serverObjectType=").append(getServerObjectType());
+        sb.append('}');
+        return sb.toString();
+    }
+}

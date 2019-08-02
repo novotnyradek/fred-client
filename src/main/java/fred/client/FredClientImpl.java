@@ -29,6 +29,10 @@ import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
+import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
+import fred.client.data.sendAuthInfo.keyset.KeysetSendAuthInfoRequest;
+import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
@@ -90,6 +94,18 @@ public class FredClientImpl implements FredClient {
 
         InfoResponse response = fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
         log.debug(response);
+
+        SendAuthInfoResponse domainResponse = fredService.callSendAuthInfo(new DomainSendAuthInfoRequest("nic.cz"));
+        log.debug(domainResponse);
+
+        SendAuthInfoResponse contactResponse = fredService.callSendAuthInfo(new ContactSendAuthInfoRequest("A24-CONTACT"));
+        log.debug(contactResponse);
+
+        SendAuthInfoResponse keysetResponse = fredService.callSendAuthInfo(new KeysetSendAuthInfoRequest("A24-KEYSET"));
+        log.debug(keysetResponse);
+
+        SendAuthInfoResponse nssetResponse = fredService.callSendAuthInfo(new NssetSendAuthInfoRequest("A24-NSSET"));
+        log.debug(nssetResponse);
     }
 
 }

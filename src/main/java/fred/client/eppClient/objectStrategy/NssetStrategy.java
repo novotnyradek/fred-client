@@ -25,6 +25,8 @@ import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
+import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoResponse;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
@@ -98,7 +100,35 @@ public class NssetStrategy implements ServerObjectStrategy {
 
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {
         log.debug("sendAuthInfo for nsset called with request(" + sendAuthInfoRequest + ")");
-        throw new UnsupportedOperationException("Not implemented yet!");
+
+        NssetSendAuthInfoRequest request = (NssetSendAuthInfoRequest) sendAuthInfoRequest;
+
+        SendAuthInfoType sendAuthInfoType = new SendAuthInfoType();
+        sendAuthInfoType.setId(request.getNssetId());
+
+        JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        NssetSendAuthInfoResponse sendAuthInfoResponse = new NssetSendAuthInfoResponse();
+        sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
+        sendAuthInfoResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
+        sendAuthInfoResponse.setCode(responseType.getResult().get(0).getCode());
+        sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
+
+        return sendAuthInfoResponse;
     }
 
     @Override

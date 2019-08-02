@@ -22,6 +22,8 @@ public class DomainSendAuthInfoResponse extends EppResponse implements Serializa
         final StringBuffer sb = new StringBuffer("DomainSendAuthInfoResponse{");
         sb.append("clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
+        sb.append(", code=").append(getCode());
+        sb.append(", message='").append(getMessage()).append('\'');
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

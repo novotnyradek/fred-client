@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </li>
  * </ul>
  *
- * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/SendAuthInfo/SendAuthInfoDomain.html#command-element-structure">FRED documentation</a>
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/SendAuthInfo/SendAuthInfoDomain.html">FRED documentation</a>
  */
 public class DomainSendAuthInfoRequest extends EppRequest implements Serializable, SendAuthInfoRequest {
 
