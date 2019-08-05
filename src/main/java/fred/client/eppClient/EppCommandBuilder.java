@@ -77,7 +77,7 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
-    private JAXBElement<EppType> getTransferRequestEppCommand(Object any, String clientTransactionId) {
+    public JAXBElement<EppType> createTransferEppCommand(Object any, String clientTransactionId) {
         TransferType transferType = new TransferType();
         transferType.setAny(any);
         transferType.setOp(TransferOpType.REQUEST);

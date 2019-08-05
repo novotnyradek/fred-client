@@ -8,6 +8,8 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
@@ -91,4 +93,13 @@ public interface FredClient {
      * @throws FredClientException
      */
     CreateResponse callCreate(CreateRequest createRequest) throws FredClientException;
+
+    /**
+     * Method used to call renew command for object DOMAIN.
+     *
+     * @param renewRequest subclass of {@link RenewRequest} interface.
+     * @return subclass of {@link RenewResponse} interface corresponding to request.
+     * @throws FredClientException
+     */
+    RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException;
 }

@@ -12,6 +12,8 @@ import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
 
 /**
@@ -30,4 +32,6 @@ public interface ServerObjectStrategy {
     CreateResponse callCreate(CreateRequest createRequest) throws FredClientException;
 
     RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException;
+
+    TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException;
 }

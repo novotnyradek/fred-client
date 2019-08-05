@@ -15,15 +15,22 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.keyset.KeysetInfoRequest;
 import fred.client.data.info.keyset.KeysetInfoResponse;
-import fred.client.data.list.*;
-import fred.client.data.list.keyset.KeysetsListRequest;
+import fred.client.data.list.ListRequest;
+import fred.client.data.list.ListResponse;
+import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.ListType;
 import fred.client.data.list.keyset.KeysetsByContactListRequest;
+import fred.client.data.list.keyset.KeysetsListRequest;
 import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.keyset.KeysetSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.keyset.KeysetSendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
+import fred.client.data.transfer.keyset.KeysetTransferRequest;
+import fred.client.data.transfer.keyset.KeysetTransferResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
@@ -226,6 +233,39 @@ public class KeysetStrategy implements ServerObjectStrategy {
     public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
         throw new UnsupportedOperationException("callRenew operation is not supported for object KEYSET");
+    }
+
+    @Override
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+        log.debug("callTransfer called with request(" + transferRequest + ")");
+
+        KeysetTransferRequest keysetTransferRequest = (KeysetTransferRequest) transferRequest;
+
+        TransferType transferType = mapper.map(keysetTransferRequest, TransferType.class);
+
+        JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, keysetTransferRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        KeysetTransferResponse result = new KeysetTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

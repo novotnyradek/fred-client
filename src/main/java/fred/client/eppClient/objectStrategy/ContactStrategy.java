@@ -26,6 +26,10 @@ import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
+import fred.client.data.transfer.contact.ContactTransferRequest;
+import fred.client.data.transfer.contact.ContactTransferResponse;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
@@ -60,6 +64,7 @@ public class ContactStrategy implements ServerObjectStrategy {
         mapper = FredClientDozerMapper.getInstance();
     }
 
+    @Override
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
         log.debug("contactInfo called with request(" + infoRequest + ")");
 
@@ -108,6 +113,7 @@ public class ContactStrategy implements ServerObjectStrategy {
         return result;
     }
 
+    @Override
     public SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException {
         log.debug("sendAuthInfo for contact called with request(" + sendAuthInfoRequest + ")");
 
@@ -252,5 +258,38 @@ public class ContactStrategy implements ServerObjectStrategy {
     public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
         throw new UnsupportedOperationException("callRenew operation is not supported for object CONTACT");
+    }
+
+    @Override
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+        log.debug("callTransfer called with request(" + transferRequest + ")");
+
+        ContactTransferRequest contactTransferRequest = (ContactTransferRequest) transferRequest;
+
+        TransferType transferType = mapper.map(contactTransferRequest, TransferType.class);
+
+        JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, contactTransferRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        ContactTransferResponse result = new ContactTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 }

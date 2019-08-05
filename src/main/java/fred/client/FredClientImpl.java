@@ -2,35 +2,31 @@ package fred.client;
 
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
-import fred.client.data.common.domain.PeriodType;
-import fred.client.data.common.domain.PeriodUnit;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.info.contact.ContactInfoRequest;
-import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.renew.domain.DomainRenewRequest;
-import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
-import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
-import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
-import fred.client.data.sendAuthInfo.keyset.KeysetSendAuthInfoRequest;
-import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
+import fred.client.data.transfer.contact.ContactTransferRequest;
+import fred.client.data.transfer.contact.ContactTransferResponse;
+import fred.client.data.transfer.domain.DomainTransferRequest;
+import fred.client.data.transfer.domain.DomainTransferResponse;
+import fred.client.data.transfer.keyset.KeysetTransferRequest;
+import fred.client.data.transfer.keyset.KeysetTransferResponse;
+import fred.client.data.transfer.nsset.NssetTransferRequest;
+import fred.client.data.transfer.nsset.NssetTransferResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * Service for using FRED client.
- */
 public class FredClientImpl implements FredClient {
 
     private static final Log log = LogFactory.getLog(FredClientImpl.class);
@@ -77,6 +73,13 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callRenew(renewRequest);
     }
 
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(transferRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callTransfer(transferRequest);
+    }
+
     /**
      * Method for testing simple scenarios.
      *
@@ -101,17 +104,22 @@ public class FredClientImpl implements FredClient {
 //        SendAuthInfoResponse nssetResponse = fredService.callSendAuthInfo(new NssetSendAuthInfoRequest("A24-NSSET"));
 //        log.debug(nssetResponse);
 
-        DomainInfoResponse domainInfoResponse = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
-        log.debug(domainInfoResponse);
+//        DomainInfoResponse domainInfoResponse = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
+//        log.debug(domainInfoResponse);
+//
+//        DomainRenewRequest domainRenewRequest = new DomainRenewRequest(domainInfoResponse.getName(), domainInfoResponse.getExDate());
+//        domainRenewRequest.setPeriod(new PeriodType(1, PeriodUnit.Y));
+//
+//        DomainRenewResponse renewResponse = (DomainRenewResponse) fredService.callRenew(domainRenewRequest);
+//        log.debug(renewResponse);
+//
+//        DomainInfoResponse domainInfoResponseRenewed = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
+//        log.debug(domainInfoResponseRenewed);
 
-        DomainRenewRequest domainRenewRequest = new DomainRenewRequest(domainInfoResponse.getName(), domainInfoResponse.getExDate());
-        domainRenewRequest.setPeriod(new PeriodType(1, PeriodUnit.Y));
-
-        DomainRenewResponse renewResponse = (DomainRenewResponse) fredService.callRenew(domainRenewRequest);
-        log.debug(renewResponse);
-
-        DomainInfoResponse domainInfoResponseRenewed = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
-        log.debug(domainInfoResponseRenewed);
+//        NssetTransferResponse nssetTransferResponse = (NssetTransferResponse) fredService.callTransfer(new NssetTransferRequest("A24-NSSET", "blbalba"));
+//        KeysetTransferResponse keysetTransferResponse = (KeysetTransferResponse) fredService.callTransfer(new KeysetTransferRequest("A24-KEYSET", "blbalba"));
+//        ContactTransferResponse contactTransferResponse = (ContactTransferResponse) fredService.callTransfer(new ContactTransferRequest("A24-CONTACT", "blbalba"));
+//        DomainTransferResponse domainTransferRequest = (DomainTransferResponse) fredService.callTransfer(new DomainTransferRequest("active24.cz", "blbalba"));
     }
 
 }

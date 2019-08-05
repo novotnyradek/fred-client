@@ -20,15 +20,19 @@ import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
 import fred.client.data.list.ListType;
-import fred.client.data.list.nsset.NssetsListRequest;
 import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
+import fred.client.data.list.nsset.NssetsListRequest;
 import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
+import fred.client.data.transfer.nsset.NssetTransferRequest;
+import fred.client.data.transfer.nsset.NssetTransferResponse;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
@@ -234,6 +238,39 @@ public class NssetStrategy implements ServerObjectStrategy {
     public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
         throw new UnsupportedOperationException("callRenew operation is not supported for object NSSET");
+    }
+
+    @Override
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+        log.debug("callTransfer called with request(" + transferRequest + ")");
+
+        NssetTransferRequest nssetTransferRequest = (NssetTransferRequest) transferRequest;
+
+        TransferType transferType = mapper.map(nssetTransferRequest, TransferType.class);
+
+        JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, nssetTransferRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        NssetTransferResponse result = new NssetTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {

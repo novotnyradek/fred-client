@@ -249,4 +249,40 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>fred.client.data.transfer.nsset.NssetTransferRequest</class-a>
+        <class-b>cz.nic.xml.epp.nsset_1.TransferType</class-b>
+        <field>
+            <a>nssetId</a>
+            <b>id</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.transfer.keyset.KeysetTransferRequest</class-a>
+        <class-b>cz.nic.xml.epp.keyset_1.TransferType</class-b>
+        <field>
+            <a>keysetId</a>
+            <b>id</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.transfer.domain.DomainTransferRequest</class-a>
+        <class-b>cz.nic.xml.epp.domain_1.TransferType</class-b>
+        <field>
+            <a>domainName</a>
+            <b>name</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.transfer.contact.ContactTransferRequest</class-a>
+        <class-b>cz.nic.xml.epp.contact_1.TransferType</class-b>
+        <field>
+            <a>contactId</a>
+            <b>id</b>
+        </field>
+    </mapping>
+
 </mappings>

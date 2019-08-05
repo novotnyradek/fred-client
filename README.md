@@ -11,7 +11,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 
 Version: 0.1.0
 * Possibility to connect to epp.demo.regtest.nic.cz from main method
-* Done 30 use cases out of 45
+* Done 33 use cases out of 45
 > Completed:
 * Session management commands
     * Login
@@ -22,6 +22,7 @@ Version: 0.1.0
     * Info
 * Transform commands
     * Create
+    * Transfer
     * Renew domain
 * Custom commands
     * Listing

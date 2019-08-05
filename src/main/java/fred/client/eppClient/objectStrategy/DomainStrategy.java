@@ -34,6 +34,10 @@ import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
+import fred.client.data.transfer.domain.DomainTransferRequest;
+import fred.client.data.transfer.domain.DomainTransferResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
@@ -303,6 +307,39 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         DomainRenewResponse result = mapper.map(renDataType, DomainRenewResponse.class);
 
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+        log.debug("callTransfer called with request(" + transferRequest + ")");
+
+        DomainTransferRequest domainTransferRequest = (DomainTransferRequest) transferRequest;
+
+        TransferType transferType = mapper.map(domainTransferRequest, TransferType.class);
+
+        JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, domainTransferRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        DomainTransferResponse result = new DomainTransferResponse();
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());
         result.setClientTransactionId(responseType.getTrID().getClTRID());

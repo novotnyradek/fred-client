@@ -12,6 +12,8 @@ import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
 
 /**
@@ -33,6 +35,7 @@ public class ServerObjectStrategyContext {
     private ServerObjectStrategy chooseServerObjectTypeStrategy(ServerObjectType serverObjectType) {
         switch (serverObjectType) {
             case DOMAIN:
+                // todo do not create strategy with every call
                 return new DomainStrategy();
             case CONTACT:
                 return new ContactStrategy();
@@ -68,5 +71,9 @@ public class ServerObjectStrategyContext {
 
     public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
         return serverObjectStrategy.callRenew(renewRequest);
+    }
+
+    public TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException {
+        return serverObjectStrategy.callTransfer(transferRequest);
     }
 }
