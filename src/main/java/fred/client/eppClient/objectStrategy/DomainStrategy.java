@@ -26,6 +26,10 @@ import fred.client.data.list.domain.DomainsByContactListRequest;
 import fred.client.data.list.domain.DomainsByKeysetListRequest;
 import fred.client.data.list.domain.DomainsByNssetListRequest;
 import fred.client.data.list.domain.DomainsListRequest;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
@@ -34,7 +38,6 @@ import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandBuilder;
 import fred.client.exception.FredClientException;
-import fred.client.exception.SystemException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
@@ -43,11 +46,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * Class for handling actions on domain.
@@ -228,18 +226,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
 
         if (domainCreateRequest.getEnumValData() != null){
-            ExValType exValType = new ExValType();
-
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-            XMLGregorianCalendar xmlGregorianCalendarDate = null;
-            try {
-                 xmlGregorianCalendarDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(format.format(domainCreateRequest.getEnumValData().getValExDate()));
-            } catch (DatatypeConfigurationException e) {
-                throw new SystemException("Unable to get XML gregorian date for input " + domainCreateRequest.getEnumValData().getValExDate());
-            }
-            exValType.setValExDate(xmlGregorianCalendarDate);
-
+            ExValType exValType = mapper.map(domainCreateRequest.getEnumValData(), ExValType.class);
 
             JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
 
@@ -275,6 +262,55 @@ public class DomainStrategy implements ServerObjectStrategy {
         return result;
     }
 
+    @Override
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+        log.debug("callRenew called with request(" + renewRequest + ")");
+
+        DomainRenewRequest domainRenewRequest = (DomainRenewRequest) renewRequest;
+
+        RenewType renewType = mapper.map(domainRenewRequest, RenewType.class);
+
+        JAXBElement<RenewType> wrapper = new ObjectFactory().createRenew(renewType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createRenewEppCommand(wrapper, domainRenewRequest.getClientTransactionId());
+
+        if (domainRenewRequest.getEnumValData() != null){
+            ExValType exValType = mapper.map(domainRenewRequest.getEnumValData(), ExValType.class);
+
+            JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(enumWrapper);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
+
+        RenDataType renDataType = (RenDataType) wrapperBack.getValue();
+
+        DomainRenewResponse result = mapper.map(renDataType, DomainRenewResponse.class);
+
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {
         log.debug("listDomainsByNsset called with request(" + domainsByNssetListRequest + ")");
 
@@ -283,7 +319,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByNsset(domainsByNssetT);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByNssetListRequest.getClientTransactionId()));
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByNssetListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -296,7 +332,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByKeyset(domainsByKeyset);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByKeysetListRequest.getClientTransactionId()));
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByKeysetListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -309,7 +345,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setDomainsByContact(domainsByContactT);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsByContactListRequest.getClientTransactionId()));
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByContactListRequest.getClientTransactionId()));
 
         return extcommandType;
     }
@@ -319,7 +355,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListDomains("");
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", domainsListRequest.getClientTransactionId()));
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsListRequest.getClientTransactionId()));
 
         return extcommandType;
     }

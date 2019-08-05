@@ -20,6 +20,8 @@ import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
 import fred.client.data.list.contact.ContactsListRequest;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
@@ -147,7 +149,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListContacts("");
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTRID("LIST", contactsListRequest.getClientTransactionId()));
+        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", contactsListRequest.getClientTransactionId()));
 
         return listResultsUtil.prepareListAndGetResults(extcommandType);
     }
@@ -244,5 +246,11 @@ public class ContactStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+        log.debug("callRenew called with request(" + renewRequest + ")");
+        throw new UnsupportedOperationException("callRenew operation is not supported for object CONTACT");
     }
 }

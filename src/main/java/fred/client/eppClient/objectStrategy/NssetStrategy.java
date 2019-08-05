@@ -23,6 +23,8 @@ import fred.client.data.list.ListType;
 import fred.client.data.list.nsset.NssetsListRequest;
 import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
@@ -226,6 +228,12 @@ public class NssetStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+        log.debug("callRenew called with request(" + renewRequest + ")");
+        throw new UnsupportedOperationException("callRenew operation is not supported for object NSSET");
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {

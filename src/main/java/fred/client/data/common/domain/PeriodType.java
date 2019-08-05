@@ -1,4 +1,4 @@
-package fred.client.data.create.domain;
+package fred.client.data.common.domain;
 
 /**
  *  The registration period.

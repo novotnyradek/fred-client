@@ -18,6 +18,8 @@ import fred.client.data.info.keyset.KeysetInfoResponse;
 import fred.client.data.list.*;
 import fred.client.data.list.keyset.KeysetsListRequest;
 import fred.client.data.list.keyset.KeysetsByContactListRequest;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.keyset.KeysetSendAuthInfoRequest;
@@ -218,6 +220,12 @@ public class KeysetStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+        log.debug("callRenew called with request(" + renewRequest + ")");
+        throw new UnsupportedOperationException("callRenew operation is not supported for object KEYSET");
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

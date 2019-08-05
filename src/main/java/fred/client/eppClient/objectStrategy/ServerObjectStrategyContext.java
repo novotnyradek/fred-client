@@ -8,6 +8,8 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
@@ -62,5 +64,9 @@ public class ServerObjectStrategyContext {
 
     public CreateResponse callCreate(CreateRequest createRequest) throws FredClientException {
         return serverObjectStrategy.callCreate(createRequest);
+    }
+
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+        return serverObjectStrategy.callRenew(renewRequest);
     }
 }

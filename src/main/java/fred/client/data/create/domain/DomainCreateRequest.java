@@ -1,8 +1,9 @@
 package fred.client.data.create.domain;
 
 import fred.client.data.EppRequest;
-import fred.client.data.create.CreateRequest;
 import fred.client.data.common.domain.EnumValData;
+import fred.client.data.common.domain.PeriodType;
+import fred.client.data.create.CreateRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 
 import java.io.Serializable;

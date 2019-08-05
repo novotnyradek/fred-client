@@ -8,6 +8,8 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
@@ -44,7 +46,14 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public CreateResponse callCreate(CreateRequest createRequest) throws FredClientException {
-        return null;
+    public CreateResponse callCreate(CreateRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public RenewResponse callRenew(RenewRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }
 }

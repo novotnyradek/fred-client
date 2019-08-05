@@ -2,31 +2,21 @@ package fred.client;
 
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
-import fred.client.data.check.keyset.KeysetCheckRequest;
-import fred.client.data.check.keyset.KeysetCheckResponse;
-import fred.client.data.common.contact.*;
-import fred.client.data.common.domain.EnumValData;
-import fred.client.data.common.keyset.DnsKeyData;
-import fred.client.data.common.nsset.NameserverData;
+import fred.client.data.common.domain.PeriodType;
+import fred.client.data.common.domain.PeriodUnit;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
-import fred.client.data.create.contact.ContactCreateRequest;
-import fred.client.data.create.domain.DomainCreateRequest;
-import fred.client.data.create.domain.PeriodType;
-import fred.client.data.create.domain.PeriodUnit;
-import fred.client.data.create.keyset.KeysetCreateRequest;
-import fred.client.data.create.nsset.NssetCreateRequest;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.domain.DomainInfoRequest;
 import fred.client.data.info.domain.DomainInfoResponse;
-import fred.client.data.info.keyset.KeysetInfoRequest;
-import fred.client.data.info.keyset.KeysetInfoResponse;
-import fred.client.data.info.nsset.NssetInfoRequest;
-import fred.client.data.info.nsset.NssetInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
@@ -37,9 +27,6 @@ import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.Base64;
-
-import java.util.*;
 
 /**
  * Service for using FRED client.
@@ -83,6 +70,13 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callCreate(createRequest);
     }
 
+    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(renewRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callRenew(renewRequest);
+    }
+
     /**
      * Method for testing simple scenarios.
      *
@@ -92,20 +86,32 @@ public class FredClientImpl implements FredClient {
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl();
 
-        InfoResponse response = fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
-        log.debug(response);
+//        InfoResponse response = fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
+//        log.debug(response);
 
-        SendAuthInfoResponse domainResponse = fredService.callSendAuthInfo(new DomainSendAuthInfoRequest("nic.cz"));
-        log.debug(domainResponse);
+//        SendAuthInfoResponse domainResponse = fredService.callSendAuthInfo(new DomainSendAuthInfoRequest("nic.cz"));
+//        log.debug(domainResponse);
 
-        SendAuthInfoResponse contactResponse = fredService.callSendAuthInfo(new ContactSendAuthInfoRequest("A24-CONTACT"));
-        log.debug(contactResponse);
+//        SendAuthInfoResponse contactResponse = fredService.callSendAuthInfo(new ContactSendAuthInfoRequest("A24-CONTACT"));
+//        log.debug(contactResponse);
 
-        SendAuthInfoResponse keysetResponse = fredService.callSendAuthInfo(new KeysetSendAuthInfoRequest("A24-KEYSET"));
-        log.debug(keysetResponse);
+//        SendAuthInfoResponse keysetResponse = fredService.callSendAuthInfo(new KeysetSendAuthInfoRequest("A24-KEYSET"));
+//        log.debug(keysetResponse);
 
-        SendAuthInfoResponse nssetResponse = fredService.callSendAuthInfo(new NssetSendAuthInfoRequest("A24-NSSET"));
-        log.debug(nssetResponse);
+//        SendAuthInfoResponse nssetResponse = fredService.callSendAuthInfo(new NssetSendAuthInfoRequest("A24-NSSET"));
+//        log.debug(nssetResponse);
+
+        DomainInfoResponse domainInfoResponse = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
+        log.debug(domainInfoResponse);
+
+        DomainRenewRequest domainRenewRequest = new DomainRenewRequest(domainInfoResponse.getName(), domainInfoResponse.getExDate());
+        domainRenewRequest.setPeriod(new PeriodType(1, PeriodUnit.Y));
+
+        DomainRenewResponse renewResponse = (DomainRenewResponse) fredService.callRenew(domainRenewRequest);
+        log.debug(renewResponse);
+
+        DomainInfoResponse domainInfoResponseRenewed = (DomainInfoResponse) fredService.callInfo(new DomainInfoRequest("active24.cz"));
+        log.debug(domainInfoResponseRenewed);
     }
 
 }

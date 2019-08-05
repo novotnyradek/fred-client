@@ -8,6 +8,8 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.renew.domain.RenewRequest;
+import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.exception.FredClientException;
@@ -26,4 +28,6 @@ public interface ServerObjectStrategy {
     CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException;
 
     CreateResponse callCreate(CreateRequest createRequest) throws FredClientException;
+
+    RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException;
 }

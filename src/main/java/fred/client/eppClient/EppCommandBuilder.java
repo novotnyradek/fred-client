@@ -17,7 +17,7 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setInfo(readWriteType);
-        commandType.setClTRID(this.resolveClTRID("INF", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("INF", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -28,7 +28,7 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setCheck(readWriteType);
-        commandType.setClTRID(this.resolveClTRID("CHK", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("CHK", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -39,7 +39,7 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setCreate(readWriteType);
-        commandType.setClTRID(this.resolveClTRID("CRE", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("CRE", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -50,7 +50,7 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setDelete(readWriteType);
-        commandType.setClTRID(this.resolveClTRID("DEL", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("DEL", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -61,7 +61,18 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setUpdate(readWriteType);
-        commandType.setClTRID(this.resolveClTRID("UPD", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("UPD", clientTransactionId));
+
+        return getEppCommandEnd(commandType);
+    }
+
+    public JAXBElement<EppType> createRenewEppCommand(Object any, String clientTransactionId) {
+        ReadWriteType readWriteType = new ReadWriteType();
+        readWriteType.setAny(any);
+
+        CommandType commandType = new CommandType();
+        commandType.setRenew(readWriteType);
+        commandType.setClTRID(this.resolveClTrId("REN", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -73,7 +84,7 @@ public class EppCommandBuilder {
 
         CommandType commandType = new CommandType();
         commandType.setTransfer(transferType);
-        commandType.setClTRID(this.resolveClTRID("TRN", clientTransactionId));
+        commandType.setClTRID(this.resolveClTrId("TRN", clientTransactionId));
 
         return getEppCommandEnd(commandType);
     }
@@ -93,7 +104,7 @@ public class EppCommandBuilder {
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setSendAuthInfo(readWriteType);
-        extcommandType.setClTRID(this.resolveClTRID("AUTH", clientTransactionId));
+        extcommandType.setClTRID(this.resolveClTrId("AUTH", clientTransactionId));
 
         return createFredExtensionEppCommand(extcommandType);
     }
@@ -112,14 +123,14 @@ public class EppCommandBuilder {
         return factory.createEpp(eppType);
     }
 
-    public String resolveClTRID(String prefix, String clientTransactionId){
-        if (this.isClTRIDNullOrEmpty(clientTransactionId)) {
+    public String resolveClTrId(String prefix, String clientTransactionId){
+        if (this.isClTrIdNullOrEmpty(clientTransactionId)) {
             return prefix + "-" + System.currentTimeMillis();
         }
         return clientTransactionId;
     }
 
-    private boolean isClTRIDNullOrEmpty(String clientTransactionId) {
+    private boolean isClTrIdNullOrEmpty(String clientTransactionId) {
         return clientTransactionId == null || clientTransactionId.isEmpty();
     }
 }

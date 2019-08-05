@@ -1,4 +1,4 @@
-package fred.client.data.create.domain;
+package fred.client.data.common.domain;
 
 /**
  * The unit the period is counted in; it can be either m for months or y for years.

@@ -227,4 +227,26 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>fred.client.data.renew.domain.DomainRenewRequest</class-a>
+        <class-b>cz.nic.xml.epp.domain_1.RenewType</class-b>
+        <field>
+            <a>domainName</a>
+            <b>name</b>
+        </field>
+        <field custom-converter="fred.client.data.common.domain.DateToXmlGregorianCalendarCustomConverter">
+            <a>curExpDate</a>
+            <b>curExpDate</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>fred.client.data.common.domain.EnumValData</class-a>
+        <class-b>cz.nic.xml.epp.enumval_1.ExValType</class-b>
+        <field custom-converter="fred.client.data.common.domain.DateToXmlGregorianCalendarCustomConverter">
+            <a>valExDate</a>
+            <b>valExDate</b>
+        </field>
+    </mapping>
+
 </mappings>

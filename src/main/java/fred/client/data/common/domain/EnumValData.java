@@ -33,11 +33,11 @@ public class EnumValData implements Serializable {
         this.valExDate = valExDate;
     }
 
-    public boolean getPublish() {
+    public Boolean getPublish() {
         return publish;
     }
 
-    public void setPublish(boolean publish) {
+    public void setPublish(Boolean publish) {
         this.publish = publish;
     }
 
