@@ -14,6 +14,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.domain.DomainCreateRequest;
 import fred.client.data.create.domain.DomainCreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.domain.DomainDeleteRequest;
@@ -384,6 +386,12 @@ public class DomainStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+        log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object DOMAIN");
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {

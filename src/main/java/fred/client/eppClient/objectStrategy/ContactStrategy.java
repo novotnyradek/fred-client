@@ -11,6 +11,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.contact.ContactCreateRequest;
 import fred.client.data.create.contact.ContactCreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.contact.ContactDeleteRequest;
@@ -329,5 +331,11 @@ public class ContactStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+        log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object CONTACT");
     }
 }

@@ -4,6 +4,8 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
@@ -71,6 +73,12 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     @Override
     public DeleteResponse callDelete(DeleteRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }

@@ -4,6 +4,8 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
@@ -136,4 +138,6 @@ public interface FredClient {
      * @throws FredClientException
      */
     DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException;
+
+    CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException;
 }

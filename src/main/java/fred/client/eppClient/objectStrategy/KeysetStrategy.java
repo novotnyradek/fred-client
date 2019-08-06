@@ -11,6 +11,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.keyset.KeysetCreateRequest;
 import fred.client.data.create.keyset.KeysetCreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.keyset.KeysetDeleteRequest;
@@ -304,6 +306,12 @@ public class KeysetStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+        log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object KEYSET");
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

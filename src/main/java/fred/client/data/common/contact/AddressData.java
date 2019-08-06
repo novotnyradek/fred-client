@@ -13,7 +13,7 @@ import java.util.List;
  * <li>{@link AddressData#sp} – the state or province</li>
  * <li>{@link AddressData#pc} – the postal code</li>
  * <li>{@link AddressData#cc} – the country code</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */

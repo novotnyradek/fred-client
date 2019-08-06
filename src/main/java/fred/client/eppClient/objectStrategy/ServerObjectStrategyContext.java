@@ -4,6 +4,8 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
@@ -46,6 +48,7 @@ public class ServerObjectStrategyContext {
             case KEYSET:
                 return new KeysetStrategy();
             case OTHER:
+                return new OtherStrategy();
             default:
                 return new NotImplementedStrategy();
         }
@@ -81,5 +84,9 @@ public class ServerObjectStrategyContext {
 
     public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
         return serverObjectStrategy.callDelete(deleteRequest);
+    }
+
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+        return serverObjectStrategy.callCreditInfo(creditInfoRequest);
     }
 }

@@ -12,6 +12,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.nsset.NssetCreateRequest;
 import fred.client.data.create.nsset.NssetCreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.nsset.NssetDeleteRequest;
@@ -309,6 +311,12 @@ public class NssetStrategy implements ServerObjectStrategy {
         result.setServerTransactionId(responseType.getTrID().getSvTRID());
 
         return result;
+    }
+
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+        log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object NSSET");
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {

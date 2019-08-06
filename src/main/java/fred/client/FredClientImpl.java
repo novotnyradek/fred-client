@@ -6,6 +6,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.domain.DomainCreateRequest;
 import fred.client.data.create.domain.DomainCreateResponse;
+import fred.client.data.creditInfo.CreditInfoRequest;
+import fred.client.data.creditInfo.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.domain.DomainDeleteRequest;
@@ -96,6 +98,14 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callDelete(deleteRequest);
     }
 
+    @Override
+    public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(creditInfoRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callCreditInfo(creditInfoRequest);
+    }
+
     /**
      * Method for testing simple scenarios.
      *
@@ -141,6 +151,8 @@ public class FredClientImpl implements FredClient {
 //        log.debug(domainCreateResponse);
 //        DomainDeleteResponse domainDeleteResponse = (DomainDeleteResponse) fredService.callDelete(new DomainDeleteRequest("testtodelete.cz"));
 //        log.debug(domainDeleteResponse);
+
+        log.debug(fredService.callCreditInfo(new CreditInfoRequest()));
     }
 
 }
