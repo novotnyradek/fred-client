@@ -23,6 +23,7 @@ Version: 0.1.0
 * Transform commands
     * Create
     * Transfer
+    * Delete
     * Renew domain
 * Custom commands
     * Listing

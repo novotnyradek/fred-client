@@ -4,6 +4,8 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
@@ -34,4 +36,6 @@ public interface ServerObjectStrategy {
     RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException;
 
     TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException;
+
+    DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException;
 }

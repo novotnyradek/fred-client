@@ -4,8 +4,16 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.create.domain.DomainCreateRequest;
+import fred.client.data.create.domain.DomainCreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
+import fred.client.data.delete.domain.DomainDeleteRequest;
+import fred.client.data.delete.domain.DomainDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
+import fred.client.data.info.domain.DomainInfoRequest;
+import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.renew.domain.RenewRequest;
@@ -80,6 +88,14 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callTransfer(transferRequest);
     }
 
+    @Override
+    public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(deleteRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callDelete(deleteRequest);
+    }
+
     /**
      * Method for testing simple scenarios.
      *
@@ -120,6 +136,11 @@ public class FredClientImpl implements FredClient {
 //        KeysetTransferResponse keysetTransferResponse = (KeysetTransferResponse) fredService.callTransfer(new KeysetTransferRequest("A24-KEYSET", "blbalba"));
 //        ContactTransferResponse contactTransferResponse = (ContactTransferResponse) fredService.callTransfer(new ContactTransferRequest("A24-CONTACT", "blbalba"));
 //        DomainTransferResponse domainTransferRequest = (DomainTransferResponse) fredService.callTransfer(new DomainTransferRequest("active24.cz", "blbalba"));
+
+//        DomainCreateResponse domainCreateResponse = (DomainCreateResponse) fredService.callCreate(new DomainCreateRequest("testtodelete.cz", "A24-CONTACT"));
+//        log.debug(domainCreateResponse);
+//        DomainDeleteResponse domainDeleteResponse = (DomainDeleteResponse) fredService.callDelete(new DomainDeleteRequest("testtodelete.cz"));
+//        log.debug(domainDeleteResponse);
     }
 
 }

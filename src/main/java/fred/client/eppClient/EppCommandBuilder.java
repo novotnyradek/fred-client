@@ -44,7 +44,7 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
-    private JAXBElement<EppType> getDeleteEppCommand(Object any, String clientTransactionId) throws FredClientException {
+    public JAXBElement<EppType> createDeleteEppCommand(Object any, String clientTransactionId) throws FredClientException {
         ReadWriteType readWriteType = new ReadWriteType();
         readWriteType.setAny(any);
 
@@ -55,7 +55,7 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
-    private JAXBElement<EppType> getUpdateEppCommand(Object any, String clientTransactionId) {
+    public JAXBElement<EppType> getUpdateEppCommand(Object any, String clientTransactionId) {
         ReadWriteType readWriteType = new ReadWriteType();
         readWriteType.setAny(any);
 

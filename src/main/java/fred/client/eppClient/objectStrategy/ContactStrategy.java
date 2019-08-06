@@ -11,6 +11,10 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.contact.ContactCreateRequest;
 import fred.client.data.create.contact.ContactCreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
+import fred.client.data.delete.contact.ContactDeleteRequest;
+import fred.client.data.delete.contact.ContactDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.common.contact.AddressData;
@@ -285,6 +289,40 @@ public class ContactStrategy implements ServerObjectStrategy {
         client.evaulateResponse(responseType);
 
         ContactTransferResponse result = new ContactTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
+        log.debug("callDelete called with request(" + deleteRequest + ")");
+
+        ContactDeleteRequest contactDeleteRequest = (ContactDeleteRequest) deleteRequest;
+
+        SIDType sidType = new SIDType();
+        sidType.setId(contactDeleteRequest.getContactId());
+
+        JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, contactDeleteRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        ContactDeleteResponse result = new ContactDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());
         result.setClientTransactionId(responseType.getTrID().getClTRID());

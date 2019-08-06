@@ -14,6 +14,10 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.domain.DomainCreateRequest;
 import fred.client.data.create.domain.DomainCreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
+import fred.client.data.delete.domain.DomainDeleteRequest;
+import fred.client.data.delete.domain.DomainDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
@@ -340,6 +344,40 @@ public class DomainStrategy implements ServerObjectStrategy {
         client.evaulateResponse(responseType);
 
         DomainTransferResponse result = new DomainTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
+        log.debug("callDelete called with request(" + deleteRequest + ")");
+
+        DomainDeleteRequest domainDeleteRequest = (DomainDeleteRequest) deleteRequest;
+
+        SNameType sNameType = new SNameType();
+        sNameType.setName(domainDeleteRequest.getDomainName());
+
+        JAXBElement<SNameType> wrapper = new ObjectFactory().createDelete(sNameType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, domainDeleteRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        DomainDeleteResponse result = new DomainDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());
         result.setClientTransactionId(responseType.getTrID().getClTRID());

@@ -12,6 +12,10 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.nsset.NssetCreateRequest;
 import fred.client.data.create.nsset.NssetCreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
+import fred.client.data.delete.nsset.NssetDeleteRequest;
+import fred.client.data.delete.nsset.NssetDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.nsset.NssetInfoRequest;
@@ -265,6 +269,40 @@ public class NssetStrategy implements ServerObjectStrategy {
         client.evaulateResponse(responseType);
 
         NssetTransferResponse result = new NssetTransferResponse();
+        result.setCode(responseType.getResult().get(0).getCode());
+        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
+        result.setClientTransactionId(responseType.getTrID().getClTRID());
+        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+
+        return result;
+    }
+
+    @Override
+    public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
+        log.debug("callDelete called with request(" + deleteRequest + ")");
+
+        NssetDeleteRequest nssetDeleteRequest = (NssetDeleteRequest) deleteRequest;
+
+        SIDType sidType = new SIDType();
+        sidType.setId(nssetDeleteRequest.getNssetId());
+
+        JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, nssetDeleteRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaulateResponse(responseType);
+
+        NssetDeleteResponse result = new NssetDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
         result.setMessage(responseType.getResult().get(0).getMsg().getValue());
         result.setClientTransactionId(responseType.getTrID().getClTRID());

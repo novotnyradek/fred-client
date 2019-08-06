@@ -4,6 +4,8 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
+import fred.client.data.delete.DeleteRequest;
+import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
@@ -12,6 +14,8 @@ import fred.client.data.renew.domain.RenewRequest;
 import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.transfer.TransferRequest;
+import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
 
 /**
@@ -102,4 +106,34 @@ public interface FredClient {
      * @throws FredClientException
      */
     RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException;
+
+    /**
+     * Method used to call transfer command for objects:
+     * <ul>
+     * <li>DOMAIN</li>
+     * <li>CONTACT</li>
+     * <li>NSSET</li>
+     * <li>KEYSET</li>
+     * </ul>
+     *
+     * @param transferRequest subclass of {@link TransferRequest} interface.
+     * @return subclass of {@link TransferResponse} interface corresponding to request.
+     * @throws FredClientException
+     */
+    TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException;
+
+    /**
+     * Method used to call create command for objects:
+     * <ul>
+     * <li>DOMAIN</li>
+     * <li>CONTACT</li>
+     * <li>NSSET</li>
+     * <li>KEYSET</li>
+     * </ul>
+     *
+     * @param deleteRequest subclass of {@link DeleteRequest} interface.
+     * @return subclass of {@link DeleteResponse} interface corresponding to request.
+     * @throws FredClientException
+     */
+    DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException;
 }

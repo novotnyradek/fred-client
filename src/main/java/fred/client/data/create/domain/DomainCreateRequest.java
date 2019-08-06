@@ -7,6 +7,7 @@ import fred.client.data.create.CreateRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,8 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
         setServerObjectType(ServerObjectType.DOMAIN);
         this.name = domainName;
         this.registrant = registrant;
+
+        this.admin = new ArrayList<String>();
     }
 
     public String getName() {
