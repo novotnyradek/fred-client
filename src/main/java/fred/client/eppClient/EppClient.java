@@ -22,5 +22,5 @@ public interface EppClient {
 
     String marshall(Object command, Class... classes) throws SystemException, SchemaValidationException;
 
-    void evaulateResponse(ResponseType responseType) throws ServerResponseException;
+    void evaluateResponse(ResponseType responseType) throws ServerResponseException;
 }

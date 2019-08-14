@@ -1,4 +1,4 @@
-package fred.client.data.creditInfo;
+package fred.client.data.creditInfo.other;
 
 import fred.client.data.EppResponse;
 import fred.client.data.common.other.ZoneCredit;
@@ -9,6 +9,11 @@ import java.util.List;
 
 /**
  * A credit info command is used to find out about the current credit amounts of the authenticated registrar in all zones for which the registrar is accredited.
+ * <p>
+ * <ul>
+ * <li>{@link CreditInfoResponse#zoneCredit} - the credit information of a single zone, see {@link ZoneCredit}</li>
+ * </ul>
+ * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/CreditInfo.html">FRED documentation</a>
  */

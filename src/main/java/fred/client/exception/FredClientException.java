@@ -12,4 +12,6 @@ public class FredClientException extends Exception {
     public FredClientException(String message, Throwable throwable){
         super(message, throwable);
     }
+
+    // todo get error code, get message, possibly get reason
 }

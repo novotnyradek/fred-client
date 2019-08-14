@@ -2,40 +2,39 @@ package fred.client;
 
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
+import fred.client.data.common.keyset.DnsKeyData;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
-import fred.client.data.create.domain.DomainCreateRequest;
-import fred.client.data.create.domain.DomainCreateResponse;
-import fred.client.data.creditInfo.CreditInfoRequest;
-import fred.client.data.creditInfo.CreditInfoResponse;
+import fred.client.data.create.keyset.KeysetCreateRequest;
+import fred.client.data.create.keyset.KeysetCreateResponse;
+import fred.client.data.creditInfo.other.CreditInfoRequest;
+import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
-import fred.client.data.delete.domain.DomainDeleteRequest;
-import fred.client.data.delete.domain.DomainDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.renew.domain.RenewRequest;
-import fred.client.data.renew.domain.RenewResponse;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
-import fred.client.data.transfer.contact.ContactTransferRequest;
-import fred.client.data.transfer.contact.ContactTransferResponse;
-import fred.client.data.transfer.domain.DomainTransferRequest;
-import fred.client.data.transfer.domain.DomainTransferResponse;
-import fred.client.data.transfer.keyset.KeysetTransferRequest;
-import fred.client.data.transfer.keyset.KeysetTransferResponse;
-import fred.client.data.transfer.nsset.NssetTransferRequest;
-import fred.client.data.transfer.nsset.NssetTransferResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.plexus.util.Base64;
+
+import java.util.Arrays;
 
 public class FredClientImpl implements FredClient {
 
@@ -76,7 +75,7 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callCreate(createRequest);
     }
 
-    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+    public DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException {
 
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(renewRequest.getServerObjectType());
 
@@ -106,6 +105,28 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callCreditInfo(creditInfoRequest);
     }
 
+    public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(testNssetRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callTestNsset(testNssetRequest);
+    }
+
+    public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(pollRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callPollRequest(pollRequest);
+    }
+
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(pollAcknowledgementRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callPollAcknowledgement(pollAcknowledgementRequest);
+    }
+
+
     /**
      * Method for testing simple scenarios.
      *
@@ -115,7 +136,7 @@ public class FredClientImpl implements FredClient {
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl();
 
-//        InfoResponse response = fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
+//        InfoResponse response = fredService.callInfo(new DomainInfoRequest("active24.cz"));
 //        log.debug(response);
 
 //        SendAuthInfoResponse domainResponse = fredService.callSendAuthInfo(new DomainSendAuthInfoRequest("nic.cz"));
@@ -152,7 +173,30 @@ public class FredClientImpl implements FredClient {
 //        DomainDeleteResponse domainDeleteResponse = (DomainDeleteResponse) fredService.callDelete(new DomainDeleteRequest("testtodelete.cz"));
 //        log.debug(domainDeleteResponse);
 
-        log.debug(fredService.callCreditInfo(new CreditInfoRequest()));
+//        log.debug(fredService.callCreditInfo(new CreditInfoRequest()));
+
+//        TestNssetRequest testNssetRequest = new TestNssetRequest("A24-NSSET");
+//        testNssetRequest.setLevel(5);
+//        testNssetRequest.setName(Arrays.asList("active24.cz"));
+//
+//        log.debug(fredService.callTestNsset(testNssetRequest));
+
+        PollResponse response = fredService.callPollRequest(new PollRequest());
+        log.debug(response);
+
+//        PollAcknowledgementResponse pollAcknowledgementResponse = fredService.callPollAcknowledgement(new PollAcknowledgementRequest("135"));
+//        log.debug(pollAcknowledgementResponse);
+
+
+//        KeysetCreateRequest keysetCreateRequest = new KeysetCreateRequest("A24KEYSET-1-JNDI", "A24CONTACT-10058");
+//        String dnskey1 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDE=";
+//        DnsKeyData dnsKeyData1 = new DnsKeyData(257, (short) 3, (short) 13, Base64.decodeBase64(dnskey1.getBytes()));
+//        String dnskey2 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDI=";
+//        DnsKeyData dnsKeyData2 = new DnsKeyData(256, (short) 3, (short) 16, Base64.decodeBase64(dnskey2.getBytes()));
+//        keysetCreateRequest.setDnskey(Arrays.asList(dnsKeyData1, dnsKeyData2));
+//
+//        KeysetCreateResponse response = (KeysetCreateResponse) fredService.callCreate(keysetCreateRequest);
+//        log.debug(response);
     }
 
 }

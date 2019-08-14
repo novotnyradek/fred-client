@@ -17,6 +17,30 @@
                 <class-a>fred.client.data.common.contact.DiscloseData</class-a>
                 <class-b>cz.nic.xml.epp.contact_1.InfupdDiscloseType</class-b>
             </converter>
+            <converter type="fred.client.data.poll.domain.DomainExpirationCustomConverter">
+                <class-a>cz.nic.xml.epp.domain_1.ImpendingExpDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
+            <converter type="fred.client.data.poll.domain.DomainExpirationCustomConverter">
+                <class-a>cz.nic.xml.epp.domain_1.ExpDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
+            <converter type="fred.client.data.poll.domain.DomainExpirationCustomConverter">
+                <class-a>cz.nic.xml.epp.domain_1.DnsOutageDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
+            <converter type="fred.client.data.poll.domain.DomainDeletionCustomConverter">
+                <class-a>cz.nic.xml.epp.domain_1.DelDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
+            <converter type="fred.client.data.poll.domain.EnumDomainValidationCustomConverter">
+                <class-a>cz.nic.xml.epp.enumval_1.ImpendingValExpDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
+            <converter type="fred.client.data.poll.domain.EnumDomainValidationCustomConverter">
+                <class-a>cz.nic.xml.epp.enumval_1.ValExpDataT</class-a>
+                <class-b>fred.client.data.poll.PollResponse</class-b>
+            </converter>
         </custom-converters>
     </configuration>
 
@@ -195,6 +219,7 @@
         <class-a>fred.client.data.common.nsset.NameserverData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.NsT</class-b>
         <field>
+<!--             todo resolve if addr is null -->
             <a>addr</a>
             <b>addr</b>
         </field>
@@ -285,4 +310,75 @@
         </field>
     </mapping>
 
+    <mapping>
+        <class-a>fred.client.data.testNsset.nsset.TestNssetRequest</class-a>
+        <class-b>cz.nic.xml.epp.nsset_1.TestType</class-b>
+        <field>
+            <a>nssetId</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a>level</a>
+            <b>level</b>
+        </field>
+        <field>
+            <a>name</a>
+            <b>name</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.fred_1.LowCreditDataT</class-a>
+        <class-b>fred.client.data.poll.other.LowCreditPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.HandleDateT</class-a>
+        <class-b>fred.client.data.poll.contact.ContactTransferPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.domain_1.HandleDateT</class-a>
+        <class-b>fred.client.data.poll.domain.DomainTransferPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.HandleDateT</class-a>
+        <class-b>fred.client.data.poll.nsset.NssetTransferPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.HandleDateT</class-a>
+        <class-b>fred.client.data.poll.keyset.KeysetTransferPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.fred_1.RequestFeeInfoDataT</class-a>
+        <class-b>fred.client.data.poll.other.RequestUsagePollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.domain_1.UpdateDataT</class-a>
+        <class-b>fred.client.data.poll.domain.DomainUpdatePollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.IdleDelDataT</class-a>
+        <class-b>fred.client.data.poll.contact.ContactDeletionPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.IdleDelDataT</class-a>
+        <class-b>fred.client.data.poll.keyset.KeysetDeletionPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.IdleDelDataT</class-a>
+        <class-b>fred.client.data.poll.nsset.NssetDeletionPollResponse</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.TestDataT</class-a>
+        <class-b>fred.client.data.poll.nsset.TechnicalCheckResultsPollResponse</class-b>
+    </mapping>
 </mappings>

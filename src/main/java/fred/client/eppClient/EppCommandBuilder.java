@@ -89,6 +89,29 @@ public class EppCommandBuilder {
         return getEppCommandEnd(commandType);
     }
 
+    public JAXBElement<EppType> createPollRequestEppCommand(String clientTransactionId){
+        PollType pollType = new PollType();
+        pollType.setOp(PollOpType.REQ);
+
+        CommandType commandType = new CommandType();
+        commandType.setPoll(pollType);
+        commandType.setClTRID(this.resolveClTrId("POLL", clientTransactionId));
+
+        return getEppCommandEnd(commandType);
+    }
+
+    public JAXBElement<EppType> createPollAcknowledgementEppCommand(String msgID, String clientTransactionId){
+        PollType pollType = new PollType();
+        pollType.setOp(PollOpType.ACK);
+        pollType.setMsgID(msgID);
+
+        CommandType commandType = new CommandType();
+        commandType.setPoll(pollType);
+        commandType.setClTRID(this.resolveClTrId("ACK", clientTransactionId));
+
+        return getEppCommandEnd(commandType);
+    }
+
     private JAXBElement<EppType> getEppCommandEnd(CommandType commandType) {
         ObjectFactory factory = new ObjectFactory();
         EppType eppType = factory.createEppType();
@@ -98,7 +121,6 @@ public class EppCommandBuilder {
     }
 
     public JAXBElement<EppType> createSendAuthInfoEppCommand(Object any, String clientTransactionId) {
-
         cz.nic.xml.epp.fred_1.ReadWriteType readWriteType = new cz.nic.xml.epp.fred_1.ReadWriteType();
         readWriteType.setAny(any);
 
@@ -110,10 +132,20 @@ public class EppCommandBuilder {
     }
 
     public JAXBElement<EppType> createCreditInfoEppCommand(String clientTransactionId) {
-
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setCreditInfo("");
         extcommandType.setClTRID(this.resolveClTrId("CREDIT", clientTransactionId));
+
+        return createFredExtensionEppCommand(extcommandType);
+    }
+
+    public JAXBElement<EppType> createTestNssetEppCommand(Object any, String clientTransactionId) {
+        cz.nic.xml.epp.fred_1.ReadWriteType readWriteType = new cz.nic.xml.epp.fred_1.ReadWriteType();
+        readWriteType.setAny(any);
+
+        ExtcommandType extcommandType = new ExtcommandType();
+        extcommandType.setTest(readWriteType);
+        extcommandType.setClTRID(this.resolveClTrId("TEST", clientTransactionId));
 
         return createFredExtensionEppCommand(extcommandType);
     }
@@ -132,7 +164,7 @@ public class EppCommandBuilder {
         return factory.createEpp(eppType);
     }
 
-    public String resolveClTrId(String prefix, String clientTransactionId){
+    public String resolveClTrId(String prefix, String clientTransactionId) {
         if (this.isClTrIdNullOrEmpty(clientTransactionId)) {
             return prefix + "-" + System.currentTimeMillis();
         }

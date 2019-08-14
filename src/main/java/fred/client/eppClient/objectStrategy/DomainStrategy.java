@@ -14,8 +14,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.domain.DomainCreateRequest;
 import fred.client.data.create.domain.DomainCreateResponse;
-import fred.client.data.creditInfo.CreditInfoRequest;
-import fred.client.data.creditInfo.CreditInfoResponse;
+import fred.client.data.creditInfo.other.CreditInfoRequest;
+import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.domain.DomainDeleteRequest;
@@ -32,14 +32,18 @@ import fred.client.data.list.domain.DomainsByContactListRequest;
 import fred.client.data.list.domain.DomainsByKeysetListRequest;
 import fred.client.data.list.domain.DomainsByNssetListRequest;
 import fred.client.data.list.domain.DomainsListRequest;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
 import fred.client.data.renew.domain.DomainRenewRequest;
 import fred.client.data.renew.domain.DomainRenewResponse;
-import fred.client.data.renew.domain.RenewRequest;
-import fred.client.data.renew.domain.RenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.domain.DomainSendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.domain.DomainTransferRequest;
@@ -101,7 +105,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -149,7 +153,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         DomainSendAuthInfoResponse sendAuthInfoResponse = new DomainSendAuthInfoResponse();
         sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
@@ -207,7 +211,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -256,7 +260,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -273,19 +277,17 @@ public class DomainStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+    public DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
 
-        DomainRenewRequest domainRenewRequest = (DomainRenewRequest) renewRequest;
-
-        RenewType renewType = mapper.map(domainRenewRequest, RenewType.class);
+        RenewType renewType = mapper.map(renewRequest, RenewType.class);
 
         JAXBElement<RenewType> wrapper = new ObjectFactory().createRenew(renewType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createRenewEppCommand(wrapper, domainRenewRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createRenewEppCommand(wrapper, renewRequest.getClientTransactionId());
 
-        if (domainRenewRequest.getEnumValData() != null){
-            ExValType exValType = mapper.map(domainRenewRequest.getEnumValData(), ExValType.class);
+        if (renewRequest.getEnumValData() != null){
+            ExValType exValType = mapper.map(renewRequest.getEnumValData(), ExValType.class);
 
             JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
 
@@ -305,7 +307,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -343,7 +345,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         DomainTransferResponse result = new DomainTransferResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -377,7 +379,7 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         DomainDeleteResponse result = new DomainDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -391,7 +393,25 @@ public class DomainStrategy implements ServerObjectStrategy {
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
         log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
-        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object DOMAIN");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " + creditInfoRequest.getServerObjectType());
+    }
+
+    @Override
+    public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
+        log.debug("callTestNsset called with request(" + testNssetRequest + ")");
+        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " + testNssetRequest.getServerObjectType());
+    }
+
+    @Override
+    public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
+        log.debug("callPollRequest called with request(" + pollRequest + ")");
+        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " + pollRequest.getServerObjectType());
+    }
+
+    @Override
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+        log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
+        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {

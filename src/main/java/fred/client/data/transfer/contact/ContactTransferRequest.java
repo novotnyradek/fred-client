@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 /**
  * A contact transfer command is used to take over sponsorship of a contact. The transfer password of the contact must be provided for authorization.
-
  * <ul>
  * <li>{@link ContactTransferRequest#contactId} - the contact handle</li>
  * <li>{@link ContactTransferRequest#authInfo} - the transfer password</li> 

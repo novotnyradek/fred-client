@@ -7,31 +7,37 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.check.contact.ContactCheckRequest;
 import fred.client.data.check.contact.ContactCheckResponse;
+import fred.client.data.common.contact.AddressData;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.contact.ContactCreateRequest;
 import fred.client.data.create.contact.ContactCreateResponse;
-import fred.client.data.creditInfo.CreditInfoRequest;
-import fred.client.data.creditInfo.CreditInfoResponse;
+import fred.client.data.creditInfo.other.CreditInfoRequest;
+import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.contact.ContactDeleteRequest;
 import fred.client.data.delete.contact.ContactDeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.common.contact.AddressData;
 import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.list.ListResultsUtil;
 import fred.client.data.list.contact.ContactsListRequest;
-import fred.client.data.renew.domain.RenewRequest;
-import fred.client.data.renew.domain.RenewResponse;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.contact.ContactSendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.contact.ContactTransferRequest;
@@ -93,7 +99,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -142,7 +148,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         ContactSendAuthInfoResponse sendAuthInfoResponse = new ContactSendAuthInfoResponse();
         sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
@@ -189,7 +195,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -244,7 +250,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -261,9 +267,9 @@ public class ContactStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+    public DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
-        throw new UnsupportedOperationException("callRenew operation is not supported for object CONTACT");
+        throw new UnsupportedOperationException("callRenew operation is not supported for object " + renewRequest.getServerObjectType());
     }
 
     @Override
@@ -288,7 +294,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         ContactTransferResponse result = new ContactTransferResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -322,7 +328,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         ContactDeleteResponse result = new ContactDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -336,6 +342,24 @@ public class ContactStrategy implements ServerObjectStrategy {
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
         log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
-        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object CONTACT");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " + creditInfoRequest.getServerObjectType());
+    }
+
+    @Override
+    public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
+        log.debug("callTestNsset called with request(" + testNssetRequest + ")");
+        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " + testNssetRequest.getServerObjectType());
+    }
+
+    @Override
+    public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
+        log.debug("callPollRequest called with request(" + pollRequest + ")");
+        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " + pollRequest.getServerObjectType());
+    }
+
+    @Override
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+        log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
+        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
     }
 }

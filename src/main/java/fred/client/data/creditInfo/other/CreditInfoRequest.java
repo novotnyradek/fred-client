@@ -1,4 +1,4 @@
-package fred.client.data.creditInfo;
+package fred.client.data.creditInfo.other;
 
 import fred.client.data.EppRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectType;

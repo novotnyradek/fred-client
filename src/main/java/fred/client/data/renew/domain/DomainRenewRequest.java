@@ -21,7 +21,7 @@ import java.util.Date;
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/RenewDomain.html">FRED documentation</a>
  */
-public class DomainRenewRequest extends EppRequest implements Serializable, RenewRequest {
+public class DomainRenewRequest extends EppRequest implements Serializable {
 
     private String domainName;
 

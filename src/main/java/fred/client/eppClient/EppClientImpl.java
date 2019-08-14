@@ -42,7 +42,7 @@ public class EppClientImpl implements EppClient {
     public EppClientImpl() {
     }
 
-    public void evaulateResponse(ResponseType responseType) throws ServerResponseException {
+    public void evaluateResponse(ResponseType responseType) throws ServerResponseException {
         ResultType result = responseType.getResult().get(0);
         // TODO better logging to exceptions
         if (ErrorResponse.getAllErrorCodes().contains(result.getCode())) {
@@ -149,7 +149,7 @@ public class EppClientImpl implements EppClient {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        evaulateResponse(responseType);
+        evaluateResponse(responseType);
 
         log.debug("Logout response " + responseElement.getValue().getResponse().getResult().get(0).getCode() +
                 " and message " + responseElement.getValue().getResponse().getResult().get(0).getMsg().getValue());
@@ -219,7 +219,7 @@ public class EppClientImpl implements EppClient {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        evaulateResponse(responseType);
+        evaluateResponse(responseType);
     }
 
     public void disconnect() throws IOException {
@@ -267,7 +267,7 @@ public class EppClientImpl implements EppClient {
                 log.error(message, e);
                 throw new SchemaValidationException(message, e.getMessage(), e);
             }
-            log.error("Something happen when marshalling data into xml!", e);
+            log.error("Something happen when unmarshalling data from xml!", e);
             throw new SystemException(e.getMessage(), e);
         } catch (SAXException e) {
             String message = "Schema loading failed!";

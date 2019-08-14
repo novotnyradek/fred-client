@@ -12,8 +12,8 @@ import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
 import fred.client.data.create.nsset.NssetCreateRequest;
 import fred.client.data.create.nsset.NssetCreateResponse;
-import fred.client.data.creditInfo.CreditInfoRequest;
-import fred.client.data.creditInfo.CreditInfoResponse;
+import fred.client.data.creditInfo.other.CreditInfoRequest;
+import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.delete.nsset.NssetDeleteRequest;
@@ -29,12 +29,18 @@ import fred.client.data.list.ListType;
 import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
 import fred.client.data.list.nsset.NssetsListRequest;
-import fred.client.data.renew.domain.RenewRequest;
-import fred.client.data.renew.domain.RenewResponse;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
 import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.nsset.NssetSendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.nsset.NssetTransferRequest;
@@ -94,7 +100,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -132,7 +138,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         NssetSendAuthInfoResponse sendAuthInfoResponse = new NssetSendAuthInfoResponse();
         sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
@@ -186,7 +192,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -224,7 +230,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -241,9 +247,9 @@ public class NssetStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public RenewResponse callRenew(RenewRequest renewRequest) throws FredClientException {
+    public DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
-        throw new UnsupportedOperationException("callRenew operation is not supported for object NSSET");
+        throw new UnsupportedOperationException("callRenew operation is not supported for object " + renewRequest.getServerObjectType());
     }
 
     @Override
@@ -268,7 +274,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         NssetTransferResponse result = new NssetTransferResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -302,7 +308,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         NssetDeleteResponse result = new NssetDeleteResponse();
         result.setCode(responseType.getResult().get(0).getCode());
@@ -316,7 +322,50 @@ public class NssetStrategy implements ServerObjectStrategy {
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
         log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
-        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object NSSET");
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " + creditInfoRequest.getServerObjectType());
+    }
+
+    @Override
+    public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
+        log.debug("callTestNsset called with request(" + testNssetRequest + ")");
+
+        TestType testType = mapper.map(testNssetRequest, TestType.class);
+
+        JAXBElement<TestType> wrapper = new ObjectFactory().createTest(testType);
+
+        JAXBElement<EppType> requestElement = eppCommandBuilder.createTestNssetEppCommand(wrapper, testNssetRequest.getClientTransactionId());
+
+        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+
+        client.checkSession();
+
+        String response = client.proceedCommand(xml);
+
+        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
+
+        ResponseType responseType = responseElement.getValue().getResponse();
+
+        client.evaluateResponse(responseType);
+
+        TestNssetResponse testNssetResponse = new TestNssetResponse();
+        testNssetResponse.setClientTransactionId(responseType.getTrID().getClTRID());
+        testNssetResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
+        testNssetResponse.setCode(responseType.getResult().get(0).getCode());
+        testNssetResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
+
+        return testNssetResponse;
+    }
+
+    @Override
+    public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
+        log.debug("callPollRequest called with request(" + pollRequest + ")");
+        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " + pollRequest.getServerObjectType());
+    }
+
+    @Override
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+        log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
+        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {

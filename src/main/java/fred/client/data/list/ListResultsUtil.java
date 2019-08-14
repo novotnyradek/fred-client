@@ -55,7 +55,7 @@ public class ListResultsUtil {
 
         ResponseType responseType = responseElement.getValue().getResponse();
 
-        client.evaulateResponse(responseType);
+        client.evaluateResponse(responseType);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
@@ -101,7 +101,7 @@ public class ListResultsUtil {
 
             ResponseType responseType = responseElement.getValue().getResponse();
 
-            client.evaulateResponse(responseType);
+            client.evaluateResponse(responseType);
 
             if (responseType.getResData() != null){
                 JAXBElement wrapperBack = (JAXBElement) responseElement.getValue().getResponse().getResData().getAny().get(0);

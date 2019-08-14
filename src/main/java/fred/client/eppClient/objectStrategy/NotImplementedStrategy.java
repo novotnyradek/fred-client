@@ -4,18 +4,24 @@ import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
-import fred.client.data.creditInfo.CreditInfoRequest;
-import fred.client.data.creditInfo.CreditInfoResponse;
+import fred.client.data.creditInfo.other.CreditInfoRequest;
+import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.renew.domain.RenewRequest;
-import fred.client.data.renew.domain.RenewResponse;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
+import fred.client.data.renew.domain.DomainRenewRequest;
+import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
@@ -60,7 +66,7 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
     }
 
     @Override
-    public RenewResponse callRenew(RenewRequest request) throws FredClientException {
+    public DomainRenewResponse callRenew(DomainRenewRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }
@@ -79,6 +85,24 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public TestNssetResponse callTestNsset(TestNssetRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public PollResponse callPollRequest(PollRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }
