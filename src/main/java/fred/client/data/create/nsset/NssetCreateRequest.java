@@ -32,7 +32,7 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
 
     private String authInfo;
 
-    private Integer reportLevel;
+    private Short reportLevel;
 
     public NssetCreateRequest(String nssetId, List<NameserverData> nameservers, List<String> technicalContacts) {
         setServerObjectType(ServerObjectType.NSSET);
@@ -78,11 +78,11 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
         this.authInfo = authInfo;
     }
 
-    public Integer getReportLevel() {
+    public Short getReportLevel() {
         return reportLevel;
     }
 
-    public void setReportLevel(Integer reportLevel) {
+    public void setReportLevel(Short reportLevel) {
         this.reportLevel = reportLevel;
     }
 
