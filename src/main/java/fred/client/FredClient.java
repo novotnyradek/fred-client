@@ -12,10 +12,16 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.poll.PollAcknowledgementRequest;
+import fred.client.data.poll.PollAcknowledgementResponse;
+import fred.client.data.poll.PollRequest;
+import fred.client.data.poll.PollResponse;
 import fred.client.data.renew.domain.DomainRenewRequest;
 import fred.client.data.renew.domain.DomainRenewResponse;
 import fred.client.data.sendAuthInfo.SendAuthInfoRequest;
 import fred.client.data.sendAuthInfo.SendAuthInfoResponse;
+import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
@@ -139,5 +145,40 @@ public interface FredClient {
      */
     DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException;
 
+    /**
+     * Method used to call credit info command.
+     *
+     * @param creditInfoRequest {@link CreditInfoRequest}.
+     * @return {@link CreditInfoResponse}.
+     * @throws FredClientException
+     */
     CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException;
+
+    /**
+     * Method used to call test NSSET command.
+     *
+     * @param testNssetRequest {@link TestNssetRequest}.
+     * @return {@link TestNssetResponse}
+     * @throws FredClientException
+     */
+    TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException;
+
+    /**
+     * Method used to call poll request command.
+     *
+     * @param pollRequest {@link PollRequest}.
+     * @return subclass of {@link PollResponse} interface corresponding to message.
+     * If no messages, returns only {@link PollResponse} object.
+     * @throws FredClientException
+     */
+    PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException;
+
+    /**
+     * Method used to call poll acknowledgement command.
+     *
+     * @param pollAcknowledgementRequest {@link PollAcknowledgementRequest}.
+     * @return {@link PollAcknowledgementResponse}.
+     * @throws FredClientException
+     */
+    PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException;
 }

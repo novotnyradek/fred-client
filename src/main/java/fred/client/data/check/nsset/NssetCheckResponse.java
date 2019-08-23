@@ -39,8 +39,7 @@ public class NssetCheckResponse extends EppResponse implements Serializable, Che
         sb.append("checkData=").append(checkData);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

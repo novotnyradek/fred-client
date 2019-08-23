@@ -1,6 +1,6 @@
 package fred.client.data.list;
 
-import fred.client.data.EppRequest;
+import fred.client.data.EppResponse;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.HashSet;
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/List/GetResults.html#response-element-structure">FRED documentation</a>
  */
-public class ListResultsResponse extends EppRequest implements Serializable, ListResponse {
+public class ListResultsResponse extends EppResponse implements Serializable, ListResponse {
 
     private Collection<String> results;
 
@@ -38,6 +38,8 @@ public class ListResultsResponse extends EppRequest implements Serializable, Lis
         final StringBuffer sb = new StringBuffer("ListResultsResponse{");
         sb.append("results=").append(results);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
+        sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

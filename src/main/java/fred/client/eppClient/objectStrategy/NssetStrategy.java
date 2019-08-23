@@ -24,7 +24,7 @@ import fred.client.data.info.nsset.NssetInfoRequest;
 import fred.client.data.info.nsset.NssetInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.ListResultsHelper;
 import fred.client.data.list.ListType;
 import fred.client.data.list.nsset.NssetsByContactListRequest;
 import fred.client.data.list.nsset.NssetsByNsListRequest;
@@ -46,7 +46,7 @@ import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.nsset.NssetTransferRequest;
 import fred.client.data.transfer.nsset.NssetTransferResponse;
 import fred.client.eppClient.EppClientImpl;
-import fred.client.eppClient.EppCommandBuilder;
+import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
@@ -55,6 +55,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
+import java.util.Properties;
 
 /**
  * Class for handling actions on nsset.
@@ -65,17 +67,16 @@ public class NssetStrategy implements ServerObjectStrategy {
 
     private EppClientImpl client;
 
-    private EppCommandBuilder eppCommandBuilder;
+    private EppCommandHelper eppCommandHelper;
 
-    private FredClientDozerMapper mapper;
+    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    private ListResultsUtil listResultsUtil;
+    private ListResultsHelper listResultsHelper;
 
-    public NssetStrategy() {
-        this.client = new EppClientImpl();
-        this.eppCommandBuilder = new EppCommandBuilder();
-        this.listResultsUtil = new ListResultsUtil(client, eppCommandBuilder);
-        mapper = FredClientDozerMapper.getInstance();
+    NssetStrategy(Properties properties) {
+        this.client = EppClientImpl.getInstance(properties);
+        this.eppCommandHelper = new EppCommandHelper();
+        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -88,30 +89,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createInfoEppCommand(wrapper, nssetInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, nssetInfoRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        InfDataType infDataType = (InfDataType) wrapperBack.getValue();
-
-        NssetInfoResponse result = mapper.map(infDataType, NssetInfoResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        NssetInfoResponse result = mapper.map(infDataType, NssetInfoResponse.class, "NameserverDataMapping");
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -126,27 +111,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        NssetSendAuthInfoResponse result = new NssetSendAuthInfoResponse();
+        result.addResponseInfo(responseType);
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        NssetSendAuthInfoResponse sendAuthInfoResponse = new NssetSendAuthInfoResponse();
-        sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
-        sendAuthInfoResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
-        sendAuthInfoResponse.setCode(responseType.getResult().get(0).getCode());
-        sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
-
-        return sendAuthInfoResponse;
+        return result;
     }
 
     @Override
@@ -155,7 +127,7 @@ public class NssetStrategy implements ServerObjectStrategy {
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
-            extcommandType = this.prepareAllNssetsCommand((NssetsListRequest) listRequest);
+            extcommandType = this.prepareListNssetsCommand((NssetsListRequest) listRequest);
         }
 
         if (ListType.NSSETS_BY_CONTACT.equals(listRequest.getListType())) {
@@ -166,7 +138,7 @@ public class NssetStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareNssetsByNsCommand((NssetsByNsListRequest) listRequest);
         }
 
-        return listResultsUtil.prepareListAndGetResults(extcommandType);
+        return listResultsHelper.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -180,30 +152,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, nssetCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, nssetCheckRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+        ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         NssetCheckResponse result = mapper.map(chkDataType, NssetCheckResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -218,30 +174,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, nssetCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, nssetCreateRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+        CreDataType creDataType = (CreDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         NssetCreateResponse result = mapper.map(creDataType, NssetCreateResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -262,25 +202,12 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, nssetTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, nssetTransferRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         NssetTransferResponse result = new NssetTransferResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -296,25 +223,12 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, nssetDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, nssetDeleteRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         NssetDeleteResponse result = new NssetDeleteResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -333,27 +247,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         JAXBElement<TestType> wrapper = new ObjectFactory().createTest(testType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createTestNssetEppCommand(wrapper, testNssetRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTestNssetEppCommand(wrapper, testNssetRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        TestNssetResponse result = new TestNssetResponse();
+        result.addResponseInfo(responseType);
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        TestNssetResponse testNssetResponse = new TestNssetResponse();
-        testNssetResponse.setClientTransactionId(responseType.getTrID().getClTRID());
-        testNssetResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
-        testNssetResponse.setCode(responseType.getResult().get(0).getCode());
-        testNssetResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
-
-        return testNssetResponse;
+        return result;
     }
 
     @Override
@@ -374,11 +275,7 @@ public class NssetStrategy implements ServerObjectStrategy {
         NssetsByNsT nssetsByNsT = new NssetsByNsT();
         nssetsByNsT.setName(nssetsByNsListRequest.getNameserver());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setNssetsByNs(nssetsByNsT);
-        extcommandType.setClTRID(nssetsByNsListRequest.getClientTransactionId());
-
-        return extcommandType;
+        return eppCommandHelper.createNssetsByNsExtCommand(nssetsByNsT, nssetsByNsListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareNssetsByContactCommand(NssetsByContactListRequest nssetsByContactListRequest) {
@@ -387,20 +284,12 @@ public class NssetStrategy implements ServerObjectStrategy {
         NssetsByContactT nssetsByContactT = new NssetsByContactT();
         nssetsByContactT.setId(nssetsByContactListRequest.getContactId());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setNssetsByContact(nssetsByContactT);
-        extcommandType.setClTRID(nssetsByContactListRequest.getClientTransactionId());
-
-        return extcommandType;
+        return eppCommandHelper.createNssetsByContactExtCommand(nssetsByContactT, nssetsByContactListRequest.getClientTransactionId());
     }
 
-    private ExtcommandType prepareAllNssetsCommand(NssetsListRequest nssetsListRequest) {
+    private ExtcommandType prepareListNssetsCommand(NssetsListRequest nssetsListRequest) {
         log.debug("listAllNssets called with request(" + nssetsListRequest + ")");
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setListNssets("");
-        extcommandType.setClTRID(nssetsListRequest.getClientTransactionId());
-
-        return extcommandType;
+        return eppCommandHelper.createListNssetsExtCommand(nssetsListRequest.getClientTransactionId());
     }
 }

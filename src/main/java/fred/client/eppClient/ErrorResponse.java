@@ -6,7 +6,12 @@ import java.util.List;
 /**
  * Error responses which can be returned from FRED.
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/Appendixes/ResultCodes.html?highlight=errors>FRED documentation</a>
+ * <ul>
+ * <li>{@link ErrorResponse#code} - result code (4-digit number)</li>
+ * <li>{@link ErrorResponse#message} - human-readable description of the result</li>
+ * </ul>
+ *
+ * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/Appendixes/ResultCodes.html>FRED documentation</a>
  */
 public enum ErrorResponse {
 
@@ -40,41 +45,45 @@ public enum ErrorResponse {
     ERROR_2501(2501, "Authentication error; server closing connection"),
     ERROR_2502(2502, "Session limit exceeded; server closing connection");
 
-    private int errorCode;
+    private int code;
 
-    private String errorMessage;
+    private String message;
 
-    ErrorResponse(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+    ErrorResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public int getCode() {
+        return code;
     }
 
-    public String getErrorNumberAsString() {
-        return String.valueOf(errorCode);
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
     public static List<Integer> getAllErrorCodes() {
         List<Integer> errorCodes = new ArrayList<Integer>();
         for (ErrorResponse error : ErrorResponse.values()) {
-            errorCodes.add(error.getErrorCode());
+            errorCodes.add(error.getCode());
         }
         return errorCodes;
     }
 
+    public static ErrorResponse fromValue(int errorCode) {
+        for (ErrorResponse value : ErrorResponse.values()) {
+            if (value.getCode() == errorCode) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException(String.valueOf(errorCode));
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(ErrorResponse.class.getSimpleName());
-        sb.append("{errorCode=").append(errorCode);
-        sb.append(", errorMessage='").append(errorMessage).append('\'');
-        sb.append('}');
+        final StringBuffer sb = new StringBuffer("ERROR_CODE: ");
+        sb.append(code);
+        sb.append(", ERROR_MESSAGE: ").append(message);
         return sb.toString();
     }
 }

@@ -22,8 +22,7 @@ public class NssetDeleteResponse extends EppResponse implements Serializable, De
         final StringBuffer sb = new StringBuffer("NssetDeleteResponse{");
         sb.append("clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

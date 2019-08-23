@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * TODO
+ * Default strategy.
  */
 public class NotImplementedStrategy implements ServerObjectStrategy {
 

@@ -66,8 +66,7 @@ public class LowCreditPollResponse extends PollResponse implements Serializable 
         sb.append(", pollMessageType=").append(getPollMessageType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

@@ -22,8 +22,7 @@ public class KeysetDeleteResponse extends EppResponse implements Serializable, D
         final StringBuffer sb = new StringBuffer("KeysetDeleteResponse{");
         sb.append("clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

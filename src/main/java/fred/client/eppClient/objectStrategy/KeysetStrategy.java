@@ -23,7 +23,7 @@ import fred.client.data.info.keyset.KeysetInfoRequest;
 import fred.client.data.info.keyset.KeysetInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.ListResultsHelper;
 import fred.client.data.list.ListType;
 import fred.client.data.list.keyset.KeysetsByContactListRequest;
 import fred.client.data.list.keyset.KeysetsListRequest;
@@ -45,7 +45,7 @@ import fred.client.data.transfer.keyset.KeysetTransferRequest;
 import fred.client.data.transfer.keyset.KeysetTransferResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
-import fred.client.eppClient.EppCommandBuilder;
+import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
@@ -54,6 +54,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
+import java.util.Properties;
 
 /**
  * Class for handling actions on keyset.
@@ -64,17 +66,16 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
     private EppClient client;
 
-    private EppCommandBuilder eppCommandBuilder;
+    private EppCommandHelper eppCommandHelper;
 
-    private FredClientDozerMapper mapper;
+    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    private ListResultsUtil listResultsUtil;
+    private ListResultsHelper listResultsHelper;
 
-    public KeysetStrategy() {
-        this.client = new EppClientImpl();
-        this.eppCommandBuilder = new EppCommandBuilder();
-        this.listResultsUtil = new ListResultsUtil(client, eppCommandBuilder);
-        this.mapper = FredClientDozerMapper.getInstance();
+    KeysetStrategy(Properties properties) {
+        this.client = EppClientImpl.getInstance(properties);
+        this.eppCommandHelper = new EppCommandHelper();
+        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -87,30 +88,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createInfoEppCommand(wrapper, keysetInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, keysetInfoRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        InfDataType infDataType = (InfDataType) wrapperBack.getValue();
+        InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         KeysetInfoResponse result = mapper.map(infDataType, KeysetInfoResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -125,27 +110,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        KeysetSendAuthInfoResponse result = new KeysetSendAuthInfoResponse();
+        result.addResponseInfo(responseType);
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        KeysetSendAuthInfoResponse sendAuthInfoResponse = new KeysetSendAuthInfoResponse();
-        sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
-        sendAuthInfoResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
-        sendAuthInfoResponse.setCode(responseType.getResult().get(0).getCode());
-        sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
-
-        return sendAuthInfoResponse;
+        return result;
     }
 
     @Override
@@ -154,14 +126,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
-            extcommandType = this.prepareAllKeysetsCommand((KeysetsListRequest) listRequest);
+            extcommandType = this.prepareListKeysetsCommand((KeysetsListRequest) listRequest);
         }
 
         if (ListType.KEYSETS_BY_CONTACT.equals(listRequest.getListType())) {
             extcommandType = this.prepareKeysetsByContactCommand((KeysetsByContactListRequest) listRequest);
         }
 
-        return listResultsUtil.prepareListAndGetResults(extcommandType);
+        return listResultsHelper.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -175,30 +147,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, keysetCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, keysetCheckRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+        ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         KeysetCheckResponse result = mapper.map(chkDataType, KeysetCheckResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -213,30 +169,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, keysetCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, keysetCreateRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+        CreDataType creDataType = (CreDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         KeysetCreateResponse result = mapper.map(creDataType, KeysetCreateResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -257,25 +197,12 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, keysetTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, keysetTransferRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         KeysetTransferResponse result = new KeysetTransferResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -291,25 +218,12 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, keysetDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, keysetDeleteRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         KeysetDeleteResponse result = new KeysetDeleteResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -344,20 +258,16 @@ public class KeysetStrategy implements ServerObjectStrategy {
         NssetsByContactT keysetsByContact = new NssetsByContactT();
         keysetsByContact.setId(keysetsByContactListRequest.getContactId());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setKeysetsByContact(keysetsByContact);
-        extcommandType.setClTRID(keysetsByContactListRequest.getClientTransactionId());
-
-        return extcommandType;
+        return eppCommandHelper.createKeysetsByContactExtCommand(keysetsByContact, keysetsByContactListRequest.getClientTransactionId());
     }
 
-    private ExtcommandType prepareAllKeysetsCommand(KeysetsListRequest keysetsListRequest) {
+    private ExtcommandType prepareListKeysetsCommand(KeysetsListRequest keysetsListRequest) {
         log.debug("listAllKeysets called with request(" + keysetsListRequest + ")");
 
         ExtcommandType extcommandType = new ExtcommandType();
         extcommandType.setListKeysets("");
         extcommandType.setClTRID(keysetsListRequest.getClientTransactionId());
 
-        return extcommandType;
+        return eppCommandHelper.createListKeysetsExtCommand(keysetsListRequest.getClientTransactionId());
     }
 }

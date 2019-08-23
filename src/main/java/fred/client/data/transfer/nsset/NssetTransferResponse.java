@@ -22,8 +22,7 @@ public class NssetTransferResponse extends EppResponse implements Serializable, 
         final StringBuffer sb = new StringBuffer("NssetTransferResponse{");
         sb.append("clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

@@ -14,4 +14,5 @@ public class FredClientException extends Exception {
     }
 
     // todo get error code, get message, possibly get reason
+
 }

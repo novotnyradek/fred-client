@@ -25,7 +25,7 @@ public class TechnicalCheckResultsPollResponse extends PollResponse implements S
 
     private List<String> name;
 
-    private List<TechnicalCheckResult> result;
+    private List<TechnicalCheckResult> testResult;
 
     public TechnicalCheckResultsPollResponse() {
         setPollMessageType(PollMessageType.TECHNICAL_CHECK_RESULTS);
@@ -47,12 +47,12 @@ public class TechnicalCheckResultsPollResponse extends PollResponse implements S
         this.name = name;
     }
 
-    public List<TechnicalCheckResult> getResult() {
-        return result;
+    public List<TechnicalCheckResult> getTestResult() {
+        return testResult;
     }
 
-    public void setResult(List<TechnicalCheckResult> result) {
-        this.result = result;
+    public void setTestResult(List<TechnicalCheckResult> testResult) {
+        this.testResult = testResult;
     }
 
     @Override
@@ -60,15 +60,14 @@ public class TechnicalCheckResultsPollResponse extends PollResponse implements S
         final StringBuffer sb = new StringBuffer("TechnicalCheckResultsPollResponse{");
         sb.append("id='").append(id).append('\'');
         sb.append(", name=").append(name);
-        sb.append(", result=").append(result);
+        sb.append(", testResult=").append(testResult);
         sb.append(", messageId='").append(getMessageId()).append('\'');
         sb.append(", messageCount=").append(getMessageCount());
         sb.append(", messageQDate=").append(getMessageQDate());
         sb.append(", pollMessageType=").append(getPollMessageType());
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();

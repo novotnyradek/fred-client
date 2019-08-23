@@ -1,18 +1,20 @@
 package fred.client.data;
 
+import fred.client.eppClient.SuccessfulResponse;
+import ietf.params.xml.ns.epp_1.ResponseType;
+
 /**
  * Every response from server must have server transaction id (svTRID) and clientTransactionId (clTRID).
  *
  * <ul>
- * <li>{@link EppResponse#clientTransactionId} - client transaction id</li>
- * <li>{@link EppResponse#serverTransactionId} - server transaction id</li>
+ * <li>{@link EppResponse#result} - see {@link SuccessfulResponse}</li>
+ * <li>{@link EppResponse#clientTransactionId} - client transaction identifier</li>
+ * <li>{@link EppResponse#serverTransactionId} - server transaction identifier</li>
  * </ul>
  */
 public abstract class EppResponse extends EppCommand {
 
-    private int code;
-
-    private String message;
+    private SuccessfulResponse result;
 
     private String clientTransactionId;
 
@@ -34,19 +36,17 @@ public abstract class EppResponse extends EppCommand {
         this.serverTransactionId = serverTransactionId;
     }
 
-    public int getCode() {
-        return code;
+    public SuccessfulResponse getResult() {
+        return result;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setResult(SuccessfulResponse result) {
+        this.result = result;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void addResponseInfo(ResponseType responseType) {
+        this.setClientTransactionId(responseType.getTrID().getClTRID());
+        this.setServerTransactionId(responseType.getTrID().getSvTRID());
+        this.setResult(SuccessfulResponse.fromValue(responseType.getResult().get(0).getCode()));
     }
 }

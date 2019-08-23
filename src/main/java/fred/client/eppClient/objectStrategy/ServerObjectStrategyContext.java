@@ -26,6 +26,8 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.exception.FredClientException;
 
+import java.util.Properties;
+
 /**
  * Class responsible for choosing correct strategy to handle request.
  */
@@ -33,28 +35,55 @@ public class ServerObjectStrategyContext {
 
     private ServerObjectStrategy serverObjectStrategy;
 
-    public ServerObjectStrategyContext(ServerObjectType serverObjectType) {
-        serverObjectStrategy = chooseServerObjectTypeStrategy(serverObjectType);
+    private DomainStrategy domainStrategy;
+
+    private ContactStrategy contactStrategy;
+
+    private NssetStrategy nssetStrategy;
+
+    private KeysetStrategy keysetStrategy;
+
+    private OtherStrategy otherStrategy;
+
+    private NotImplementedStrategy notImplementedStrategy;
+
+    public ServerObjectStrategyContext(Properties properties, ServerObjectType serverObjectType) {
+        serverObjectStrategy = chooseServerObjectTypeStrategy(properties, serverObjectType);
     }
 
     /**
      * Choose right strategy for given object.
      *
+     * @param properties
      * @param serverObjectType
      */
-    private ServerObjectStrategy chooseServerObjectTypeStrategy(ServerObjectType serverObjectType) {
+    private ServerObjectStrategy chooseServerObjectTypeStrategy(Properties properties, ServerObjectType serverObjectType) {
         switch (serverObjectType) {
             case DOMAIN:
-                // todo do not create strategy with every call
-                return new DomainStrategy();
+                if (domainStrategy == null) {
+                    domainStrategy = new DomainStrategy(properties);
+                }
+                return domainStrategy;
             case CONTACT:
-                return new ContactStrategy();
+                if (contactStrategy == null) {
+                    contactStrategy = new ContactStrategy(properties);
+                }
+                return contactStrategy;
             case NSSET:
-                return new NssetStrategy();
+                if (nssetStrategy == null) {
+                    nssetStrategy = new NssetStrategy(properties);
+                }
+                return nssetStrategy;
             case KEYSET:
-                return new KeysetStrategy();
+                if (keysetStrategy == null) {
+                    keysetStrategy = new KeysetStrategy(properties);
+                }
+                return keysetStrategy;
             case OTHER:
-                return new OtherStrategy();
+                if (otherStrategy == null) {
+                    otherStrategy = new OtherStrategy(properties);
+                }
+                return otherStrategy;
             default:
                 return new NotImplementedStrategy();
         }

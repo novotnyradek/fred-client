@@ -1,77 +1,125 @@
 package fred.client.eppClient;
 
 import fred.client.exception.FredClientException;
-import fred.client.exception.SchemaValidationException;
 import fred.client.exception.ServerResponseException;
 import fred.client.exception.SystemException;
 import ietf.params.xml.ns.epp_1.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.net.ssl.*;
-import javax.xml.XMLConstants;
-import javax.xml.bind.*;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.*;
+import javax.xml.bind.JAXBElement;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.List;
+import java.util.Properties;
 
 /**
- *  Low level EPP client for FRED.
+ * Low level EPP client for FRED.
  */
 public class EppClientImpl implements EppClient {
 
     private static final Log log = LogFactory.getLog(EppClientImpl.class);
 
-    private final static String CONF_BUNDLE = "fred-client";
+    private static EppClientImpl eppClient;
 
     private static final String SESSION_OK = "SESSION_OK";
 
-    private SSLSocket socket;
     private static final int HEADER = 4;
+
+    private SSLSocket socket;
+
     private BufferedInputStream reader;
+
     private BufferedOutputStream writer;
 
-    public EppClientImpl() {
+    private Properties properties;
+
+    private EppClientMarshallerHelper marshallerHelper;
+
+    private EppClientImpl(Properties properties) {
+        this.properties = properties;
+        this.marshallerHelper = new EppClientMarshallerHelper(properties);
     }
 
-    public void evaluateResponse(ResponseType responseType) throws ServerResponseException {
-        ResultType result = responseType.getResult().get(0);
-        // TODO better logging to exceptions
-        if (ErrorResponse.getAllErrorCodes().contains(result.getCode())) {
-            String errorCode = String.valueOf(result.getCode());
-            String message = result.getMsg().getValue();
+    public static EppClientImpl getInstance(Properties properties) {
+        if (eppClient == null) {
+            synchronized (EppClientImpl.class) {
+                if (eppClient == null) {
+                    eppClient = new EppClientImpl(properties);
+                }
+            }
+        }
+        return eppClient;
+    }
 
-            throw new ServerResponseException(errorCode, message);
+    @Override
+    public ResponseType execute(JAXBElement<EppType> request) throws FredClientException {
+
+        // marshalling request to xml
+        String xml = marshallerHelper.marshal(request);
+
+        // check if session is alive via hello command
+        this.checkSession();
+
+        // execute command
+        String response = this.proceedCommand(xml);
+
+        // unmarshall response
+        EppType eppType = marshallerHelper.unmarshal(response);
+
+        ResponseType responseType = eppType.getResponse();
+
+        // evaluate response
+        evaluateResponse(responseType);
+
+        return responseType;
+    }
+
+    /**
+     * Evaluates response - if it contains error code, exception with those error codes is thrown.
+     *
+     * @param responseType
+     * @throws ServerResponseException
+     */
+    private void evaluateResponse(ResponseType responseType) throws ServerResponseException {
+        List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
+
+        for (ResultType result : responseType.getResult()) {
+            if (ErrorResponse.getAllErrorCodes().contains(result.getCode())) {
+                // because of limitations of xsd schemas we provide only msg and error code
+                errorResponses.add(ErrorResponse.fromValue(result.getCode()));
+            }
+        }
+
+        if (!errorResponses.isEmpty()) {
+            throw new ServerResponseException(errorResponses);
         }
     }
 
-    public void checkSession() throws FredClientException {
+    /**
+     * Check if session is still alive - if not, initializes new connection to server.
+     *
+     * @throws FredClientException
+     */
+    private void checkSession() throws FredClientException {
         if (!isConnected()) {
             log.debug("Connection not established or wrong, try to initialize");
             initialize();
         }
     }
 
-    private void initialize() throws FredClientException {
-        try {
-            connect();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new SystemException(e.getMessage(), e);
-        }
-        String greetingXml = read();
-        GreetingType greeting = proceedGreeting(greetingXml);
-        proceedLogin(greeting);
-    }
-
+    /**
+     * Checks connection via epp hello command.
+     *
+     * @return true if we are connected to server.
+     */
     private boolean isConnected() {
         String sessionOk;
 
@@ -89,18 +137,72 @@ public class EppClientImpl implements EppClient {
         return sessionOk != null;
     }
 
+    /**
+     * Executes hello command.
+     *
+     * @return null if response is without greeting.
+     * @throws FredClientException
+     */
+    private String hello() throws FredClientException {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        EppType eppType = objectFactory.createEppType();
+        eppType.setHello("");
+
+        JAXBElement<EppType> hello = objectFactory.createEpp(eppType);
+
+        String xml = marshallerHelper.marshal(hello);
+
+        String response = this.proceedCommand(xml);
+
+        EppType responseEppType = marshallerHelper.unmarshal(response);
+
+        GreetingType greeting = responseEppType.getGreeting();
+        if (greeting == null) return null;
+
+        return SESSION_OK;
+    }
+
+    /**
+     * Initializes new connection to server.
+     *
+     * @throws FredClientException
+     */
+    private void initialize() throws FredClientException {
+        try {
+            connect();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new SystemException(e.getMessage(), e);
+        }
+        String greetingXml = read();
+
+        EppType eppType = marshallerHelper.unmarshal(greetingXml);
+
+        login(eppType.getGreeting());
+    }
+
+    /**
+     * Method to connect to server.
+     *
+     * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws IOException
+     * @throws CertificateException
+     * @throws KeyManagementException
+     * @throws UnrecoverableKeyException
+     * @throws NoSuchProviderException
+     */
     private void connect() throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, KeyManagementException, UnrecoverableKeyException, NoSuchProviderException {
-        ResourceBundle bundle = ResourceBundle.getBundle(CONF_BUNDLE);
+        String sslContextInstance = properties.getProperty("sslsocket.instance");
+        String keyStoreInstance = properties.getProperty("keystore.instance");
+        String certificateFile = properties.getProperty("certificate.file");
+        String certificatePassword = properties.getProperty("certificate.secret");
+        String keyManagerInstance = properties.getProperty("keymanager.instance");
 
-        String sslContextInstance = bundle.getString("sslsocket.instance");
-        String keyStoreInstance = bundle.getString("keystore.instance");
-        String certificateFile = bundle.getString("certificate.file");
-        String certificatePassword = bundle.getString("certificate.password");
-        String keyManagerInstance = bundle.getString("keymanager.instance");
-
-        String server = bundle.getString("server");
-        String port = bundle.getString("port");
-        String timeout = bundle.getString("timeout");
+        String server = properties.getProperty("host");
+        String port = properties.getProperty("port");
+        String timeout = properties.getProperty("timeout");
 
         SSLContext sslContext = SSLContext.getInstance(sslContextInstance);
 
@@ -130,59 +232,9 @@ public class EppClientImpl implements EppClient {
         log.debug("Connected to: " + socket.getInetAddress());
     }
 
-    private void logout() throws SchemaValidationException, SystemException, ServerResponseException {
-        ObjectFactory eppObjectFactory = new ObjectFactory();
-
-        CommandType command = eppObjectFactory.createCommandType();
-        command.setLogout("");
-
-        EppType eppType = eppObjectFactory.createEppType();
-        eppType.setCommand(command);
-
-        JAXBElement<EppType> logout = eppObjectFactory.createEpp(eppType);
-
-        String xml = marshall(logout, ObjectFactory.class);
-
-        String logoutResponse = proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = unmarshall(logoutResponse, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        evaluateResponse(responseType);
-
-        log.debug("Logout response " + responseElement.getValue().getResponse().getResult().get(0).getCode() +
-                " and message " + responseElement.getValue().getResponse().getResult().get(0).getMsg().getValue());
-    }
-
-    private String hello() throws SchemaValidationException, SystemException {
-        ObjectFactory eppObjectFactory = new ObjectFactory();
-
-        EppType eppType = eppObjectFactory.createEppType();
-        eppType.setHello("");
-
-        JAXBElement<EppType> hello = eppObjectFactory.createEpp(eppType);
-
-        String xml = marshall(hello, ObjectFactory.class);
-
-        String response = proceedCommand(xml);
-
-        GreetingType greeting = proceedGreeting(response);
-        if (greeting == null) return null;
-
-        return SESSION_OK;
-    }
-
-    private GreetingType proceedGreeting(String greeting) throws SchemaValidationException, SystemException {
-        JAXBElement<EppType> jaxbElement = unmarshall(greeting, ObjectFactory.class, GreetingType.class);
-        return jaxbElement.getValue().getGreeting();
-    }
-
-    private void proceedLogin(GreetingType greeting) throws SchemaValidationException, SystemException, ServerResponseException {
-        ResourceBundle bundle = ResourceBundle.getBundle(CONF_BUNDLE);
-
-        String apiKey = bundle.getString("apiKey.id");
-        String apiKeyPassword = bundle.getString("apiKey.secret");
+    private void login(GreetingType greeting) throws FredClientException {
+        String apiKey = properties.getProperty("apiKey.id");
+        String apiKeyPassword = properties.getProperty("apiKey.secret");
 
         LoginType loginType = new LoginType();
 
@@ -211,112 +263,67 @@ public class EppClientImpl implements EppClient {
 
         JAXBElement<EppType> requestElement = factory.createEpp(eppType);
 
-        String xml = marshall(requestElement, ObjectFactory.class, LoginType.class);
-
-        String response = proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = unmarshall(response, ObjectFactory.class, ResponseType.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        evaluateResponse(responseType);
+        this.execute(requestElement);
     }
 
-    public void disconnect() throws IOException {
-        if (socket != null) socket.close();
-        if (reader != null) reader.close();
-        if (writer != null) writer.close();
+    /**
+     * Method executes logout command and destroys socket connection.
+     *
+     * @throws FredClientException
+     * @throws IOException
+     */
+    private void logout() throws FredClientException {
+        ObjectFactory eppObjectFactory = new ObjectFactory();
+
+        CommandType command = eppObjectFactory.createCommandType();
+        command.setLogout("");
+
+        EppType eppType = eppObjectFactory.createEppType();
+        eppType.setCommand(command);
+
+        JAXBElement<EppType> logout = eppObjectFactory.createEpp(eppType);
+
+        ResponseType response = this.execute(logout);
+
+        this.disconnect();
+
+        log.debug("Logout response " + response.getResult().get(0).getCode() +
+                " and message " + response.getResult().get(0).getMsg().getValue());
     }
 
-    public String marshall(Object command, Class... classes) throws SystemException, SchemaValidationException {
+    /**
+     * Closes socket, reader and writer.
+     *
+     * @throws SystemException
+     */
+    private void disconnect() throws SystemException {
         try {
-            Schema schema = getSchema();
-            StringWriter result = new StringWriter();
-            JAXBContext jaxbContext = JAXBContext.newInstance(classes);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setSchema(schema);
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(command, result);
-            return result.toString();
-        } catch (JAXBException e) {
-            if (e.getLinkedException() instanceof SAXParseException) {
-                String message = "Provided data are wrong, validation against schema failed!";
-                log.error(message, e);
-                throw new SchemaValidationException(message, e.getMessage(), e);
-            }
-            log.error("Something happen when marshalling data into xml!", e);
-            throw new SystemException(e.getMessage(), e);
-        } catch (SAXException e) {
-            String message = "Schema loading failed!";
-            log.error(message, e);
-            throw new SystemException(e.getMessage(), e);
+            if (socket != null) socket.close();
+            if (reader != null) reader.close();
+            if (writer != null) writer.close();
+        } catch (IOException e) {
+            log.debug("Unable to close socket");
+            throw new SystemException("Unable to close socket");
+        } finally {
+            socket = null;
+            reader = null;
+            writer = null;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public JAXBElement<EppType> unmarshall(String xml, Class... classes) throws SystemException, SchemaValidationException {
-        try {
-            Schema schema = getSchema();
-            JAXBContext jaxbContext = JAXBContext.newInstance(classes);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            jaxbUnmarshaller.setSchema(schema);
-            return (JAXBElement<EppType>) jaxbUnmarshaller.unmarshal(new StringReader(xml));
-        } catch (JAXBException e) {
-            if (e.getLinkedException() instanceof SAXParseException) {
-                String message = "Provided data are wrong, validation against schema failed!";
-                log.error(message, e);
-                throw new SchemaValidationException(message, e.getMessage(), e);
-            }
-            log.error("Something happen when unmarshalling data from xml!", e);
-            throw new SystemException(e.getMessage(), e);
-        } catch (SAXException e) {
-            String message = "Schema loading failed!";
-            log.error(message, e);
-            throw new SystemException(e.getMessage(), e);
-        }
-    }
-
-    private Schema getSchema() throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        return schemaFactory.newSchema(new Source[]{
-                new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.2.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.2.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.2.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.2.xsd")),
-                new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
-        });
-    }
-
-    public String proceedCommand(String xmlCommand) throws SystemException {
+    /**
+     * Writes command to socket and reads response.
+     *
+     * @param xmlCommand command in XML.
+     * @return XML representation of response.
+     * @throws SystemException
+     */
+    private String proceedCommand(String xmlCommand) throws SystemException {
         log.debug("REQUEST:\n" + xmlCommand);
         this.write(xmlCommand);
         String xmlResponse = this.read();
         log.debug("RESPONSE:\n" + xmlResponse);
         return xmlResponse;
-    }
-
-    private String read() throws SystemException {
-        int len = this.readBufferSize();
-        len -= HEADER;
-        if (len < 0) {
-            String message = "Length of response without header cant be negative!";
-            log.error(message);
-            throw new SystemException(message);
-        }
-        byte[] buff = this.readInputBuffer(reader, len);
-        String value;
-        try {
-            value = new String(buff, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.error("UnsupportedEncodingException", e);
-            throw new SystemException("UnsupportedEncodingException", e);
-        }
-        return value;
     }
 
     private void write(String xml) throws SystemException {
@@ -339,6 +346,25 @@ public class EppClientImpl implements EppClient {
         out_buf[3] = (byte) (0xff & buf_sz);
 
         writer.write(out_buf, 0, HEADER);
+    }
+
+    private String read() throws SystemException {
+        int len = this.readBufferSize();
+        len -= HEADER;
+        if (len < 0) {
+            String message = "Length of response without header cant be negative!";
+            log.error(message);
+            throw new SystemException(message);
+        }
+        byte[] buff = this.readInputBuffer(reader, len);
+        String value;
+        try {
+            value = new String(buff, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("UnsupportedEncodingException", e);
+            throw new SystemException("UnsupportedEncodingException", e);
+        }
+        return value;
     }
 
     private int readBufferSize() throws SystemException {
@@ -386,14 +412,5 @@ public class EppClientImpl implements EppClient {
             bytesRead += len;
         }
         return in_buf;
-    }
-
-    public static void main(String[] args) throws Exception {
-        EppClientImpl client = new EppClientImpl();
-        client.initialize();
-        client.hello();
-        client.logout();
-        client.disconnect();
-
     }
 }

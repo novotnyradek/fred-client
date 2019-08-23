@@ -26,7 +26,7 @@ import fred.client.data.info.domain.DomainInfoRequest;
 import fred.client.data.info.domain.DomainInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.ListResultsHelper;
 import fred.client.data.list.ListType;
 import fred.client.data.list.domain.DomainsByContactListRequest;
 import fred.client.data.list.domain.DomainsByKeysetListRequest;
@@ -50,7 +50,7 @@ import fred.client.data.transfer.domain.DomainTransferRequest;
 import fred.client.data.transfer.domain.DomainTransferResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
-import fred.client.eppClient.EppCommandBuilder;
+import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
@@ -60,6 +60,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
+import java.util.Properties;
 
 /**
  * Class for handling actions on domain.
@@ -70,17 +72,16 @@ public class DomainStrategy implements ServerObjectStrategy {
 
     private EppClient client;
 
-    private EppCommandBuilder eppCommandBuilder;
+    private EppCommandHelper eppCommandHelper;
 
-    private ListResultsUtil listResultsUtil;
+    private ListResultsHelper listResultsHelper;
 
-    private FredClientDozerMapper mapper;
+    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    public DomainStrategy() {
-        this.client = new EppClientImpl();
-        this.eppCommandBuilder = new EppCommandBuilder();
-        this.listResultsUtil = new ListResultsUtil(client, eppCommandBuilder);
-        mapper = FredClientDozerMapper.getInstance();
+    DomainStrategy(Properties properties) {
+        this.client = EppClientImpl.getInstance(properties);
+        this.eppCommandHelper = new EppCommandHelper();
+        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -93,35 +94,19 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<SNameType> wrapper = new ObjectFactory().createInfo(sNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createInfoEppCommand(wrapper, domainInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, domainInfoRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
         InfDataType infDataType = (InfDataType) wrapperBack.getValue();
 
         DomainInfoResponse result = mapper.map(infDataType, DomainInfoResponse.class);
+        result.addResponseInfo(responseType);
 
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
-
-        if (responseType.getExtension() != null){
-            JAXBElement extraAddr = (JAXBElement) responseType.getExtension().getAny().get(0);
-
-            ExValType exValType = (ExValType) extraAddr.getValue();
+        if (responseType.getExtension() != null) {
+            ExValType exValType = (ExValType) JAXBIntrospector.getValue(responseType.getExtension().getAny().get(0));
 
             EnumValData enumValData = mapper.map(exValType, EnumValData.class);
 
@@ -141,27 +126,14 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        DomainSendAuthInfoResponse result = new DomainSendAuthInfoResponse();
+        result.addResponseInfo(responseType);
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        DomainSendAuthInfoResponse sendAuthInfoResponse = new DomainSendAuthInfoResponse();
-        sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
-        sendAuthInfoResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
-        sendAuthInfoResponse.setCode(responseType.getResult().get(0).getCode());
-        sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
-
-        return sendAuthInfoResponse;
+        return result;
     }
 
     @Override
@@ -170,7 +142,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
-            extcommandType = this.prepareAllDomainsCommand((DomainsListRequest) listRequest);
+            extcommandType = this.prepareListDomainsCommand((DomainsListRequest) listRequest);
         }
 
         if (ListType.DOMAINS_BY_CONTACTS.equals(listRequest.getListType())) {
@@ -185,7 +157,7 @@ public class DomainStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareDomainsByNssetCommand((DomainsByNssetListRequest) listRequest);
         }
 
-        return listResultsUtil.prepareListAndGetResults(extcommandType);
+        return listResultsHelper.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -199,30 +171,14 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, domainCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, domainCheckRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
+        ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         DomainCheckResponse result = mapper.map(chkDataType, DomainCheckResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -237,9 +193,9 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
 
-        if (domainCreateRequest.getEnumValData() != null){
+        if (domainCreateRequest.getEnumValData() != null) {
             ExValType exValType = mapper.map(domainCreateRequest.getEnumValData(), ExValType.class);
 
             JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
@@ -250,28 +206,12 @@ public class DomainStrategy implements ServerObjectStrategy {
             requestElement.getValue().getCommand().setExtension(extAnyType);
         }
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        CreDataType creDataType = (CreDataType) wrapperBack.getValue();
+        CreDataType creDataType = (CreDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         DomainCreateResponse result = mapper.map(creDataType, DomainCreateResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -284,9 +224,9 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<RenewType> wrapper = new ObjectFactory().createRenew(renewType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createRenewEppCommand(wrapper, renewRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createRenewEppCommand(wrapper, renewRequest.getClientTransactionId());
 
-        if (renewRequest.getEnumValData() != null){
+        if (renewRequest.getEnumValData() != null) {
             ExValType exValType = mapper.map(renewRequest.getEnumValData(), ExValType.class);
 
             JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
@@ -297,28 +237,12 @@ public class DomainStrategy implements ServerObjectStrategy {
             requestElement.getValue().getCommand().setExtension(extAnyType);
         }
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.enumval_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        RenDataType renDataType = (RenDataType) wrapperBack.getValue();
+        RenDataType renDataType = (RenDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         DomainRenewResponse result = mapper.map(renDataType, DomainRenewResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -333,25 +257,12 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, domainTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, domainTransferRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         DomainTransferResponse result = new DomainTransferResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -367,25 +278,12 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<SNameType> wrapper = new ObjectFactory().createDelete(sNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, domainDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, domainDeleteRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         DomainDeleteResponse result = new DomainDeleteResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -420,11 +318,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByNssetT domainsByNssetT = new DomainsByNssetT();
         domainsByNssetT.setId(domainsByNssetListRequest.getNssetId());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setDomainsByNsset(domainsByNssetT);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByNssetListRequest.getClientTransactionId()));
-
-        return extcommandType;
+        return eppCommandHelper.createDomainsByNssetExtCommand(domainsByNssetT, domainsByNssetListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareDomainsByKeysetCommand(DomainsByKeysetListRequest domainsByKeysetListRequest) {
@@ -433,11 +327,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByNssetT domainsByKeyset = new DomainsByNssetT();
         domainsByKeyset.setId(domainsByKeysetListRequest.getKeysetId());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setDomainsByKeyset(domainsByKeyset);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByKeysetListRequest.getClientTransactionId()));
-
-        return extcommandType;
+        return eppCommandHelper.createDomainsByKeysetExtCommand(domainsByKeyset, domainsByKeysetListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareDomainsByContactCommand(DomainsByContactListRequest domainsByContactListRequest) {
@@ -446,21 +336,13 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByContactT domainsByContactT = new DomainsByContactT();
         domainsByContactT.setId(domainsByContactListRequest.getContactId());
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setDomainsByContact(domainsByContactT);
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsByContactListRequest.getClientTransactionId()));
-
-        return extcommandType;
+        return eppCommandHelper.createDomainsByContactExtCommand(domainsByContactT, domainsByContactListRequest.getClientTransactionId());
     }
 
-    private ExtcommandType prepareAllDomainsCommand(DomainsListRequest domainsListRequest) {
+    private ExtcommandType prepareListDomainsCommand(DomainsListRequest domainsListRequest) {
         log.debug("listAllDomains called with request(" + domainsListRequest + ")");
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setListDomains("");
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", domainsListRequest.getClientTransactionId()));
-
-        return extcommandType;
+        return eppCommandHelper.createListDomainsExtCommand(domainsListRequest.getClientTransactionId());
     }
 
 }

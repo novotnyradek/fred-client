@@ -24,7 +24,7 @@ import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.list.ListResultsUtil;
+import fred.client.data.list.ListResultsHelper;
 import fred.client.data.list.contact.ContactsListRequest;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
@@ -43,7 +43,7 @@ import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.contact.ContactTransferRequest;
 import fred.client.data.transfer.contact.ContactTransferResponse;
 import fred.client.eppClient.EppClientImpl;
-import fred.client.eppClient.EppCommandBuilder;
+import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
 import ietf.params.xml.ns.epp_1.EppType;
@@ -53,6 +53,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
+import java.util.Properties;
 
 /**
  * Class for handling actions on contact.
@@ -63,17 +65,16 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private EppClientImpl client;
 
-    private EppCommandBuilder eppCommandBuilder;
+    private EppCommandHelper eppCommandHelper;
 
-    private ListResultsUtil listResultsUtil;
+    private ListResultsHelper listResultsHelper;
 
-    private FredClientDozerMapper mapper;
+    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    public ContactStrategy() {
-        this.client = new EppClientImpl();
-        this.eppCommandBuilder = new EppCommandBuilder();
-        this.listResultsUtil = new ListResultsUtil(client, eppCommandBuilder);
-        mapper = FredClientDozerMapper.getInstance();
+    ContactStrategy(Properties properties) {
+        this.client = EppClientImpl.getInstance(properties);
+        this.eppCommandHelper = new EppCommandHelper();
+        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     @Override
@@ -87,35 +88,17 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createInfoEppCommand(wrapper, contactInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, contactInfoRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.extra_addr_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
-
-        InfDataType infDataType = (InfDataType) wrapperBack.getValue();
+        InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
         ContactInfoResponse result = mapper.map(infDataType, ContactInfoResponse.class);
+        result.addResponseInfo(responseType);
 
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
-
-        if (responseType.getExtension() != null){
-            JAXBElement extraAddr = (JAXBElement) responseType.getExtension().getAny().get(0);
-
-            AddrListType addrListType = (AddrListType) extraAddr.getValue();
+        if (responseType.getExtension() != null) {
+            AddrListType addrListType = (AddrListType) JAXBIntrospector.getValue(responseType.getExtension().getAny().get(0));
 
             AddressData addressData = mapper.map(addrListType.getMailing().getAddr(), AddressData.class);
 
@@ -136,27 +119,14 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.fred_1.ObjectFactory.class);
+        ResponseType responseType = client.execute(requestElement);
 
-        client.checkSession();
+        ContactSendAuthInfoResponse result = new ContactSendAuthInfoResponse();
+        result.addResponseInfo(responseType);
 
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
-
-        ContactSendAuthInfoResponse sendAuthInfoResponse = new ContactSendAuthInfoResponse();
-        sendAuthInfoResponse.setClientTransactionId(responseType.getTrID().getClTRID());
-        sendAuthInfoResponse.setServerTransactionId(responseType.getTrID().getSvTRID());
-        sendAuthInfoResponse.setCode(responseType.getResult().get(0).getCode());
-        sendAuthInfoResponse.setMessage(responseType.getResult().get(0).getMsg().getValue());
-
-        return sendAuthInfoResponse;
+        return result;
     }
 
     @Override
@@ -165,11 +135,9 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactsListRequest contactsListRequest = (ContactsListRequest) listRequest;
 
-        ExtcommandType extcommandType = new ExtcommandType();
-        extcommandType.setListContacts("");
-        extcommandType.setClTRID(eppCommandBuilder.resolveClTrId("LIST", contactsListRequest.getClientTransactionId()));
+        ExtcommandType extcommandType = eppCommandHelper.createListContactsExtCommand(contactsListRequest.getClientTransactionId());
 
-        return listResultsUtil.prepareListAndGetResults(extcommandType);
+        return listResultsHelper.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -183,30 +151,16 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<MIDType> wrapper = new ObjectFactory().createCheck(midType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCheckEppCommand(wrapper, contactCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, contactCheckRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
         ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
 
         ContactCheckResponse result = mapper.map(chkDataType, ContactCheckResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -221,9 +175,9 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createCreateEppCommand(wrapper, contactCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, contactCreateRequest.getClientTransactionId());
 
-        if (contactCreateRequest.getMailingAddress() != null){
+        if (contactCreateRequest.getMailingAddress() != null) {
             cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.map(contactCreateRequest.getMailingAddress(), cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
 
             cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
@@ -240,28 +194,14 @@ public class ContactStrategy implements ServerObjectStrategy {
             requestElement.getValue().getCommand().setExtension(extAnyType);
         }
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class, cz.nic.xml.epp.extra_addr_1.ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         JAXBElement wrapperBack = (JAXBElement) responseType.getResData().getAny().get(0);
 
         CreDataType creDataType = (CreDataType) wrapperBack.getValue();
 
         ContactCreateResponse result = mapper.map(creDataType, ContactCreateResponse.class);
-
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -282,25 +222,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createTransferEppCommand(wrapper, contactTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, contactTransferRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         ContactTransferResponse result = new ContactTransferResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }
@@ -316,25 +243,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandBuilder.createDeleteEppCommand(wrapper, contactDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, contactDeleteRequest.getClientTransactionId());
 
-        String xml = client.marshall(requestElement, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        client.checkSession();
-
-        String response = client.proceedCommand(xml);
-
-        JAXBElement<EppType> responseElement = client.unmarshall(response, ietf.params.xml.ns.epp_1.ObjectFactory.class, ObjectFactory.class);
-
-        ResponseType responseType = responseElement.getValue().getResponse();
-
-        client.evaluateResponse(responseType);
+        ResponseType responseType = client.execute(requestElement);
 
         ContactDeleteResponse result = new ContactDeleteResponse();
-        result.setCode(responseType.getResult().get(0).getCode());
-        result.setMessage(responseType.getResult().get(0).getMsg().getValue());
-        result.setClientTransactionId(responseType.getTrID().getClTRID());
-        result.setServerTransactionId(responseType.getTrID().getSvTRID());
+        result.addResponseInfo(responseType);
 
         return result;
     }

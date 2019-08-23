@@ -6,7 +6,12 @@ import java.util.List;
 /**
  * Successful responses which can be returned from FRED.
  *
- * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/Appendixes/ResultCodes.html?highlight=errors>FRED documentation</a>
+ * <ul>
+ * <li>{@link SuccessfulResponse#code} - result code (4-digit number)</li>
+ * <li>{@link SuccessfulResponse#message} - human-readable description of the result</li>
+ * </ul>
+ *
+ * @see <a href=https://fred.nic.cz/documentation/html/EPPReference/Appendixes/ResultCodes.html>FRED documentation</a>
  */
 public enum SuccessfulResponse {
 
@@ -16,40 +21,45 @@ public enum SuccessfulResponse {
     RESPONSE_1301(1301, "Command completed successfully; ack to dequeue"),
     RESPONSE_1500(1500, "Command completed successfully; ending session");
 
-    private int responseNumber;
+    private int code;
 
-    private String responseMessage;
+    private String message;
 
-    SuccessfulResponse(int responseNumber, String responseMessage) {
-        this.responseNumber = responseNumber;
-        this.responseMessage = responseMessage;
+    SuccessfulResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public int getResponseNumber() {
-        return responseNumber;
+    public int getCode() {
+        return code;
     }
 
-    public String getErrorNumberAsString() {
-        return String.valueOf(responseNumber);
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
+    public String getMessage() {
+        return message;
     }
 
     public static List<Integer> getAllSuccessfulCodes() {
         List<Integer> successfulCodes = new ArrayList<Integer>();
         for (SuccessfulResponse successfulResponse : SuccessfulResponse.values()) {
-            successfulCodes.add(successfulResponse.getResponseNumber());
+            successfulCodes.add(successfulResponse.getCode());
         }
         return successfulCodes;
+    }
+
+    public static SuccessfulResponse fromValue(int code) {
+        for (SuccessfulResponse value : SuccessfulResponse.values()) {
+            if (value.getCode() == code) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException(String.valueOf(code));
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(SuccessfulResponse.class.getSimpleName());
-        sb.append("{responseNumber=").append(responseNumber);
-        sb.append(", responseMessage='").append(responseMessage).append('\'');
+        sb.append("{code=").append(code);
+        sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
     }

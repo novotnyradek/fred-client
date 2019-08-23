@@ -184,8 +184,7 @@ public class NssetInfoResponse extends EppResponse implements Serializable, Info
         sb.append(", reportLevel=").append(reportLevel);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
-        sb.append(", code=").append(getCode());
-        sb.append(", message='").append(getMessage()).append('\'');
+        sb.append(", result=").append(getResult());
         sb.append(", serverObjectType=").append(getServerObjectType());
         sb.append('}');
         return sb.toString();
