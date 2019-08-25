@@ -20,7 +20,7 @@ Version: 0.2.0 (0.2-SNAPSHOT)
 * Query commands
     * Check
     * Info
-    * Update
+    * Update (wip)
     * Polling (without object update message)
 * Transform commands
     * Create
