@@ -20,7 +20,7 @@ Version: 0.2.0 (0.2-SNAPSHOT)
 * Query commands
     * Check
     * Info
-    * Update (wip)
+    * _Update (wip)_
     * Polling (without object update message)
 * Transform commands
     * Create
@@ -62,7 +62,21 @@ Customize `fred-client.properties` file. You have to provide properties file whe
 
 > Creating your own java keystore file
 * Please read https://www.nic.cz/page/744/registracni-system/.
-* At first you need your own private certificate and public certificate of the server. For open instance you can use these certificates https://www.nic.cz/files/nic/doc/pristupy_openinstance.zip.
+* At first you need your own private certificate and key and public certificate of the server. For open instance you can use this private key https://www.nic.cz/files/nic/doc/pristupy_openinstance.zip.
+* Credits to https://www.wowza.com/docs/how-to-import-an-existing-ssl-certificate-and-private-key#convert-the-certificate-and-private-key-to-pkcs-12.
+
+###### Step 1 - Convert the certificate and private key to PKCS 12
+`openssl pkcs12 -export -in Cert_openinstance.pem -inkey privatekey_openinstance.pem -out private_key.p12 -password pass:changeit`
+
+###### Step 2 - Import the certificate to the keystore 
+`keytool -importkeystore -srcstorepass changeit -deststorepass changeit -destkeystore fred.jks -srckeystore private_key.p12 -srcstoretype PKCS12`
+###### Step 3 - Get server certificate
+Note: works only for open instance environment - on production instance you get certificate from CZ.NIC.
+
+`openssl s_client -connect epp.demo.regtest.nic.cz:443 2>/dev/null </dev/null |  sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > server.pem`
+
+###### Step 4 - import downloaded certificate to keystore
+`keytool -import -alias server -file server.pem -storepass changeit -keystore fred.jks`
 
 > Usage
 
