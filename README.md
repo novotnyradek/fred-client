@@ -71,7 +71,7 @@ Customize `fred-client.properties` file. You have to provide properties file whe
 ###### Step 2 - Import the certificate to the keystore 
 `keytool -importkeystore -srcstorepass changeit -deststorepass changeit -destkeystore fred.jks -srckeystore private_key.p12 -srcstoretype PKCS12`
 ###### Step 3 - Get server certificate
-Note: works only for open instance environment - on production instance you get certificate from CZ.NIC.
+Note: works only for open instance environment - on production instance you'll get certificate from CZ.NIC.
 
 `openssl s_client -connect epp.demo.regtest.nic.cz:443 2>/dev/null </dev/null |  sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > server.pem`
 
