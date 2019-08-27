@@ -60,6 +60,40 @@ Add as maven dependency to your project.
 
 Customize `fred-client.properties` file. You have to provide properties file when initiating client.
 
+```properties
+###############################################################################
+#                     FRED Client Configuration File                          #
+###############################################################################
+# This is an example of configuration.
+#
+# Connection settings
+# Open instance registrar account
+# The client identifier
+apiKey.id = REG-FRED_B
+# The client’s plain-text password
+apiKey.secret = passwd
+
+# Server name
+host = epp.demo.regtest.nic.cz
+# Server port
+port = 700
+# Socket timeout (miliseconds)
+timeout = 20000
+
+# SSL Properties
+# Path to Java keystore with private and public certificate
+certificate.file = fred.jks
+# Java keystore password
+certificate.secret = changeit
+# Other settings
+keystore.instance = JKS
+sslsocket.instance = TLSv1.2
+keymanager.instance = SunX509
+
+# Enable/disable the validation of messages (true enabled, false disabled)
+schema.validation = true
+```
+
 > Creating your own java keystore file
 * Please read https://www.nic.cz/page/744/registracni-system/.
 * At first you need your own private certificate and key and public certificate of the server. For open instance you can use this private key https://www.nic.cz/files/nic/doc/pristupy_openinstance.zip.
