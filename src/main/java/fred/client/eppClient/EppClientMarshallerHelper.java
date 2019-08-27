@@ -136,8 +136,17 @@ public class EppClientMarshallerHelper {
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-            this.schema = schemaFactory.newSchema(new Source[]{
-                    new StreamSource(new File(properties.getProperty("schema.location")))
+            schema = schemaFactory.newSchema(new Source[]{
+                    new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.2.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.2.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.2.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.2.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
             });
         }
 
