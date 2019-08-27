@@ -16,6 +16,7 @@ import fred.client.data.info.InfoResponse;
 import fred.client.data.info.contact.ContactInfoRequest;
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.info.domain.DomainInfoRequest;
+import fred.client.data.info.nsset.NssetInfoRequest;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
@@ -30,6 +31,10 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.contact.ContactUpdateData;
+import fred.client.data.update.contact.ContactUpdateRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
@@ -160,7 +165,7 @@ public class FredClientImpl implements FredClient {
      * @throws FredClientException
      */
     public static void main(String[] args) throws FredClientException {
-        FredClientImpl fredService = new FredClientImpl("/home/radekn/IdeaProjects/fred-client-github/src/main/resources/fred-client.properties");
+        FredClientImpl fredService = new FredClientImpl("conf/fred-client.properties");
 
         ContactInfoResponse contactInfoResponse = (ContactInfoResponse) fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
         log.debug(contactInfoResponse);
@@ -222,23 +227,23 @@ public class FredClientImpl implements FredClient {
 //        domainCreateRequest.setEnumValData(enumValData);
 //        fredService.callCreate(domainCreateRequest);
 
-        KeysetCreateRequest keysetCreateRequest = new KeysetCreateRequest("##*-+7/17A24KEYSET-2-JNDI", "A24-CONTACT");
-        String dnskey1 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDE=";
-        DnsKeyData dnsKeyData1 = new DnsKeyData(257, (short) 3, (short) 13, Base64.decodeBase64(dnskey1.getBytes()));
-        String dnskey2 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDI=";
-        DnsKeyData dnsKeyData2 = new DnsKeyData(256, (short) 3, (short) 16, Base64.decodeBase64(dnskey2.getBytes()));
-        keysetCreateRequest.setDnskey(Arrays.asList(dnsKeyData1, dnsKeyData2));
+//        KeysetCreateRequest keysetCreateRequest = new KeysetCreateRequest("##*-+7/17A24KEYSET-2-JNDI", "A24-CONTACT");
+//        String dnskey1 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDE=";
+//        DnsKeyData dnsKeyData1 = new DnsKeyData(257, (short) 3, (short) 13, Base64.decodeBase64(dnskey1.getBytes()));
+//        String dnskey2 = "dGhpc2lzYmFzZTY0cHVibGlja2V5Zm9ydGVzdDI=";
+//        DnsKeyData dnsKeyData2 = new DnsKeyData(256, (short) 3, (short) 16, Base64.decodeBase64(dnskey2.getBytes()));
+//        keysetCreateRequest.setDnskey(Arrays.asList(dnsKeyData1, dnsKeyData2));
 
 //        KeysetCreateResponse response = (KeysetCreateResponse) fredService.callCreate(keysetCreateRequest);
 //        log.debug(response);
 
         // todo jakto že blby object update nechytla validace schemat?
         //  testy
+        //   na mapovani
+        //   celý scenář - od vytvoření objektů, přes jejich update, transfer, prodloužení, smazání, chytání poll message na všechny tyto akce
         //  update command
         //  projit todocka
         //  otestovat veskera volani v jave 8 (pripadne vyssi)
-        //  konfigurace klienta
-        //  exception - lepsi log
 
         /* Todo registrace keysetu v Jave 8 pada
         KeysetCzRegistrationData data = new KeysetCzRegistrationData();
