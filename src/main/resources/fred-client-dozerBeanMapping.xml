@@ -219,7 +219,6 @@
         <class-a>fred.client.data.common.nsset.NameserverData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.NsT</class-b>
         <field>
-<!--             todo resolve if addr is null and Vojta hlasi mapovani name ze serveru -->
             <a>addr</a>
             <b>addr</b>
         </field>
