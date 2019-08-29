@@ -12,6 +12,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.login.LoginRequest;
+import fred.client.data.login.LoginResponse;
+import fred.client.data.logout.LogoutRequest;
+import fred.client.data.logout.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -111,6 +115,18 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     @Override
     public UpdateResponse callUpdate(UpdateRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public LoginResponse callLogin(LoginRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public LogoutResponse callLogout(LogoutRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }

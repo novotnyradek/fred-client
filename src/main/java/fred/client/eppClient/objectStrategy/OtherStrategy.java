@@ -14,6 +14,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.login.LoginRequest;
+import fred.client.data.login.LoginResponse;
+import fred.client.data.logout.LogoutRequest;
+import fred.client.data.logout.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -183,5 +187,29 @@ public class OtherStrategy implements ServerObjectStrategy {
     public UpdateResponse callUpdate(UpdateRequest updateRequest) {
         log.debug("callUpdate called with request(" + updateRequest + ")");
         throw new UnsupportedOperationException("callUpdate operation is not supported for object " + updateRequest.getServerObjectType());
+    }
+
+    @Override
+    public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
+        log.debug("callLogin called with request(" + loginRequest + ")");
+
+        ResponseType responseType = client.login(loginRequest.getClientTransactionId());
+
+        LoginResponse result = new LoginResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
+    }
+
+    @Override
+    public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
+        log.debug("callLogout called with request(" + logoutRequest + ")");
+
+        ResponseType responseType = client.logout(logoutRequest.getClientTransactionId());
+
+        LogoutResponse result = new LogoutResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
     }
 }

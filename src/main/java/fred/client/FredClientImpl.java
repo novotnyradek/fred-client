@@ -12,6 +12,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.login.LoginRequest;
+import fred.client.data.login.LoginResponse;
+import fred.client.data.logout.LogoutRequest;
+import fred.client.data.logout.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -94,7 +98,6 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callTransfer(transferRequest);
     }
 
-    @Override
     public DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException {
 
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, deleteRequest.getServerObjectType());
@@ -102,7 +105,6 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callDelete(deleteRequest);
     }
 
-    @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
 
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, creditInfoRequest.getServerObjectType());
@@ -131,12 +133,27 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callPollAcknowledgement(pollAcknowledgementRequest);
     }
 
-    @Override
     public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
 
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, updateRequest.getServerObjectType());
 
         return serverObjectStrategyContext.callUpdate(updateRequest);
+    }
+
+    @Override
+    public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, loginRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callLogin(loginRequest);
+    }
+
+    @Override
+    public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, logoutRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callLogout(logoutRequest);
     }
 
     /**
@@ -151,6 +168,7 @@ public class FredClientImpl implements FredClient {
             properties.load(new FileInputStream(pathToConfiguration));
             return properties;
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
             throw new FredClientException(e.getMessage(), e);
         }
     }
@@ -163,6 +181,15 @@ public class FredClientImpl implements FredClient {
      */
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl("conf/fred-client.properties");
+
+//        LoginRequest loginRequest = new LoginRequest();
+
+//        log.debug(fredService.callLogin(loginRequest));
+
+//        log.debug(fredService.callLogout(new LogoutRequest()));
+//
+//        log.debug(fredService.callLogin(loginRequest));
+
 
 //        ContactInfoResponse contactInfoResponse = (ContactInfoResponse) fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
 //        log.debug(contactInfoResponse);

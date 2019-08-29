@@ -32,6 +32,10 @@ import fred.client.data.list.domain.DomainsByContactListRequest;
 import fred.client.data.list.domain.DomainsByKeysetListRequest;
 import fred.client.data.list.domain.DomainsByNssetListRequest;
 import fred.client.data.list.domain.DomainsListRequest;
+import fred.client.data.login.LoginRequest;
+import fred.client.data.login.LoginResponse;
+import fred.client.data.logout.LogoutRequest;
+import fred.client.data.logout.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -348,6 +352,18 @@ public class DomainStrategy implements ServerObjectStrategy {
         result.addResponseInfo(responseType);
 
         return result;
+    }
+
+    @Override
+    public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
+        log.debug("callLogin called with request(" + loginRequest + ")");
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " + loginRequest.getServerObjectType());
+    }
+
+    @Override
+    public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
+        log.debug("callLogout called with request(" + logoutRequest + ")");
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " + logoutRequest.getServerObjectType());
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {

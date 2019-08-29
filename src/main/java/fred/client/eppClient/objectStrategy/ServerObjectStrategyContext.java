@@ -12,6 +12,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
+import fred.client.data.login.LoginRequest;
+import fred.client.data.login.LoginResponse;
+import fred.client.data.logout.LogoutRequest;
+import fred.client.data.logout.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -141,5 +145,13 @@ public class ServerObjectStrategyContext {
 
     public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
         return serverObjectStrategy.callUpdate(updateRequest);
+    }
+
+    public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
+        return serverObjectStrategy.callLogin(loginRequest);
+    }
+
+    public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
+        return serverObjectStrategy.callLogout(logoutRequest);
     }
 }

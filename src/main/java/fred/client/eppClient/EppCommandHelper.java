@@ -17,7 +17,23 @@ public class EppCommandHelper {
      * Prefixes for generating client transaction id.
      */
     enum ClTrIdPrefix {
-        INFO, CHECK, CREATE, DELETE, UPDATE, RENEW, TRANSFER, POLL, ACK, AUTHINFO, CREDIT, NSSET_TEST, LIST
+        INFO, CHECK, CREATE, DELETE, UPDATE, RENEW, TRANSFER, POLL, ACK, AUTHINFO, CREDIT, NSSET_TEST, LIST, LOGIN, LOGOUT
+    }
+
+    public JAXBElement<EppType> createLoginEppCommand(LoginType loginType, String clientTransactionId) {
+        CommandType commandType = new CommandType();
+        commandType.setLogin(loginType);
+        commandType.setClTRID(this.resolveClTrId(ClTrIdPrefix.LOGIN.name(), clientTransactionId));
+
+        return getEppCommandEnd(commandType);
+    }
+
+    public JAXBElement<EppType> createLogoutEppCommand(String clientTransactionId) {
+        CommandType commandType = new CommandType();
+        commandType.setLogout("");
+        commandType.setClTRID(this.resolveClTrId(ClTrIdPrefix.LOGOUT.name(), clientTransactionId));
+
+        return getEppCommandEnd(commandType);
     }
 
     public JAXBElement<EppType> createInfoEppCommand(Object any, String clientTransactionId) {
@@ -120,7 +136,6 @@ public class EppCommandHelper {
 
         return getEppCommandEnd(commandType);
     }
-
 
     public JAXBElement<EppType> createSendAuthInfoEppCommand(Object any, String clientTransactionId) {
         cz.nic.xml.epp.fred_1.ReadWriteType readWriteType = new cz.nic.xml.epp.fred_1.ReadWriteType();

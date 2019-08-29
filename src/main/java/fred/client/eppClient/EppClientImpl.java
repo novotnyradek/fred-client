@@ -13,7 +13,6 @@ import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,8 +24,6 @@ public class EppClientImpl implements EppClient {
     private static final Log log = LogFactory.getLog(EppClientImpl.class);
 
     private static EppClientImpl eppClient;
-
-    private static final String SESSION_OK = "SESSION_OK";
 
     private static final int HEADER = 4;
 
@@ -40,9 +37,12 @@ public class EppClientImpl implements EppClient {
 
     private EppClientMarshallerHelper marshallerHelper;
 
+    private EppCommandHelper eppCommandHelper;
+
     private EppClientImpl(Properties properties) {
         this.properties = properties;
         this.marshallerHelper = new EppClientMarshallerHelper(properties);
+        this.eppCommandHelper = new EppCommandHelper();
     }
 
     public static EppClientImpl getInstance(Properties properties) {
@@ -56,7 +56,25 @@ public class EppClientImpl implements EppClient {
         return eppClient;
     }
 
-    @Override
+    public ResponseType login(String clientTransactionId) throws FredClientException {
+        if (isConnected()) {
+            GreetingType greeting = hello();
+            return login(greeting, clientTransactionId);
+        }
+
+        return initialize(clientTransactionId);
+    }
+
+    public ResponseType logout(String clientTransactionId) throws FredClientException {
+        JAXBElement<EppType> logout = eppCommandHelper.createLogoutEppCommand(clientTransactionId);
+
+        ResponseType response = this.execute(logout);
+
+        this.disconnect();
+
+        return response;
+    }
+
     public ResponseType execute(JAXBElement<EppType> request) throws FredClientException {
 
         // marshalling request to xml
@@ -108,7 +126,7 @@ public class EppClientImpl implements EppClient {
     private void checkSession() throws FredClientException {
         if (!isConnected()) {
             log.debug("Connection not established or wrong, try to initialize");
-            initialize();
+            initialize(null);
         }
     }
 
@@ -118,20 +136,20 @@ public class EppClientImpl implements EppClient {
      * @return true if we are connected to server.
      */
     private boolean isConnected() {
-        String sessionOk;
+        GreetingType greeting;
 
         if (reader == null || writer == null || socket == null) {
             return false;
         }
 
         try {
-            sessionOk = hello();
+            greeting = hello();
         } catch (FredClientException e) {
             log.error("Checking with hello failed, we are not connected, returning false!");
             return false;
         }
 
-        return sessionOk != null;
+        return greeting != null;
     }
 
     /**
@@ -140,7 +158,7 @@ public class EppClientImpl implements EppClient {
      * @return null if response is without greeting.
      * @throws FredClientException
      */
-    private String hello() throws FredClientException {
+    private GreetingType hello() throws FredClientException {
         ObjectFactory objectFactory = new ObjectFactory();
 
         EppType eppType = objectFactory.createEppType();
@@ -154,18 +172,16 @@ public class EppClientImpl implements EppClient {
 
         EppType responseEppType = marshallerHelper.unmarshal(response);
 
-        GreetingType greeting = responseEppType.getGreeting();
-        if (greeting == null) return null;
-
-        return SESSION_OK;
+        return responseEppType.getGreeting();
     }
 
     /**
      * Initializes new connection to server.
      *
+     * @return
      * @throws FredClientException
      */
-    private void initialize() throws FredClientException {
+    private ResponseType initialize(String clientTransactionId) throws FredClientException {
         try {
             connect();
         } catch (Exception e) {
@@ -176,7 +192,7 @@ public class EppClientImpl implements EppClient {
 
         EppType eppType = marshallerHelper.unmarshal(greetingXml);
 
-        login(eppType.getGreeting());
+        return login(eppType.getGreeting(), clientTransactionId);
     }
 
     /**
@@ -228,7 +244,7 @@ public class EppClientImpl implements EppClient {
         log.debug("Connected to: " + socket.getInetAddress());
     }
 
-    private void login(GreetingType greeting) throws FredClientException {
+    private ResponseType login(GreetingType greeting, String clientTransactionId) throws FredClientException {
         String apiKey = properties.getProperty("apiKey.id");
         String apiKeyPassword = properties.getProperty("apiKey.secret");
 
@@ -247,44 +263,9 @@ public class EppClientImpl implements EppClient {
         credsOptionsType.setVersion(greeting.getSvcMenu().getVersion().get(0));
         loginType.setOptions(credsOptionsType);
 
-        ObjectFactory factory = new ObjectFactory();
-        EppType eppType = factory.createEppType();
+        JAXBElement<EppType> requestElement = eppCommandHelper.createLoginEppCommand(loginType, clientTransactionId);
 
-        CommandType commandType = new CommandType();
-        commandType.setLogin(loginType);
-
-        Date date = new Date();
-        commandType.setClTRID("LOGIN-" + date.getTime());
-        eppType.setCommand(commandType);
-
-        JAXBElement<EppType> requestElement = factory.createEpp(eppType);
-
-        this.execute(requestElement);
-    }
-
-    /**
-     * Method executes logout command and destroys socket connection.
-     *
-     * @throws FredClientException
-     * @throws IOException
-     */
-    private void logout() throws FredClientException {
-        ObjectFactory eppObjectFactory = new ObjectFactory();
-
-        CommandType command = eppObjectFactory.createCommandType();
-        command.setLogout("");
-
-        EppType eppType = eppObjectFactory.createEppType();
-        eppType.setCommand(command);
-
-        JAXBElement<EppType> logout = eppObjectFactory.createEpp(eppType);
-
-        ResponseType response = this.execute(logout);
-
-        this.disconnect();
-
-        log.debug("Logout response " + response.getResult().get(0).getCode() +
-                " and message " + response.getResult().get(0).getMsg().getValue());
+        return this.execute(requestElement);
     }
 
     /**
