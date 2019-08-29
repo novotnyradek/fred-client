@@ -13,10 +13,9 @@ Version: 0.2.0 (0.2-SNAPSHOT)
 * Possibility to connect to epp.demo.regtest.nic.cz from main method
 * Done all use cases out without object update poll message (mistakes in schemas, CZ.NIC was notified)
 > Completed:
-* Session management commands (unable to call them separately)
+* Session management commands
     * Login
     * Logout
-    * Hello
 * Query commands
     * Check
     * Info
