@@ -24,6 +24,8 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -103,6 +105,12 @@ public class NotImplementedStrategy implements ServerObjectStrategy {
 
     @Override
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest request) throws FredClientException {
+        log.error("No strategy found for type " + request.getServerObjectType());
+        throw new FredClientException("No strategy found for type " + request.getServerObjectType());
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest request) throws FredClientException {
         log.error("No strategy found for type " + request.getServerObjectType());
         throw new FredClientException("No strategy found for type " + request.getServerObjectType());
     }

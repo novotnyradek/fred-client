@@ -48,6 +48,10 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.domain.DomainTransferRequest;
 import fred.client.data.transfer.domain.DomainTransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.domain.DomainUpdateRequest;
+import fred.client.data.update.domain.DomainUpdateResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandHelper;
@@ -310,6 +314,40 @@ public class DomainStrategy implements ServerObjectStrategy {
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
         throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+        log.debug("callUpdate called with request(" + updateRequest + ")");
+
+        DomainUpdateRequest domainUpdateRequest = (DomainUpdateRequest) updateRequest;
+
+        UpdateType updateType = mapper.map(domainUpdateRequest, UpdateType.class);
+
+        JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
+
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, domainUpdateRequest.getClientTransactionId());
+
+        if (domainUpdateRequest.getEnumValUpdateData() != null) {
+            ExValType exValType = mapper.map(domainUpdateRequest.getEnumValUpdateData(), ExValType.class);
+
+            cz.nic.xml.epp.enumval_1.UpdateType enumUpdate = new cz.nic.xml.epp.enumval_1.UpdateType();
+            enumUpdate.setChg(exValType);
+
+            JAXBElement<cz.nic.xml.epp.enumval_1.UpdateType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createUpdate(enumUpdate);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(enumWrapper);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
+
+        ResponseType responseType = client.execute(requestElement);
+
+        DomainUpdateResponse result = new DomainUpdateResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {

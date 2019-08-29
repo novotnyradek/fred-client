@@ -24,6 +24,8 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
 import fred.client.exception.FredClientException;
 
 /**
@@ -181,4 +183,19 @@ public interface FredClient {
      * @throws FredClientException
      */
     PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException;
+
+    /**
+     * Method used to call update command for objects:
+     * <ul>
+     * <li>DOMAIN</li>
+     * <li>CONTACT</li>
+     * <li>NSSET</li>
+     * <li>KEYSET</li>
+     * </ul>
+     *
+     * @param updateRequest subclass of {@link UpdateRequest} interface.
+     * @return subclass of {@link UpdateResponse} interface corresponding to request.
+     * @throws FredClientException
+     */
+    UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException;
 }

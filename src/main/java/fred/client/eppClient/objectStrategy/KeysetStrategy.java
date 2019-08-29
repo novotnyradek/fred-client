@@ -43,6 +43,10 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.keyset.KeysetTransferRequest;
 import fred.client.data.transfer.keyset.KeysetTransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.keyset.KeysetUpdateRequest;
+import fred.client.data.update.keyset.KeysetUpdateResponse;
 import fred.client.eppClient.EppClient;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandHelper;
@@ -250,6 +254,26 @@ public class KeysetStrategy implements ServerObjectStrategy {
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
         throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+        log.debug("callUpdate called with request(" + updateRequest + ")");
+
+        KeysetUpdateRequest keysetUpdateRequest = (KeysetUpdateRequest) updateRequest;
+
+        UpdateType updateType = mapper.map(keysetUpdateRequest, UpdateType.class);
+
+        JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
+
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, keysetUpdateRequest.getClientTransactionId());
+
+        ResponseType responseType = client.execute(requestElement);
+
+        KeysetUpdateResponse result = new KeysetUpdateResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
     }
 
     private ExtcommandType prepareKeysetsByContactCommand(KeysetsByContactListRequest keysetsByContactListRequest) {

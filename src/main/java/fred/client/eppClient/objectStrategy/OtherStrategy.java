@@ -26,6 +26,8 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
 import fred.client.eppClient.*;
 import fred.client.exception.FredClientException;
 import fred.client.mapper.FredClientDozerMapper;
@@ -175,5 +177,11 @@ public class OtherStrategy implements ServerObjectStrategy {
         }
 
         return result;
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) {
+        log.debug("callUpdate called with request(" + updateRequest + ")");
+        throw new UnsupportedOperationException("callUpdate operation is not supported for object " + updateRequest.getServerObjectType());
     }
 }

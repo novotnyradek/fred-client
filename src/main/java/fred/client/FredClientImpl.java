@@ -2,21 +2,14 @@ package fred.client;
 
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
-import fred.client.data.common.keyset.DnsKeyData;
 import fred.client.data.create.CreateRequest;
 import fred.client.data.create.CreateResponse;
-import fred.client.data.create.keyset.KeysetCreateRequest;
-import fred.client.data.create.keyset.KeysetCreateResponse;
 import fred.client.data.creditInfo.other.CreditInfoRequest;
 import fred.client.data.creditInfo.other.CreditInfoResponse;
 import fred.client.data.delete.DeleteRequest;
 import fred.client.data.delete.DeleteResponse;
 import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
-import fred.client.data.info.contact.ContactInfoRequest;
-import fred.client.data.info.contact.ContactInfoResponse;
-import fred.client.data.info.domain.DomainInfoRequest;
-import fred.client.data.info.nsset.NssetInfoRequest;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
@@ -33,17 +26,13 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.update.UpdateRequest;
 import fred.client.data.update.UpdateResponse;
-import fred.client.data.update.contact.ContactUpdateData;
-import fred.client.data.update.contact.ContactUpdateRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.Base64;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class FredClientImpl implements FredClient {
@@ -142,6 +131,14 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callPollAcknowledgement(pollAcknowledgementRequest);
     }
 
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+
+        ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, updateRequest.getServerObjectType());
+
+        return serverObjectStrategyContext.callUpdate(updateRequest);
+    }
+
     /**
      * Method for loading properties file provided by user.
      *
@@ -153,7 +150,7 @@ public class FredClientImpl implements FredClient {
             Properties properties = new Properties();
             properties.load(new FileInputStream(pathToConfiguration));
             return properties;
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new FredClientException(e.getMessage(), e);
         }
     }
@@ -167,8 +164,8 @@ public class FredClientImpl implements FredClient {
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl("conf/fred-client.properties");
 
-        ContactInfoResponse contactInfoResponse = (ContactInfoResponse) fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
-        log.debug(contactInfoResponse);
+//        ContactInfoResponse contactInfoResponse = (ContactInfoResponse) fredService.callInfo(new ContactInfoRequest("A24-CONTACT"));
+//        log.debug(contactInfoResponse);
 
 //        InfoResponse response = fredService.callInfo(new DomainInfoRequest("testovacidomena.cz"));
 //        log.debug(response);
@@ -179,6 +176,10 @@ public class FredClientImpl implements FredClient {
 //        SendAuthInfoResponse contactResponse = fredService.callSendAuthInfo(new ContactSendAuthInfoRequest("A24-CONTACT"));
 //        log.debug(contactResponse);
 //
+//        NssetInfoRequest request = new NssetInfoRequest("A24-NSSET");
+//        InfoResponse response = fredService.callInfo(request);
+//        log.debug(response);
+
 //        SendAuthInfoResponse keysetResponse = fredService.callSendAuthInfo(new KeysetSendAuthInfoRequest("A24-KEYSET"));
 //        log.debug(keysetResponse);
 //
@@ -241,7 +242,6 @@ public class FredClientImpl implements FredClient {
         //  testy
         //   na mapovani
         //   celý scenář - od vytvoření objektů, přes jejich update, transfer, prodloužení, smazání, chytání poll message na všechny tyto akce
-        //  update command
         //  projit todocka
         //  otestovat veskera volani v jave 8 (pripadne vyssi)
 
@@ -267,6 +267,99 @@ public class FredClientImpl implements FredClient {
         Caused by: javax.xml.bind.JAXBException: class fred.client.data.common.keyset.DnsKeyData nor any of its super class is known to this context.
         */
 
+
+//        ContactChangeData updateData = new ContactChangeData();
+//        PostalInfoData postalInfoData = new PostalInfoData(null, new AddressData("Praha 9", "19000", "CZ", "Kytlická 862/2"));
+//        updateData.setPostalInfo(postalInfoData);
+//        updateData.setIdent(new IdentificationData(IdentType.BIRTHDAY, "25.5.1990"));
+//        updateData.setAuthInfo("authinfo123");
+//        updateData.setEmail("radek.novotny@loopiagroup.com");
+//        updateData.setFax("+420.333555666");
+//        updateData.setVoice("+420.333555666");
+//        updateData.setFax("");
+//        updateData.setVat("");
+//        updateData.setNotifyEmail("radek.novotny@loopiagroup.com");
+
+//        DiscloseData discloseData = new DiscloseData();
+//        discloseData.setFlag(true);
+//        discloseData.setAddr("");
+//        discloseData.setEmail("");
+
+//        updateData.setDisclose(discloseData);
+
+
+//        ExtraAddressUpdateData extraAddressUpdateData = new ExtraAddressUpdateData();
+//        extraAddressUpdateData.setSet(new AddressData("Prague", "19900", "CZ", "Českolipská 5"));
+////        extraAddressUpdateData.setRem("");
+//
+//        ContactUpdateRequest contactUpdateRequest = new ContactUpdateRequest("A24-CONTACT");
+////        contactUpdateRequest.setChg(updateData);
+//        contactUpdateRequest.setExtraAddressUpdateData(extraAddressUpdateData);
+//
+//        fredService.callUpdate(contactUpdateRequest);
+
+
+//        DomainUpdateRequest domainUpdateRequest = new DomainUpdateRequest("active24.cz");
+//        domainUpdateRequest.setAdd(new DomainAddData("A24-ADD", "A24-ADD1"));
+//        domainUpdateRequest.setRem(new DomainRemData("A24-REM", "A24-REM1"));
+//
+//        DomainChangeData domainChangeData = new DomainChangeData();
+//        domainChangeData.setAuthInfo("authinfossss");
+//        domainChangeData.setKeyset("nejakykeyset");
+//        domainChangeData.setNsset("");
+//        domainChangeData.setRegistrant(null);
+//        domainUpdateRequest.setChg(domainChangeData);
+//
+//        EnumValData enumValData = new EnumValData();
+//        enumValData.setPublish(false);
+//        domainUpdateRequest.setEnumValUpdateData(enumValData);
+//
+//        fredService.callUpdate(domainUpdateRequest);
+
+//        NssetUpdateRequest nssetUpdateRequest = new NssetUpdateRequest("A24-NSSET");
+//
+//        NssetAddData nssetAddData = new NssetAddData();
+//        NameserverData nsData = new NameserverData("neco.cz");
+//        nsData.setAddr(Arrays.asList("217.31.207.130", "217.31.207.131"));
+//        NameserverData nsData2 = new NameserverData("neco.cz");
+//        nsData2.setAddr(Arrays.asList("217.31.207.130", "217.31.207.131"));
+//        nssetAddData.setNs(Arrays.asList(nsData, nsData2));
+//        nssetAddData.setTech(Arrays.asList("A24-CONTACT"));
+//        nssetUpdateRequest.setAdd(nssetAddData);
+//
+//        NssetRemData nssetRemData = new NssetRemData();
+//        nssetRemData.setName(Arrays.asList("neco.cz"));
+//        nssetRemData.setTech(Arrays.asList("A24-CONTACT"));
+//        nssetUpdateRequest.setRem(nssetRemData);
+//
+//        NssetChangeData changeData = new NssetChangeData();
+//        changeData.setAuthInfo("atuhsdvkl");
+//        changeData.setReportLevel((short) 4);
+//        nssetUpdateRequest.setChg(changeData);
+//
+//        log.debug(fredService.callUpdate(nssetUpdateRequest));
+
+
+//        KeysetUpdateRequest keysetUpdateRequest = new KeysetUpdateRequest("A24-KEYSET");
+//
+//        KeysetAddData keysetAddData = new KeysetAddData();
+//        keysetAddData.setDnskey(Arrays.asList(new DnsKeyData(257, (short) 3, (short) 3, Base64.decodeBase64("agfg".getBytes())), new DnsKeyData(256, (short) 4, (short) 5, Base64.encodeBase64("agfg".getBytes()))));
+//        keysetAddData.setTech(Arrays.asList("A24-TECH"));
+//        keysetUpdateRequest.setAdd(keysetAddData);
+//
+//        KeysetRemData keysetRemData = new KeysetRemData();
+//        keysetRemData.setDnskey(Arrays.asList(new DnsKeyData(257, (short) 3, (short) 3, Base64.encodeBase64("agfg".getBytes())), new DnsKeyData(256, (short) 4, (short) 5, Base64.encodeBase64("agfg".getBytes()))));
+//        keysetRemData.setTech(Arrays.asList("A24-TECH"));
+//        keysetUpdateRequest.setRem(keysetRemData);
+//
+//        KeysetChangeData keysetChangeData = new KeysetChangeData();
+//        keysetChangeData.setAuthInfo("4564968496afggdgdgadfgdfa");
+//        keysetUpdateRequest.setChg(keysetChangeData);
+//
+//        log.debug(fredService.callUpdate(keysetUpdateRequest));
+
+//        KeysetInfoRequest keysetInfoRequest = new KeysetInfoRequest("A24-KEYSET");
+//        log.debug(fredService.callInfo(keysetInfoRequest));
     }
 
 }

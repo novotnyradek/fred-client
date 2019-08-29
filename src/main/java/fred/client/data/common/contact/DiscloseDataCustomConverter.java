@@ -12,6 +12,10 @@ public class DiscloseDataCustomConverter implements CustomConverter {
 
     @Override
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
+        if (source == null){
+            return null;
+        }
+
         if (source instanceof DiscloseData && destClass.getName().equals(DiscloseType.class.getName())) {
             DiscloseData discloseData = (DiscloseData) source;
 
@@ -67,7 +71,6 @@ public class DiscloseDataCustomConverter implements CustomConverter {
 
             return discloseData;
         }
-
         throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
     }
 }

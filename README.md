@@ -11,7 +11,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 
 Version: 0.2.0 (0.2-SNAPSHOT)
 * Possibility to connect to epp.demo.regtest.nic.cz from main method
-* Done 38 use cases out of 45
+* Done all use cases out without object update poll message (mistakes in schemas, CZ.NIC was notified)
 > Completed:
 * Session management commands (unable to call them separately)
     * Login
@@ -20,7 +20,7 @@ Version: 0.2.0 (0.2-SNAPSHOT)
 * Query commands
     * Check
     * Info
-    * _Update (wip)_
+    * Update
     * Polling (without object update message)
 * Transform commands
     * Create
@@ -82,7 +82,7 @@ timeout = 20000
 
 # SSL Properties
 # Path to Java keystore with private and public certificate
-certificate.file = fred.jks
+certificate.file = conf/fred.jks
 # Java keystore password
 certificate.secret = changeit
 # Other settings
@@ -113,5 +113,13 @@ Note: works only for open instance environment - on production instance you'll g
 `keytool -import -alias server -file server.pem -storepass changeit -keystore fred.jks`
 
 > Usage
+* Add as Maven dependency (or use .jar) to your project. Create instance of FredClient class, properties file as parameter.
+* Feel free to call any command, no need to call login separately, because:
+  * Every command checks for connection via hello EPP command,
+  * if connection is not established, it creates new ssl connection to server,
+  * proceeds login EPP command and try to login,
+  * proceeds command you wanted.
+* If you keep your current instance of FredClient class, it reuses created connection.
 
+> Enjoy!
 

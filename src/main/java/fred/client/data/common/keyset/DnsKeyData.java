@@ -24,7 +24,7 @@ public class DnsKeyData implements Serializable {
 
     private byte[] pubKey;
 
-    protected DnsKeyData() {
+    public DnsKeyData() {
     }
 
     public DnsKeyData(int flags, short protocol, short alg, byte[] pubKey) {
@@ -38,7 +38,7 @@ public class DnsKeyData implements Serializable {
         return flags;
     }
 
-    protected void setFlags(int flags) {
+    public void setFlags(int flags) {
         this.flags = flags;
     }
 
@@ -46,7 +46,7 @@ public class DnsKeyData implements Serializable {
         return protocol;
     }
 
-    protected void setProtocol(short protocol) {
+    public void setProtocol(short protocol) {
         this.protocol = protocol;
     }
 
@@ -54,7 +54,7 @@ public class DnsKeyData implements Serializable {
         return alg;
     }
 
-    protected void setAlg(short alg) {
+    public void setAlg(short alg) {
         this.alg = alg;
     }
 
@@ -62,7 +62,7 @@ public class DnsKeyData implements Serializable {
         return pubKey;
     }
 
-    protected void setPubKey(byte[] pubKey) {
+    public void setPubKey(byte[] pubKey) {
         this.pubKey = pubKey;
     }
 

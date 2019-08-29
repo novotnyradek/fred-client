@@ -24,6 +24,8 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
 import fred.client.exception.FredClientException;
 
 import java.util.Properties;
@@ -135,5 +137,9 @@ public class ServerObjectStrategyContext {
 
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         return serverObjectStrategy.callPollAcknowledgement(pollAcknowledgementRequest);
+    }
+
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+        return serverObjectStrategy.callUpdate(updateRequest);
     }
 }

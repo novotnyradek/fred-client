@@ -24,6 +24,8 @@ import fred.client.data.testNsset.nsset.TestNssetRequest;
 import fred.client.data.testNsset.nsset.TestNssetResponse;
 import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
 import fred.client.exception.FredClientException;
 
 /**
@@ -54,4 +56,6 @@ public interface ServerObjectStrategy {
     PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException;
 
     PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException;
+
+    UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException;
 }

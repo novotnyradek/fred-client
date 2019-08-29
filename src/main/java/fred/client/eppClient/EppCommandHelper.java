@@ -2,9 +2,9 @@ package fred.client.eppClient;
 
 import cz.nic.xml.epp.fred_1.*;
 import fred.client.exception.FredClientException;
-import ietf.params.xml.ns.epp_1.*;
 import ietf.params.xml.ns.epp_1.ObjectFactory;
 import ietf.params.xml.ns.epp_1.ReadWriteType;
+import ietf.params.xml.ns.epp_1.*;
 
 import javax.xml.bind.JAXBElement;
 
@@ -64,7 +64,7 @@ public class EppCommandHelper {
         return getEppCommandEnd(commandType);
     }
 
-    public JAXBElement<EppType> getUpdateEppCommand(Object any, String clientTransactionId) {
+    public JAXBElement<EppType> createUpdateEppCommand(Object any, String clientTransactionId) {
         ReadWriteType readWriteType = new ReadWriteType();
         readWriteType.setAny(any);
 

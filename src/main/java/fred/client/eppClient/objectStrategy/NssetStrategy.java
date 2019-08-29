@@ -45,6 +45,10 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.nsset.NssetTransferRequest;
 import fred.client.data.transfer.nsset.NssetTransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.nsset.NssetUpdateRequest;
+import fred.client.data.update.nsset.NssetUpdateResponse;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
@@ -95,7 +99,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        NssetInfoResponse result = mapper.map(infDataType, NssetInfoResponse.class, "NameserverDataMapping");
+        NssetInfoResponse result = mapper.map(infDataType, NssetInfoResponse.class);
         result.addResponseInfo(responseType);
 
         return result;
@@ -267,6 +271,26 @@ public class NssetStrategy implements ServerObjectStrategy {
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
         throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+        log.debug("callUpdate called with request(" + updateRequest + ")");
+
+        NssetUpdateRequest nssetUpdateRequest = (NssetUpdateRequest) updateRequest;
+
+        UpdateType updateType = mapper.map(nssetUpdateRequest, UpdateType.class);
+
+        JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
+
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, nssetUpdateRequest.getClientTransactionId());
+
+        ResponseType responseType = client.execute(requestElement);
+
+        NssetUpdateResponse result = new NssetUpdateResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
     }
 
     private ExtcommandType prepareNssetsByNsCommand(NssetsByNsListRequest nssetsByNsListRequest) {

@@ -16,6 +16,14 @@ public class ServerResponseException extends FredClientException {
         this.errors = errors;
     }
 
+    public List<ErrorResponse> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<ErrorResponse> errors) {
+        this.errors = errors;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Server returned error! ");

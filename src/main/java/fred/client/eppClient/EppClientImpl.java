@@ -9,10 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.net.ssl.*;
 import javax.xml.bind.JAXBElement;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -191,9 +188,8 @@ public class EppClientImpl implements EppClient {
      * @throws CertificateException
      * @throws KeyManagementException
      * @throws UnrecoverableKeyException
-     * @throws NoSuchProviderException
      */
-    private void connect() throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, KeyManagementException, UnrecoverableKeyException, NoSuchProviderException {
+    private void connect() throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, KeyManagementException, UnrecoverableKeyException {
         String sslContextInstance = properties.getProperty("sslsocket.instance");
         String keyStoreInstance = properties.getProperty("keystore.instance");
         String certificateFile = properties.getProperty("certificate.file");
@@ -207,7 +203,7 @@ public class EppClientImpl implements EppClient {
         SSLContext sslContext = SSLContext.getInstance(sslContextInstance);
 
         KeyStore keyStore = KeyStore.getInstance(keyStoreInstance);
-        keyStore.load(ClassLoader.getSystemClassLoader().getResourceAsStream(certificateFile), certificatePassword.toCharArray());
+        keyStore.load(new FileInputStream(certificateFile), certificatePassword.toCharArray());
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(keyManagerInstance);
         keyManagerFactory.init(keyStore, certificatePassword.toCharArray());

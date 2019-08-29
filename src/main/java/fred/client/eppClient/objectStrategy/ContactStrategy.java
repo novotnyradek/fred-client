@@ -2,6 +2,7 @@ package fred.client.eppClient.objectStrategy;
 
 import cz.nic.xml.epp.contact_1.*;
 import cz.nic.xml.epp.extra_addr_1.AddrListType;
+import cz.nic.xml.epp.extra_addr_1.RemType;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
@@ -42,6 +43,11 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.transfer.contact.ContactTransferRequest;
 import fred.client.data.transfer.contact.ContactTransferResponse;
+import fred.client.data.update.UpdateRequest;
+import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.contact.ContactUpdateRequest;
+import fred.client.data.update.contact.ContactUpdateResponse;
+import fred.client.data.update.contact.ExtraAddressUpdateData;
 import fred.client.eppClient.EppClientImpl;
 import fred.client.eppClient.EppCommandHelper;
 import fred.client.exception.FredClientException;
@@ -275,5 +281,66 @@ public class ContactStrategy implements ServerObjectStrategy {
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
         throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+    }
+
+    @Override
+    public UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException {
+        log.debug("callUpdate called with request(" + updateRequest + ")");
+
+        ContactUpdateRequest contactUpdateRequest = (ContactUpdateRequest) updateRequest;
+
+        UpdateType updateType = mapper.map(contactUpdateRequest, UpdateType.class);
+
+        JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
+
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, contactUpdateRequest.getClientTransactionId());
+
+        if (contactUpdateRequest.getExtraAddressUpdateData() != null) {
+            this.setExtraAddressUpdateExtension(requestElement, contactUpdateRequest.getExtraAddressUpdateData());
+        }
+        ResponseType responseType = client.execute(requestElement);
+
+        ContactUpdateResponse result = new ContactUpdateResponse();
+        result.addResponseInfo(responseType);
+
+        return result;
+    }
+
+    /**
+     * Adds extra address extension for update command.
+     *
+     * @param requestElement element to decore.
+     * @param extraAddressUpdate extra address to set.
+     */
+    private void setExtraAddressUpdateExtension(JAXBElement<EppType> requestElement, ExtraAddressUpdateData extraAddressUpdate) {
+        if (extraAddressUpdate.getSet() != null || extraAddressUpdate.getRem() != null) {
+            cz.nic.xml.epp.extra_addr_1.UpdateType extraAddrUpdate = new cz.nic.xml.epp.extra_addr_1.UpdateType();
+
+            if (extraAddressUpdate.getSet() != null) {
+                cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.map(extraAddressUpdate.getSet(), cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
+
+                cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
+                addrType.setAddr(addr);
+
+                AddrListType addrListType = new AddrListType();
+                addrListType.setMailing(addrType);
+
+                extraAddrUpdate.setSet(addrListType);
+            }
+
+            if (extraAddressUpdate.getRem() != null) {
+                RemType remType = new RemType();
+                remType.setMailing("");
+
+                extraAddrUpdate.setRem(remType);
+            }
+
+            JAXBElement<cz.nic.xml.epp.extra_addr_1.UpdateType> addrWrapper = new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createUpdate(extraAddrUpdate);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(addrWrapper);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
     }
 }

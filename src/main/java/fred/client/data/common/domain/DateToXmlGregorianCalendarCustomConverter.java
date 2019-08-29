@@ -16,6 +16,9 @@ import java.util.Date;
 public class DateToXmlGregorianCalendarCustomConverter implements CustomConverter {
 
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
+        if (source == null){
+            return null;
+        }
         if (source instanceof Date) {
             Date date = (Date) source;
 

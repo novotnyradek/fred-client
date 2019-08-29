@@ -19,7 +19,7 @@ public class EnumValData implements Serializable {
 
     private Boolean publish;
 
-    protected EnumValData(){}
+    public EnumValData(){}
 
     public EnumValData(Date valExDate) {
         this.valExDate = valExDate;
