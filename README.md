@@ -9,9 +9,22 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 
-Version: 0.2.0 (0.2-SNAPSHOT)
+**Version: `0.2.1 (0.2-SNAPSHOT)`**
+> Changes
+###### 0.2.1
+* Generated class diagram.
+* Changed schemas to accept object update poll message.
+###### 0.2.1
+* Created remaining methods (without object update poll message yet).
+* Possibility to configure client from outside, via properties file, see Settings section.
+* Possibility to turn off validation of requests and responses (via properties file).
+* Speed improvements, sharing one connection to client.
+* And much more.
+###### 0.1.0
+* Removed clientTransactionId attribute from constructors. Can be set using setClientTransactionId method on any request, otherwise will be generated automatically.
+* First version.
 * Possibility to connect to epp.demo.regtest.nic.cz from main method or your application
-* Done all use cases even with object update poll message (mistakes in schemas, CZ.NIC was notified, changed schemas in client to make it work)
+
 > Completed:
 * Session management commands
     * Login
@@ -31,20 +44,6 @@ Version: 0.2.0 (0.2-SNAPSHOT)
     * Send authInfo
     * Test nsset
     * Listing
-    
-> Changes
-###### 0.2.1
-* Generated class diagram.
-* Changed schemas to accept object update poll message.
-###### 0.2.1
-* Created remaining methods (without object update poll message yet).
-* Possibility to configure client from outside, via properties file, see Settings section.
-* Possibility to turn off validation of requests and responses (via properties file).
-* Speed improvements, sharing one connection to client.
-* And much more.
-###### 0.1.0
-* Removed clientTransactionId attribute from constructors. Can be set using setClientTransactionId method on any request, otherwise will be generated automatically.
-* First version.
 
 > Installation (Not avaliable yet)
 
