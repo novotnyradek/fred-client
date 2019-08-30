@@ -1,4 +1,4 @@
-package fred.client.data.login;
+package fred.client.data.login.other;
 
 import fred.client.data.EppResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectType;

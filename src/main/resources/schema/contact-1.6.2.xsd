@@ -490,9 +490,21 @@
     <complexType name="updateDataT">
       <sequence>
         <element name="opTRID" type="contact:trIDStringType"/>
-        <element name="oldData" type="contact:infDataType"/>
-        <element name="newData" type="contact:infDataType"/>
+        <element name="oldData" type="contact:oldData"/>
+        <element name="newData" type="contact:newData"/>
       </sequence>
+    </complexType>
+
+    <complexType name="oldData">
+        <sequence>
+            <element name="infData" type="contact:infDataType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="newData">
+        <sequence>
+            <element name="infData" type="contact:infDataType"/>
+        </sequence>
     </complexType>
 
   </schema>

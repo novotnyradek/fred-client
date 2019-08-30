@@ -12,10 +12,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.login.LoginRequest;
-import fred.client.data.login.LoginResponse;
-import fred.client.data.logout.LogoutRequest;
-import fred.client.data.logout.LogoutResponse;
+import fred.client.data.login.other.LoginRequest;
+import fred.client.data.login.other.LoginResponse;
+import fred.client.data.logout.other.LogoutRequest;
+import fred.client.data.logout.other.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -205,6 +205,7 @@ public interface FredClient {
 
     /**
      * Method used to call login command.
+     *
      * @param loginRequest {@link LoginRequest}
      * @return {@link LoginResponse}
      * @throws FredClientException
@@ -213,8 +214,9 @@ public interface FredClient {
 
     /**
      * Method used to call logout command.
-     * @param loginRequest {@link LoginRequest}
-     * @return {@link LoginResponse}
+     *
+     * @param logoutRequest {@link LogoutRequest}
+     * @return {@link LogoutResponse}
      * @throws FredClientException
      */
     LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException;

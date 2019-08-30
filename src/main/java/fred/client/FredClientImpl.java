@@ -12,10 +12,10 @@ import fred.client.data.info.InfoRequest;
 import fred.client.data.info.InfoResponse;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListResponse;
-import fred.client.data.login.LoginRequest;
-import fred.client.data.login.LoginResponse;
-import fred.client.data.logout.LogoutRequest;
-import fred.client.data.logout.LogoutResponse;
+import fred.client.data.login.other.LoginRequest;
+import fred.client.data.login.other.LoginResponse;
+import fred.client.data.logout.other.LogoutRequest;
+import fred.client.data.logout.other.LogoutResponse;
 import fred.client.data.poll.PollAcknowledgementRequest;
 import fred.client.data.poll.PollAcknowledgementResponse;
 import fred.client.data.poll.PollRequest;
@@ -387,6 +387,9 @@ public class FredClientImpl implements FredClient {
 
 //        KeysetInfoRequest keysetInfoRequest = new KeysetInfoRequest("A24-KEYSET");
 //        log.debug(fredService.callInfo(keysetInfoRequest));
+
+
+        fredService.callPollRequest(new PollRequest());
     }
 
 }

@@ -398,9 +398,21 @@
     <complexType name="updateDataT">
       <sequence>
         <element name="opTRID" type="domain:trIDStringType"/>
-        <element name="oldData" type="domain:infDataType"/>
-        <element name="newData" type="domain:infDataType"/>
+        <element name="oldData" type="domain:oldData"/>
+        <element name="newData" type="domain:newData"/>
       </sequence>
+    </complexType>
+
+    <complexType name="oldData">
+        <sequence>
+            <element name="infData" type="domain:infDataType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="newData">
+        <sequence>
+            <element name="infData" type="domain:infDataType"/>
+        </sequence>
     </complexType>
 
   </schema>

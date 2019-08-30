@@ -10,8 +10,8 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 
 Version: 0.2.0 (0.2-SNAPSHOT)
-* Possibility to connect to epp.demo.regtest.nic.cz from main method
-* Done all use cases out without object update poll message (mistakes in schemas, CZ.NIC was notified)
+* Possibility to connect to epp.demo.regtest.nic.cz from main method or your application
+* Done all use cases even with object update poll message (mistakes in schemas, CZ.NIC was notified, changed schemas in client to make it work)
 > Completed:
 * Session management commands
     * Login
@@ -20,7 +20,7 @@ Version: 0.2.0 (0.2-SNAPSHOT)
     * Check
     * Info
     * Update
-    * Polling (without object update message)
+    * Polling
 * Transform commands
     * Create
     * Transfer
@@ -33,7 +33,10 @@ Version: 0.2.0 (0.2-SNAPSHOT)
     * Listing
     
 > Changes
-###### 0.2.0
+###### 0.2.1
+* Generated class diagram.
+* Changed schemas to accept object update poll message.
+###### 0.2.1
 * Created remaining methods (without object update poll message yet).
 * Possibility to configure client from outside, via properties file, see Settings section.
 * Possibility to turn off validation of requests and responses (via properties file).

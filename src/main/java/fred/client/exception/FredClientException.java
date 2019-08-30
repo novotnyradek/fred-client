@@ -13,6 +13,13 @@ public class FredClientException extends Exception {
         super(message, throwable);
     }
 
-    // todo get error code, get message, possibly get reason
+    @Override
+    public String getMessage() {
+        return super.getMessage();
+    }
 
+    @Override
+    public synchronized Throwable getCause() {
+        return super.getCause();
+    }
 }

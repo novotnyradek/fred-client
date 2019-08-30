@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-  <schema targetNamespace="http://www.nic.cz/xml/epp/keyset-1.3"
-          elementFormDefault="qualified"
-          xmlns:keyset="http://www.nic.cz/xml/epp/keyset-1.3"
-          xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
-          xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
-          xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="http://www.nic.cz/xml/epp/keyset-1.3"
+        elementFormDefault="qualified"
+        xmlns:keyset="http://www.nic.cz/xml/epp/keyset-1.3"
+        xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+        xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
+        xmlns="http://www.w3.org/2001/XMLSchema">
 
     <!--
     This schema defines object extension of EPP.
@@ -19,10 +19,10 @@
             schemaLocation="fredcom-1.2.1.xsd"/>
 
     <annotation>
-      <documentation>
-        Extension to Extensible Provisioning Protocol v1.0
-        keyset provisioning schema.
-      </documentation>
+        <documentation>
+            Extension to Extensible Provisioning Protocol v1.0
+            keyset provisioning schema.
+        </documentation>
     </annotation>
 
     <!--
@@ -46,89 +46,89 @@
     Child elements of the <create> command.
     -->
     <complexType name="crType">
-      <sequence>
-        <element name="id" type="fredcom:objIDCreateType"/>
-        <element name="dnskey" type="keyset:dnskeyT"
-         minOccurs="0" maxOccurs="10"/>
-        <element name="tech" type="fredcom:objIDType"
-         maxOccurs="10"/>
-        <element name="authInfo" type="fredcom:authInfoType"
-         minOccurs="0"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDCreateType"/>
+            <element name="dnskey" type="keyset:dnskeyT"
+                     minOccurs="0" maxOccurs="10"/>
+            <element name="tech" type="fredcom:objIDType"
+                     maxOccurs="10"/>
+            <element name="authInfo" type="fredcom:authInfoType"
+                     minOccurs="0"/>
+        </sequence>
     </complexType>
 
     <simpleType name="maxSigLifeType">
-      <restriction base="int">
-        <minInclusive value="1"/>
-      </restriction>
+        <restriction base="int">
+            <minInclusive value="1"/>
+        </restriction>
     </simpleType>
 
     <complexType name="dnskeyT">
-      <sequence>
-         <element name="flags" type="unsignedShort"/>
-         <element name="protocol" type="unsignedByte"/>
-         <element name="alg" type="unsignedByte"/>
-         <element name="pubKey" type="keyset:keyT"/>
-      </sequence>
+        <sequence>
+            <element name="flags" type="unsignedShort"/>
+            <element name="protocol" type="unsignedByte"/>
+            <element name="alg" type="unsignedByte"/>
+            <element name="pubKey" type="keyset:keyT"/>
+        </sequence>
     </complexType>
 
     <simpleType name="keyT">
-      <restriction base="base64Binary">
-        <minLength value="1"/>
-      </restriction>
+        <restriction base="base64Binary">
+            <minLength value="1"/>
+        </restriction>
     </simpleType>
 
     <!--
     Child element of commands that require only an identifier (delete and info).
     -->
     <complexType name="sIDType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+        </sequence>
     </complexType>
 
     <!--
     Child element of commands that accept multiple identifiers (check).
     -->
     <complexType name="mNameType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"
-         maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"
+                     maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <!--
     Child elements of the <transfer> command.
     -->
     <complexType name="transferType">
-      <sequence>
-        <element name="id" type="eppcom:labelType"/>
-        <element name="authInfo" type="fredcom:authInfoType"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="eppcom:labelType"/>
+            <element name="authInfo" type="fredcom:authInfoType"/>
+        </sequence>
     </complexType>
 
     <!--
     Child elements of the <update> command.
     -->
     <complexType name="updateType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="add" type="keyset:addType"
-         minOccurs="0"/>
-        <element name="rem" type="keyset:addType"
-         minOccurs="0"/>
-        <element name="chg" type="keyset:chgType"
-         minOccurs="0"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="add" type="keyset:addType"
+                     minOccurs="0"/>
+            <element name="rem" type="keyset:addType"
+                     minOccurs="0"/>
+            <element name="chg" type="keyset:chgType"
+                     minOccurs="0"/>
+        </sequence>
     </complexType>
 
     <complexType name="addType">
-      <sequence>
-        <element name="dnskey" type="keyset:dnskeyT"
-         minOccurs="0" maxOccurs="10"/>
-        <element name="tech" type="fredcom:objIDType"
-         minOccurs="0" maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="dnskey" type="keyset:dnskeyT"
+                     minOccurs="0" maxOccurs="10"/>
+            <element name="tech" type="fredcom:objIDType"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <!--
@@ -143,24 +143,24 @@
     -->
 
     <complexType name="chgType">
-      <sequence>
-        <element name="authInfo" type="fredcom:authInfoType"
-         minOccurs="0"/>
-      </sequence>
+        <sequence>
+            <element name="authInfo" type="fredcom:authInfoType"
+                     minOccurs="0"/>
+        </sequence>
     </complexType>
 
     <complexType name="sendAuthInfoType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+        </sequence>
     </complexType>
 
     <complexType name="testType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="name" type="eppcom:labelType"
-         minOccurs="0" maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="name" type="eppcom:labelType"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <!--
@@ -178,65 +178,65 @@
     <check> response elements.
     -->
     <complexType name="chkDataType">
-      <sequence>
-        <element name="cd" type="keyset:checkType"
-         maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="cd" type="keyset:checkType"
+                     maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <complexType name="checkType">
-      <sequence>
-        <element name="id" type="keyset:checkNameType"/>
-        <element name="reason" type="fredcom:msgType"
-         minOccurs="0"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="keyset:checkNameType"/>
+            <element name="reason" type="fredcom:msgType"
+                     minOccurs="0"/>
+        </sequence>
     </complexType>
 
     <complexType name="checkNameType">
-      <simpleContent>
-        <extension base="fredcom:objIDType">
-          <attribute name="avail" type="boolean" use="required"/>
-        </extension>
-      </simpleContent>
+        <simpleContent>
+            <extension base="fredcom:objIDType">
+                <attribute name="avail" type="boolean" use="required"/>
+            </extension>
+        </simpleContent>
     </complexType>
 
     <!--
     <create> response elements.
     -->
     <complexType name="creDataType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="crDate" type="dateTime"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="crDate" type="dateTime"/>
+        </sequence>
     </complexType>
 
     <!--
     <info> response elements.
     -->
     <complexType name="infDataType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="roid" type="eppcom:roidType"/>
-        <element name="status" type="keyset:statusType"
-         minOccurs="0" maxOccurs="6"/>
-        <element name="clID" type="eppcom:clIDType"/>
-        <element name="crID" type="eppcom:clIDType"
-         minOccurs="0"/>
-        <element name="crDate" type="dateTime"
-         minOccurs="0"/>
-        <element name="upID" type="eppcom:clIDType"
-         minOccurs="0"/>
-        <element name="upDate" type="dateTime"
-         minOccurs="0"/>
-        <element name="trDate" type="dateTime"
-         minOccurs="0"/>
-        <element name="authInfo" type="fredcom:authInfoType"
-         minOccurs="0"/>
-        <element name="dnskey" type="keyset:dnskeyT" 
-         minOccurs="0" maxOccurs="10"/>
-        <element name="tech" type="fredcom:objIDType"
-         maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="roid" type="eppcom:roidType"/>
+            <element name="status" type="keyset:statusType"
+                     minOccurs="0" maxOccurs="6"/>
+            <element name="clID" type="eppcom:clIDType"/>
+            <element name="crID" type="eppcom:clIDType"
+                     minOccurs="0"/>
+            <element name="crDate" type="dateTime"
+                     minOccurs="0"/>
+            <element name="upID" type="eppcom:clIDType"
+                     minOccurs="0"/>
+            <element name="upDate" type="dateTime"
+                     minOccurs="0"/>
+            <element name="trDate" type="dateTime"
+                     minOccurs="0"/>
+            <element name="authInfo" type="fredcom:authInfoType"
+                     minOccurs="0"/>
+            <element name="dnskey" type="keyset:dnskeyT"
+                     minOccurs="0" maxOccurs="10"/>
+            <element name="tech" type="fredcom:objIDType"
+                     maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <!--
@@ -244,32 +244,32 @@
     message.
     -->
     <complexType name="statusType">
-      <simpleContent>
-        <extension base="normalizedString">
-          <attribute name="s" type="keyset:statusValueType"
-           use="required"/>
-          <attribute name="lang" type="language"
-           default="en"/>
-        </extension>
-      </simpleContent>
+        <simpleContent>
+            <extension base="normalizedString">
+                <attribute name="s" type="keyset:statusValueType"
+                           use="required"/>
+                <attribute name="lang" type="language"
+                           default="en"/>
+            </extension>
+        </simpleContent>
     </complexType>
 
     <simpleType name="statusValueType">
-      <restriction base="token">
-        <enumeration value="ok"/>
-        <enumeration value="linked"/>
-        <enumeration value="serverDeleteProhibited"/>
-        <enumeration value="serverTransferProhibited"/>
-        <enumeration value="serverUpdateProhibited"/>
-        <enumeration value="deleteCandidate"/>
-      </restriction>
+        <restriction base="token">
+            <enumeration value="ok"/>
+            <enumeration value="linked"/>
+            <enumeration value="serverDeleteProhibited"/>
+            <enumeration value="serverTransferProhibited"/>
+            <enumeration value="serverUpdateProhibited"/>
+            <enumeration value="deleteCandidate"/>
+        </restriction>
     </simpleType>
 
     <complexType name="listDataType">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"
-         minOccurs="0" maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <!--
@@ -284,53 +284,65 @@
     <element name="updateData" type="keyset:updateDataT"/>
 
     <complexType name="handleDateT">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="trDate" type="dateTime"/>
-        <element name="clID" type="eppcom:clIDType"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="trDate" type="dateTime"/>
+            <element name="clID" type="eppcom:clIDType"/>
+        </sequence>
     </complexType>
 
     <complexType name="idleDelDataT">
-      <sequence>
-        <element name="id" type="fredcom:objIDType"/>
-      </sequence>
+        <sequence>
+            <element name="id" type="fredcom:objIDType"/>
+        </sequence>
     </complexType>
 
     <complexType name="testDataT">
-      <sequence>
-        <element name="cltestid" type="keyset:trIDStringType"
-         minOccurs="0"/>
-        <element name="id" type="fredcom:objIDType"/>
-        <element name="name" type="eppcom:labelType"
-         minOccurs="0" maxOccurs="unbounded"/>
-        <element name="result" type="keyset:resultType"
-         minOccurs="0" maxOccurs="unbounded"/>
-      </sequence>
+        <sequence>
+            <element name="cltestid" type="keyset:trIDStringType"
+                     minOccurs="0"/>
+            <element name="id" type="fredcom:objIDType"/>
+            <element name="name" type="eppcom:labelType"
+                     minOccurs="0" maxOccurs="unbounded"/>
+            <element name="result" type="keyset:resultType"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
     </complexType>
 
     <complexType name="resultType">
-      <sequence>
-        <element name="testname" type="eppcom:labelType"/>
-        <element name="status" type="boolean"/>
-        <element name="note" type="string"
-         minOccurs="0"/>
-      </sequence>
+        <sequence>
+            <element name="testname" type="eppcom:labelType"/>
+            <element name="status" type="boolean"/>
+            <element name="note" type="string"
+                     minOccurs="0"/>
+        </sequence>
     </complexType>
 
     <simpleType name="trIDStringType">
-      <restriction base="token">
-        <minLength value="3"/>
-        <maxLength value="64"/>
-      </restriction>
+        <restriction base="token">
+            <minLength value="3"/>
+            <maxLength value="64"/>
+        </restriction>
     </simpleType>
 
     <complexType name="updateDataT">
-      <sequence>
-        <element name="opTRID" type="keyset:trIDStringType"/>
-        <element name="oldData" type="keyset:infDataType"/>
-        <element name="newData" type="keyset:infDataType"/>
-      </sequence>
+        <sequence>
+            <element name="opTRID" type="keyset:trIDStringType"/>
+            <element name="oldData" type="keyset:oldData"/>
+            <element name="newData" type="keyset:newData"/>
+        </sequence>
     </complexType>
 
-  </schema>
+    <complexType name="oldData">
+        <sequence>
+            <element name="infData" type="keyset:infDataType"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="newData">
+        <sequence>
+            <element name="infData" type="keyset:infDataType"/>
+        </sequence>
+    </complexType>
+
+</schema>

@@ -1,4 +1,4 @@
-package fred.client.data.logout;
+package fred.client.data.logout.other;
 
 import fred.client.data.EppResponse;
 import fred.client.eppClient.objectStrategy.ServerObjectType;
