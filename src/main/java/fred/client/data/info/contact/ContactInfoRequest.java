@@ -12,7 +12,6 @@ import java.io.Serializable;
  * <ul>
  * <li>{@link ContactInfoRequest#contactId} - the contact handle</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */

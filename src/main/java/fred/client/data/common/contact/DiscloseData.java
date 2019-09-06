@@ -17,7 +17,7 @@ import java.io.Serializable;
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>,
- * <a href="https://fred.nic.cz/documentation/html/EPPReference/PoliciesRules.html">Policies & Rules Of Disclosure</a>
+ * <a href="https://fred.nic.cz/documentation/html/EPPReference/PoliciesRules.html">Policies &amp; Rules Of Disclosure</a>
  */
 public class DiscloseData implements Serializable {
 

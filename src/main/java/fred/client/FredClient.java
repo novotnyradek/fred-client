@@ -175,7 +175,7 @@ public interface FredClient {
      * @param pollRequest {@link PollRequest}.
      * @return subclass of {@link PollResponse} interface corresponding to message.
      * If no messages, returns only {@link PollResponse} object.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException;
 
