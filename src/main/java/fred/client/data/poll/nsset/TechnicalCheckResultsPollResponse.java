@@ -12,8 +12,9 @@ import java.util.List;
  * <p>
  * <ul>
  * <li>{@link TechnicalCheckResultsPollResponse#id} - the nsset handle</li>
+ * <li>{@link TechnicalCheckResultsPollResponse#cltestid} - clTRID of technical check request</li>
  * <li>{@link TechnicalCheckResultsPollResponse#name} - a listing of additional domain names that have been tested with the nsset</li>
- * <li>{@link TechnicalCheckResultsPollResponse#id} - the result of a single test, see {@link TechnicalCheckResult}</li>
+ * <li>{@link TechnicalCheckResultsPollResponse#testResult} - the result of a single test, see {@link TechnicalCheckResult}</li>
  * </ul>
  * </p>
  *
@@ -22,6 +23,8 @@ import java.util.List;
 public class TechnicalCheckResultsPollResponse extends PollResponse implements Serializable {
 
     private String id;
+
+    private String cltestid;
 
     private List<String> name;
 
@@ -37,6 +40,14 @@ public class TechnicalCheckResultsPollResponse extends PollResponse implements S
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCltestid() {
+        return cltestid;
+    }
+
+    public void setCltestid(String cltestid) {
+        this.cltestid = cltestid;
     }
 
     public List<String> getName() {
@@ -59,6 +70,7 @@ public class TechnicalCheckResultsPollResponse extends PollResponse implements S
     public String toString() {
         final StringBuffer sb = new StringBuffer("TechnicalCheckResultsPollResponse{");
         sb.append("id='").append(id).append('\'');
+        sb.append(", cltestid='").append(cltestid).append('\'');
         sb.append(", name=").append(name);
         sb.append(", testResult=").append(testResult);
         sb.append(", messageId='").append(getMessageId()).append('\'');

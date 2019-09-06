@@ -81,7 +81,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    ContactStrategy(Properties properties) {
+    public ContactStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
         this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);

@@ -46,4 +46,12 @@ public class DateToXmlGregorianCalendarCustomConverterTest {
 
         Assert.assertEquals(javaUtilDate, date);
     }
+
+    @Test
+    public void convertNull(){
+
+        Object result = target.convert(null, null, null, null);
+
+        Assert.assertNull(result);
+    }
 }

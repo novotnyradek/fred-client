@@ -14,7 +14,11 @@ import java.util.List;
 public class NssetStatusValueTypeCustomConverter implements CustomConverter {
 
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source != null && source instanceof List) {
+        if (source == null) {
+            return null;
+        }
+
+        if (source instanceof List) {
             List sourceList = (List) source;
             if (sourceList.get(0) != null && sourceList.get(0) instanceof StatusType) {
                 List<NssetStatusValueType> nssetStatuses = new ArrayList<NssetStatusValueType>();
@@ -37,6 +41,7 @@ public class NssetStatusValueTypeCustomConverter implements CustomConverter {
                 return statusTypes;
             }
         }
+
         throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
     }
 }

@@ -2,8 +2,6 @@ package fred.client.data.info.domain;
 
 import cz.nic.xml.epp.domain_1.StatusType;
 import cz.nic.xml.epp.domain_1.StatusValueType;
-import cz.nic.xml.epp.enumval_1.ExValType;
-import fred.client.mapper.FredClientDozerMapper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,5 +43,13 @@ public class DomainStatusValueTypeCustomConverterTest {
 
         Assert.assertEquals(13, destination.size());
         Assert.assertEquals(source.size(), destination.size());
+    }
+
+    @Test
+    public void convertNull(){
+
+        Object result = target.convert(null, null, null, null);
+
+        Assert.assertNull(result);
     }
 }

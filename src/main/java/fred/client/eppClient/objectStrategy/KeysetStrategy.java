@@ -173,7 +173,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         KeysetCreateRequest keysetCreateRequest = (KeysetCreateRequest) createRequest;
 
-        CrType crType = mapper.map(keysetCreateRequest, CrType.class, "KeysetCreateRequestMapping");
+        CrType crType = mapper.map(keysetCreateRequest, CrType.class);
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 

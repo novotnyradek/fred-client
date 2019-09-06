@@ -17,7 +17,7 @@ public class TechnicalCheckResult {
 
     private String testname;
 
-    private Boolean status;
+    private boolean status;
 
     private String note;
 
@@ -32,11 +32,11 @@ public class TechnicalCheckResult {
         this.testname = testname;
     }
 
-    public Boolean getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

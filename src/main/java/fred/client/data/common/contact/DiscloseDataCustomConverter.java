@@ -6,13 +6,13 @@ import org.dozer.CustomConverter;
 import org.dozer.MappingException;
 
 /**
- * Converter between {@link DiscloseType} and {@link DiscloseData}.
+ * Converter between {@link DiscloseType}, {@link InfupdDiscloseType} and {@link DiscloseData}.
  */
 public class DiscloseDataCustomConverter implements CustomConverter {
 
     @Override
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source == null){
+        if (source == null) {
             return null;
         }
 
@@ -29,7 +29,7 @@ public class DiscloseDataCustomConverter implements CustomConverter {
             discloseType.setVoice(discloseData.getVoice());
 
             return discloseType;
-        } else if (source instanceof DiscloseData && destClass.getName().equals(InfupdDiscloseType.class.getName())){
+        } else if (source instanceof DiscloseData && destClass.getName().equals(InfupdDiscloseType.class.getName())) {
             DiscloseData discloseData = (DiscloseData) source;
 
             InfupdDiscloseType discloseType = new InfupdDiscloseType();

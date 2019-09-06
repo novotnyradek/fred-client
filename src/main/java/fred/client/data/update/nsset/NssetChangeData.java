@@ -16,7 +16,7 @@ public class NssetChangeData implements Serializable {
 
     private String authInfo;
 
-    private short reportLevel;
+    private Short reportLevel;
 
     public NssetChangeData() {
     }
@@ -29,11 +29,11 @@ public class NssetChangeData implements Serializable {
         this.authInfo = authInfo;
     }
 
-    public short getReportLevel() {
+    public Short getReportLevel() {
         return reportLevel;
     }
 
-    public void setReportLevel(short reportLevel) {
+    public void setReportLevel(Short reportLevel) {
         this.reportLevel = reportLevel;
     }
 

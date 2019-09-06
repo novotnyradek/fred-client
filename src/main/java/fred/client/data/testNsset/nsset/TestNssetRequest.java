@@ -22,7 +22,7 @@ public class TestNssetRequest extends EppRequest implements Serializable {
 
     private String nssetId;
 
-    private Integer level;
+    private Short level;
 
     private List<String> name;
 
@@ -41,11 +41,11 @@ public class TestNssetRequest extends EppRequest implements Serializable {
         this.nssetId = nssetId;
     }
 
-    public Integer getLevel() {
+    public Short getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(Short level) {
         this.level = level;
     }
 

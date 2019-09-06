@@ -178,7 +178,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         NssetCreateRequest nssetCreateRequest = (NssetCreateRequest) createRequest;
 
-        CrType crType = mapper.map(nssetCreateRequest, CrType.class, "NssetCreateRequestMapping");
+        CrType crType = mapper.map(nssetCreateRequest, CrType.class);
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 

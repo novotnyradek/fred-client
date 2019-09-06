@@ -51,8 +51,6 @@ public class ServerObjectStrategyContext {
 
     private OtherStrategy otherStrategy;
 
-    private NotImplementedStrategy notImplementedStrategy;
-
     public ServerObjectStrategyContext(Properties properties, ServerObjectType serverObjectType) {
         serverObjectStrategy = chooseServerObjectTypeStrategy(properties, serverObjectType);
     }

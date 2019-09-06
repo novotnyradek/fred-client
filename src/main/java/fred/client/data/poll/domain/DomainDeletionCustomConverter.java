@@ -1,7 +1,6 @@
 package fred.client.data.poll.domain;
 
-import cz.nic.xml.epp.domain_1.*;
-import fred.client.data.info.domain.DomainStatusValueType;
+import cz.nic.xml.epp.domain_1.DelDataT;
 import org.dozer.CustomConverter;
 import org.dozer.MappingException;
 
@@ -11,8 +10,11 @@ import org.dozer.MappingException;
 public class DomainDeletionCustomConverter implements CustomConverter {
 
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
+        if (source == null) {
+            return null;
+        }
 
-        if (source instanceof DelDataT){
+        if (source instanceof DelDataT) {
             DelDataT delDataT = (DelDataT) source;
 
             DomainDeletionPollResponse response = new DomainDeletionPollResponse();
@@ -21,7 +23,6 @@ public class DomainDeletionCustomConverter implements CustomConverter {
             response.setEventType(DomainExpirationEventType.DEL_DATA);
             return response;
         }
-
 
         throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
     }

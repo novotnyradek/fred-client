@@ -1,12 +1,10 @@
 package fred.client.data.poll.domain;
 
-import cz.nic.xml.epp.domain_1.*;
-import fred.client.data.info.domain.DomainStatusValueType;
+import cz.nic.xml.epp.domain_1.DnsOutageDataT;
+import cz.nic.xml.epp.domain_1.ExpDataT;
+import cz.nic.xml.epp.domain_1.ImpendingExpDataT;
 import org.dozer.CustomConverter;
 import org.dozer.MappingException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * One way converter from {@link ImpendingExpDataT} or {@link ExpDataT} or {@link DnsOutageDataT} to {@link DomainExpirationPollResponse}.
@@ -14,6 +12,9 @@ import java.util.List;
 public class DomainExpirationCustomConverter implements CustomConverter {
 
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
+        if (source == null){
+            return null;
+        }
 
         if (source instanceof ImpendingExpDataT){
             ImpendingExpDataT impendingExpDataT = (ImpendingExpDataT) source;

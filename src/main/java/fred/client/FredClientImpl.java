@@ -30,6 +30,10 @@ import fred.client.data.transfer.TransferRequest;
 import fred.client.data.transfer.TransferResponse;
 import fred.client.data.update.UpdateRequest;
 import fred.client.data.update.UpdateResponse;
+import fred.client.data.update.nsset.NssetAddData;
+import fred.client.data.update.nsset.NssetChangeData;
+import fred.client.data.update.nsset.NssetRemData;
+import fred.client.data.update.nsset.NssetUpdateRequest;
 import fred.client.eppClient.objectStrategy.ServerObjectStrategyContext;
 import fred.client.exception.FredClientException;
 import org.apache.commons.logging.Log;
@@ -37,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class FredClientImpl implements FredClient {
@@ -265,13 +270,8 @@ public class FredClientImpl implements FredClient {
 //        KeysetCreateResponse response = (KeysetCreateResponse) fredService.callCreate(keysetCreateRequest);
 //        log.debug(response);
 
-        // todo jakto že blby object update nechytla validace schemat?
-        //  testy
-        //   na mapovani
-        //   celý scenář - od vytvoření objektů, přes jejich update, transfer, prodloužení, smazání, chytání poll message na všechny tyto akce
-        //  projit todocka
-        //  otestovat veskera volani v jave 8 (pripadne vyssi)
-
+        // todo otestovat veskera volani v jave 8 (pripadne vyssi)
+        //  regenerate class diagram
         /* Todo registrace keysetu v Jave 8 pada
         KeysetCzRegistrationData data = new KeysetCzRegistrationData();
         data.setKeysetId("A24KEYSET-1-JNDI");
@@ -343,28 +343,27 @@ public class FredClientImpl implements FredClient {
 //
 //        fredService.callUpdate(domainUpdateRequest);
 
-//        NssetUpdateRequest nssetUpdateRequest = new NssetUpdateRequest("A24-NSSET");
-//
-//        NssetAddData nssetAddData = new NssetAddData();
+        NssetUpdateRequest nssetUpdateRequest = new NssetUpdateRequest("A24-NSSET");
+
+        NssetAddData nssetAddData = new NssetAddData();
 //        NameserverData nsData = new NameserverData("neco.cz");
 //        nsData.setAddr(Arrays.asList("217.31.207.130", "217.31.207.131"));
 //        NameserverData nsData2 = new NameserverData("neco.cz");
 //        nsData2.setAddr(Arrays.asList("217.31.207.130", "217.31.207.131"));
 //        nssetAddData.setNs(Arrays.asList(nsData, nsData2));
-//        nssetAddData.setTech(Arrays.asList("A24-CONTACT"));
-//        nssetUpdateRequest.setAdd(nssetAddData);
-//
-//        NssetRemData nssetRemData = new NssetRemData();
+        nssetAddData.setTech(Arrays.asList("A24-CONTACT"));
+        nssetUpdateRequest.setAdd(nssetAddData);
+
+        NssetRemData nssetRemData = new NssetRemData();
 //        nssetRemData.setName(Arrays.asList("neco.cz"));
-//        nssetRemData.setTech(Arrays.asList("A24-CONTACT"));
-//        nssetUpdateRequest.setRem(nssetRemData);
-//
-//        NssetChangeData changeData = new NssetChangeData();
-//        changeData.setAuthInfo("atuhsdvkl");
-//        changeData.setReportLevel((short) 4);
-//        nssetUpdateRequest.setChg(changeData);
-//
-//        log.debug(fredService.callUpdate(nssetUpdateRequest));
+        nssetRemData.setTech(Arrays.asList("A24-CONTACT"));
+        nssetUpdateRequest.setRem(nssetRemData);
+
+        NssetChangeData changeData = new NssetChangeData();
+        changeData.setReportLevel((short) 4);
+        nssetUpdateRequest.setChg(changeData);
+
+        log.debug(fredService.callUpdate(nssetUpdateRequest));
 
 
 //        KeysetUpdateRequest keysetUpdateRequest = new KeysetUpdateRequest("A24-KEYSET");
@@ -389,7 +388,7 @@ public class FredClientImpl implements FredClient {
 //        log.debug(fredService.callInfo(keysetInfoRequest));
 
 
-        fredService.callPollRequest(new PollRequest());
+//        fredService.callPollRequest(new PollRequest());
     }
 
 }

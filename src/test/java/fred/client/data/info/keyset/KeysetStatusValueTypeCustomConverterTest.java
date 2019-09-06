@@ -44,4 +44,12 @@ public class KeysetStatusValueTypeCustomConverterTest {
         Assert.assertEquals(6, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
+
+    @Test
+    public void convertNull(){
+
+        Object result = target.convert(null, null, null, null);
+
+        Assert.assertNull(result);
+    }
 }

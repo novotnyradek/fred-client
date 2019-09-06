@@ -56,7 +56,7 @@ public class NssetInfoResponse extends EppResponse implements Serializable, Info
 
     private List<String> tech;
 
-    private Short reportLevel;
+    private short reportLevel;
 
     public NssetInfoResponse() {
         setServerObjectType(ServerObjectType.NSSET);
@@ -158,11 +158,11 @@ public class NssetInfoResponse extends EppResponse implements Serializable, Info
         this.tech = tech;
     }
 
-    public Short getReportLevel() {
+    public short getReportLevel() {
         return reportLevel;
     }
 
-    public void setReportLevel(Short reportLevel) {
+    public void setReportLevel(short reportLevel) {
         this.reportLevel = reportLevel;
     }
 

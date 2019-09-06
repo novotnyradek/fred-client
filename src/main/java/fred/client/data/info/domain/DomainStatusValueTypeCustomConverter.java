@@ -13,8 +13,11 @@ import java.util.List;
  */
 public class DomainStatusValueTypeCustomConverter implements CustomConverter {
 
-    // todo what if no statuses at all ? write tests and change other converters
     public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
+        if (source == null) {
+            return null;
+        }
+
         if (source instanceof List) {
             List sourceList = (List) source;
             if (!sourceList.isEmpty() && sourceList.get(0) instanceof StatusType) {
@@ -38,8 +41,8 @@ public class DomainStatusValueTypeCustomConverter implements CustomConverter {
                 return statusTypes;
             }
             return new ArrayList<Object>();
-        } else {
-            throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
         }
+
+        throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
     }
 }

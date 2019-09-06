@@ -12,7 +12,7 @@ import java.util.Date;
  * <p>
  * <ul>
  * <li>{@link EnumDomainValidationPollResponse#name} - the domain name to which they are referring</li>
- * <li>{@link EnumDomainValidationPollResponse#exDate} - the expiration date of domain validation</li>
+ * <li>{@link EnumDomainValidationPollResponse#valExDate} - the expiration date of domain validation</li>
  * <li>{@link EnumDomainValidationPollResponse#eventType} - event type, see {@link EnumDomainValidationEventType}</li>
  * </ul>
  * </p>
@@ -23,7 +23,7 @@ public class EnumDomainValidationPollResponse extends PollResponse implements Se
 
     private String name;
 
-    private Date exDate;
+    private Date valExDate;
 
     private EnumDomainValidationEventType eventType;
 
@@ -39,12 +39,12 @@ public class EnumDomainValidationPollResponse extends PollResponse implements Se
         this.name = name;
     }
 
-    public Date getExDate() {
-        return exDate;
+    public Date getValExDate() {
+        return valExDate;
     }
 
-    public void setExDate(Date exDate) {
-        this.exDate = exDate;
+    public void setValExDate(Date valExDate) {
+        this.valExDate = valExDate;
     }
 
     public EnumDomainValidationEventType getEventType() {
@@ -59,7 +59,7 @@ public class EnumDomainValidationPollResponse extends PollResponse implements Se
     public String toString() {
         final StringBuffer sb = new StringBuffer("EnumDomainValidationPollResponse{");
         sb.append("name='").append(name).append('\'');
-        sb.append(", exDate=").append(exDate);
+        sb.append(", valExDate=").append(valExDate);
         sb.append(", eventType=").append(eventType);
         sb.append(", messageId='").append(getMessageId()).append('\'');
         sb.append(", messageCount=").append(getMessageCount());

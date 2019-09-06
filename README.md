@@ -9,8 +9,11 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 
-**Version: `0.2.1 (0.2-SNAPSHOT)`**
+**Version: `0.2.2 (0.2-SNAPSHOT)`**
 > Changes
+###### 0.2.2
+* More mapping tests.
+* Created poll responses pojos for contact, keyset and nsset update.
 ###### 0.2.1
 * Generated class diagram.
 * Changed schemas to accept object update poll message.
@@ -25,7 +28,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 * First version.
 * Possibility to connect to epp.demo.regtest.nic.cz from main method or your application
 
-> Completed:
+> Commands
 * Session management commands
     * Login
     * Logout

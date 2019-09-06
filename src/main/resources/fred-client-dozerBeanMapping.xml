@@ -210,7 +210,7 @@
         </field>
     </mapping>
 
-    <mapping map-id="NssetCreateRequestMapping">
+    <mapping>
         <class-a>fred.client.data.create.nsset.NssetCreateRequest</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.CrType</class-b>
         <field map-id="NameserverDataMapping">
@@ -223,7 +223,7 @@
         </field>
     </mapping>
 
-    <mapping map-id="NameserverDataMapping">
+    <mapping map-id="NameserverDataMapping" map-null="false">
         <class-a>fred.client.data.common.nsset.NameserverData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.NsT</class-b>
         <field>
@@ -232,7 +232,7 @@
         </field>
     </mapping>
 
-    <mapping map-id="KeysetCreateRequestMapping">
+    <mapping>
         <class-a>fred.client.data.create.keyset.KeysetCreateRequest</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.CrType</class-b>
         <field>
@@ -245,12 +245,12 @@
         </field>
     </mapping>
 
-    <mapping map-id="DnsKeyDataMapping">
+    <mapping map-id="DnsKeyDataMapping" map-null="false">
         <class-a>fred.client.data.common.keyset.DnsKeyData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.DnskeyT</class-b>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.create.domain.DomainCreateRequest</class-a>
         <class-b>cz.nic.xml.epp.domain_1.CreateType</class-b>
         <field>
@@ -364,9 +364,56 @@
         <class-b>fred.client.data.poll.other.RequestUsagePollResponse</class-b>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>cz.nic.xml.epp.domain_1.UpdateDataT</class-a>
         <class-b>fred.client.data.poll.domain.DomainUpdatePollResponse</class-b>
+        <field>
+            <a>oldData.infData</a>
+            <b>oldData</b>
+        </field>
+        <field>
+            <a>newData.infData</a>
+            <b>newData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.contact_1.UpdateDataT</class-a>
+        <class-b>fred.client.data.poll.contact.ContactUpdatePollResponse</class-b>
+        <field>
+            <a>oldData.infData</a>
+            <b>oldData</b>
+        </field>
+        <field>
+            <a>newData.infData</a>
+            <b>newData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.nsset_1.UpdateDataT</class-a>
+        <class-b>fred.client.data.poll.nsset.NssetUpdatePollResponse</class-b>
+        <field>
+            <a>oldData.infData</a>
+            <b>oldData</b>
+        </field>
+        <field>
+            <a>newData.infData</a>
+            <b>newData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>cz.nic.xml.epp.keyset_1.UpdateDataT</class-a>
+        <class-b>fred.client.data.poll.keyset.KeysetUpdatePollResponse</class-b>
+        <field>
+            <a>oldData.infData</a>
+            <b>oldData</b>
+        </field>
+        <field>
+            <a>newData.infData</a>
+            <b>newData</b>
+        </field>
     </mapping>
 
     <mapping>
@@ -391,14 +438,26 @@
             <a>result</a>
             <b>testResult</b>
         </field>
+        <field-exclude>
+            <a>result</a>
+            <b>result</b>
+        </field-exclude>
     </mapping>
 
     <mapping>
         <class-a>fred.client.data.update.nsset.NssetUpdateRequest</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.UpdateType</class-b>
+        <field>
+            <a>add</a>
+            <b>add</b>
+        </field>
+        <field>
+            <a>rem</a>
+            <b>rem</b>
+        </field>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.nsset.NssetAddData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.AddType</class-b>
         <field map-id="NameserverDataMapping">
@@ -411,7 +470,7 @@
         </field>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.nsset.NssetRemData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.RemType</class-b>
         <field>
@@ -434,7 +493,7 @@
         <class-b>cz.nic.xml.epp.domain_1.UpdateType</class-b>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.domain.DomainAddData</class-a>
         <class-b>cz.nic.xml.epp.domain_1.AddType</class-b>
         <field>
@@ -443,7 +502,7 @@
         </field>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.domain.DomainRemData</class-a>
         <class-b>cz.nic.xml.epp.domain_1.RemType</class-b>
         <field>
@@ -462,7 +521,7 @@
         <class-b>cz.nic.xml.epp.keyset_1.UpdateType</class-b>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.keyset.KeysetAddData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.AddType</class-b>
         <field map-id="DnsKeyDataMapping">
@@ -475,7 +534,7 @@
         </field>
     </mapping>
 
-    <mapping>
+    <mapping map-null="false">
         <class-a>fred.client.data.update.keyset.KeysetRemData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.AddType</class-b>
         <field map-id="DnsKeyDataMapping">
@@ -493,5 +552,13 @@
         <class-b>cz.nic.xml.epp.keyset_1.ChgType</class-b>
     </mapping>
 
+    <mapping>
+        <class-a>fred.client.data.update.contact.ContactUpdateRequest</class-a>
+        <class-b>cz.nic.xml.epp.contact_1.UpdateType</class-b>
+    </mapping>
 
+    <mapping>
+        <class-a>fred.client.data.update.contact.ContactChangeData</class-a>
+        <class-b>cz.nic.xml.epp.contact_1.ChgType</class-b>
+    </mapping>
 </mappings>
