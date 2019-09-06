@@ -73,6 +73,8 @@
                             <goal>xjc</goal>
                         </goals>
                         <configuration>
+                            <addGeneratedAnnotation>true</addGeneratedAnnotation>
+                            <noGeneratedHeaderComments>true</noGeneratedHeaderComments>
                             <enableIntrospection>true</enableIntrospection>
                             <sources>
                                 <source>src/main/resources/schema/all.xsd</source>
