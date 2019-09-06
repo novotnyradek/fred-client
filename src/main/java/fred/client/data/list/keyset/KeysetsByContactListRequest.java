@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Keyset list request - select keysets by technical contact which are managed by the authenticated client.
- * <p>
+ *
  * <ul>
  * <li>
  * {@link KeysetsByContactListRequest#contactId} - a contact handle

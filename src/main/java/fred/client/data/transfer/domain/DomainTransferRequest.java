@@ -14,7 +14,7 @@ import java.io.Serializable;
  * <li>the domain owner contact or</li>
  * <li>an administrative contact of the domain.</li>
  * </ul>
- * <p>
+ *
  * <ul>
  * <li>{@link DomainTransferRequest#domainName} - a domain name</li>
  * <li>{@link DomainTransferRequest#authInfo} - the transfer password</li>

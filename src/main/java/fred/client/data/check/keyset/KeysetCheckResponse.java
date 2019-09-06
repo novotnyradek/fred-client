@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * A keyset check response.
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetCheckResponse#checkData} - see {@link KeysetCheckData}</li>
  * </ul>
- * </p>
+ *
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckKeyset.html">FRED documentation</a>
  */

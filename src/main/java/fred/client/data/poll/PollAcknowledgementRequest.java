@@ -7,11 +7,10 @@ import java.io.Serializable;
 
 /**
  * A poll acknowledgement command is used to confirm that a message has been received by the client and can be removed from the queue on the server.
- * <p>
+ *
  * <ul>
  * <li>{@link PollAcknowledgementRequest#msgID} - the identification number of a message to be confirmed</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/PollAck.html">FRED documentation</a>
  */

@@ -1,20 +1,16 @@
 package fred.client.data.poll.contact;
 
 import fred.client.data.poll.PollResponse;
-import fred.client.data.poll.domain.DomainExpirationEventType;
 import fred.client.eppClient.objectStrategy.PollMessageType;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Event: An object has been deleted because it had become obsolete.
  *
- * <p>
  * <ul>
  * <li>{@link ContactDeletionPollResponse#id} - the handle of the deleted object</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#epp-poll-type-idle-del">FRED documentation</a>
  */

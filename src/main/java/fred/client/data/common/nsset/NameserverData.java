@@ -6,12 +6,11 @@ import java.util.List;
 
 /**
  * Nameserver data detail.
- * <p>
+ *
  * <ul>
  * <li>{@link NameserverData#name} - a nameserver hostname</li>
  * <li>{@link NameserverData#addr} - a namesever’s IP address(es)</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoNsset.html">FRED documentation</a>
  */

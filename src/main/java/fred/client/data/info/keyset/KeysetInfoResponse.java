@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Keyset info response.
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetInfoResponse#id} – a keyset handle</li>
  * <li>{@link KeysetInfoResponse#roid} – the keyset repository identifier</li>
@@ -25,7 +25,7 @@ import java.util.List;
  * <li>{@link KeysetInfoResponse#authInfo} – authorization information (transfer password)</li>
  * <li>{@link KeysetInfoResponse#dnskey} – a DNS key</li>
  * <li>{@link KeysetInfoResponse#tech} – a technical contact handle</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoKeyset.html">FRED documentation</a>
  */

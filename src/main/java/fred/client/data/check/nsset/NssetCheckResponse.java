@@ -9,11 +9,10 @@ import java.util.List;
 
 /**
  * A nsset check response.
- * <p>
+ *
  * <ul>
  * <li>{@link NssetCheckResponse#checkData} - see {@link NssetCheckData}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckNsset.html">FRED documentation</a>
  */

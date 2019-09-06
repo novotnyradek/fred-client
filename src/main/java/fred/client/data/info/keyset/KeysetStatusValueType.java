@@ -2,7 +2,7 @@ package fred.client.data.info.keyset;
 
 /**
  * A keyset can have one or more of the following statuses:
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetStatusValueType#OK} – no other states are set</li>
  * <li>{@link KeysetStatusValueType#LINKED} – the keyset has relation to other records in the Registry</li>

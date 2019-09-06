@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 /**
  * Nsset info request.
- * <p>
+ *
  * <ul>
  * <li>{@link NssetInfoRequest#id} – a nsset handle</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoNsset.html">FRED documentation</a>
  */

@@ -9,14 +9,13 @@ import java.util.Date;
 
 /**
  * A poll request command is used to obtain the message queue status (message count) and contents of the first message in the queue (the oldest one).
- * <p>
+ *
  * <ul>
  * <li>{@link PollResponse#messageId} - current message identifier</li>
  * <li>{@link PollResponse#messageCount} - number of messages in the queue</li>
  * <li>{@link PollResponse#messageQDate} - the timestamp when the message was enqueued</li>
  * <li>{@link PollResponse#pollMessageType} - message type, see {@link PollMessageType}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/PollReq.html">FRED documentation</a>
  */

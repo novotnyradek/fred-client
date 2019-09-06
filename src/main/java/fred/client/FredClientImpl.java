@@ -177,9 +177,6 @@ public class FredClientImpl implements FredClient {
 
     /**
      * Method for testing simple scenarios.
-     *
-     * @param args
-     * @throws FredClientException
      */
     public static void main(String[] args) throws FredClientException {
         FredClientImpl fredService = new FredClientImpl("conf/fred-client.properties");

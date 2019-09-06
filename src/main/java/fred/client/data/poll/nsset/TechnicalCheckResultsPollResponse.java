@@ -9,14 +9,12 @@ import java.util.List;
 /**
  * Event: A technical check that the client had requested, has finished.
  *
- * <p>
  * <ul>
  * <li>{@link TechnicalCheckResultsPollResponse#id} - the nsset handle</li>
  * <li>{@link TechnicalCheckResultsPollResponse#cltestid} - clTRID of technical check request</li>
  * <li>{@link TechnicalCheckResultsPollResponse#name} - a listing of additional domain names that have been tested with the nsset</li>
  * <li>{@link TechnicalCheckResultsPollResponse#testResult} - the result of a single test, see {@link TechnicalCheckResult}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#technical-check-results">FRED documentation</a>
  */

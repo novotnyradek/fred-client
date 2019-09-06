@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Nsset list request - select nssets by technical contact which are managed by the authenticated client.
- * <p>
+ *
  * <ul>
  * <li>
  * {@link NssetsByContactListRequest#contactId} - a contact handle

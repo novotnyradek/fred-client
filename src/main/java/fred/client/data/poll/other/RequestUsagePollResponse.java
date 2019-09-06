@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Event: Daily report of how many free requests have been made this month so far, and how much the client will be charged for the requests that exceed the limit.
- * <p>
+ *
  * <ul>
  * <li>{@link RequestUsagePollResponse#periodFrom} - the timestamp of the start of the period</li>
  * <li>{@link RequestUsagePollResponse#periodTo} - the timestamp of the end of the period</li>
@@ -17,7 +17,6 @@ import java.util.Date;
  * <li>{@link RequestUsagePollResponse#usedCount} - the total of requests used during the period</li>
  * <li>{@link RequestUsagePollResponse#price} - additional charge for requests over the limit that the client will be billed</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#request-usage">FRED documentation</a>
  */

@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 /**
  * Keyset info request.
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetInfoRequest#id} – a keyset handle as fredcom:objIDType</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoKeyset.html">FRED documentation</a>
  */

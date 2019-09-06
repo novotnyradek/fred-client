@@ -2,7 +2,7 @@ package fred.client.data.info.domain;
 
 /**
  * A domain can have one or more of the following statuses:
- * <p>
+ *
  * <ul>
  * <li>{@link DomainStatusValueType#OK} – no other states are set</li>
  * <li>{@link DomainStatusValueType#SERVER_DELETE_PROHIBITED} – deletion of the domain is forbidden</li>

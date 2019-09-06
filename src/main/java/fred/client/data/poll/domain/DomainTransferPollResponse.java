@@ -9,13 +9,11 @@ import java.util.Date;
 /**
  * Event: An object has been transferred to another registrar.
  *
- * <p>
  * <ul>
  * <li>{@link DomainTransferPollResponse#name} - a domain name</li>
  * <li>{@link DomainTransferPollResponse#trDate} - the date of the transfer</li>
  * <li>{@link DomainTransferPollResponse#clID} - the handle of the registrar who requested the transfer</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#object-transfer">FRED documentation</a>
  */

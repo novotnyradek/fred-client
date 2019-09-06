@@ -5,11 +5,11 @@ import java.util.Date;
 
 /**
  * The enum data extension is used to display the validation of an ENUM domain and/or its publish flag.
- * <p>
+ *
  * <ul>
  * <li>{@link EnumValData#valExDate} – the validation expiration date</li>
  * <li>{@link EnumValData#publish} – the setting for publishing the ENUM domain in a public directory; true – display, false – hide</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoDomain.html">FRED documentation</a>
  */
@@ -19,7 +19,8 @@ public class EnumValData implements Serializable {
 
     private Boolean publish;
 
-    public EnumValData(){}
+    public EnumValData() {
+    }
 
     public EnumValData(Date valExDate) {
         this.valExDate = valExDate;

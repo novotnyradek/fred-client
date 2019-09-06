@@ -9,13 +9,11 @@ import java.util.Date;
 /**
  * Event: ENUM domain validation.
  *
- * <p>
  * <ul>
  * <li>{@link EnumDomainValidationPollResponse#name} - the domain name to which they are referring</li>
  * <li>{@link EnumDomainValidationPollResponse#valExDate} - the expiration date of domain validation</li>
  * <li>{@link EnumDomainValidationPollResponse#eventType} - event type, see {@link EnumDomainValidationEventType}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#enum-domain-validation">FRED documentation</a>
  */

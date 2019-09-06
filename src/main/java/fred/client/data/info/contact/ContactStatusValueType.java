@@ -2,7 +2,7 @@ package fred.client.data.info.contact;
 
 /**
  * A contact can have one or more of the following statuses:
- * <p>
+ *
  * <ul>
  * <li>{@link ContactStatusValueType#OK} – no other states are set</li>
  * <li>{@link ContactStatusValueType#LINKED} – the contact has relation to other records in the Registry</li>

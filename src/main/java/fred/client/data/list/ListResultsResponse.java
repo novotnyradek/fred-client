@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 /**
  * Response contains loaded data prepared by specific request.
- * <p>
+ *
  * <ul>
  * <li>
  * {@link ListResultsResponse#results} - loaded data.

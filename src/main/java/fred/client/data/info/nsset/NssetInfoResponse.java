@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Nsset info response.
- * <p>
+ *
  * <ul>
  * <li>{@link NssetInfoResponse#id} – a nsset handle</li>
  * <li>{@link NssetInfoResponse#roid} – the nsset repository identifier</li>
@@ -26,7 +26,7 @@ import java.util.List;
  * <li>{@link NssetInfoResponse#ns} – a nameserver, see {@link NameserverData}</li>
  * <li>{@link NssetInfoResponse#tech} – a technical contact handle</li>
  * <li>{@link NssetInfoResponse#reportLevel} – the report level of technical checks</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoNsset.html">FRED documentation</a>
  */

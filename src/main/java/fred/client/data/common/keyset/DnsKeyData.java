@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * DNS key data. The 1–10 DNSSEC key(s), consisting of:
- * <p>
+ *
  * <ul>
  * <li>{@link DnsKeyData#flags} – allowed values are: 0, 256, 257</li>
  * <li>{@link DnsKeyData#protocol} – the only allowed value is 3</li>

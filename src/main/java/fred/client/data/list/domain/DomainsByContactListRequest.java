@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Domain list request - select domains by a contact (registrant or administrative contact) which are managed by the authenticated client.
- * <p>
+ *
  * <ul>
  * <li>
  * {@link DomainsByContactListRequest#contactId} - a contact handle

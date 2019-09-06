@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Data about contact address information.
- * <p>
+ *
  * <ul>
  * <li>{@link AddressData#street} – the street line(s)</li>
  * <li>{@link AddressData#city} – the city</li>

@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 /**
  * Nsset check data.
- * <p>
+ *
  * <ul>
  * <li>{@link NssetCheckData#id} - the nsset handle</li>
  * <li>{@link NssetCheckData#avail} - availability; true – available, false – not available</li>
  * <li>{@link NssetCheckData#reason} - if the availability is negative, this element contains an explanation why the nsset handle is not available</li>
  * </ul>
- * </p>
+ *
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckNsset.html">FRED documentation</a>
  */

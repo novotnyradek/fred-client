@@ -9,12 +9,12 @@ import java.util.Date;
 
 /**
  * Response for contact create command.
- * <p>
+ *
  * <ul>
  * <li>{@link ContactCreateResponse#id} - the contact handle</li>
  * <li>{@link ContactCreateResponse#crDate} - the timestamp of creation</li>
  * </ul>
- * </p>
+ *
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Create/CreateContact.html">FRED documentation</a>
  */

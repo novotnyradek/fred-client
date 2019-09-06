@@ -8,12 +8,10 @@ import java.io.Serializable;
 /**
  * The response from the FRED EPP server contains the result, message queue information and transaction identification.
  *
- * <p>
  * <ul>
  * <li>{@link PollAcknowledgementResponse#id} - the identification number of the first message in the queue</li>
  * <li>{@link PollAcknowledgementResponse#count} - the count of messages in the queue</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/PollAck.html">FRED documentation</a>
  */

@@ -9,13 +9,13 @@ import java.util.Date;
 
 /**
  * Response for domain create command.
- * <p>
+ *
  * <ul>
  * <li>{@link DomainCreateResponse#name} - the domain name</li>
  * <li>{@link DomainCreateResponse#crDate} - the timestamp of creation</li>
  * <li>{@link DomainCreateResponse#exDate} - the date of expiration</li>
  * </ul>
- * </p>
+ *
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Create/CreateDomain.html">FRED documentation</a>
  */

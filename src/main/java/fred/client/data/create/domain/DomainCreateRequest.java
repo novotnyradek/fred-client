@@ -16,7 +16,7 @@ import java.util.List;
  * <ul>
  * <li>{@link DomainCreateRequest#name} - domain name</li>
  * <li>{@link DomainCreateRequest#period} - the registration period; if omitted, the domain expiration is set to the minimum (FRED’s default: 1 year)</li>
- * <li>{@link DomainCreateRequest#nsset} - an nsset handle to associate/li>
+ * <li>{@link DomainCreateRequest#nsset} - an nsset handle to associate</li>
  * <li>{@link DomainCreateRequest#keyset} - the keyset handle to associate</li>
  * <li>{@link DomainCreateRequest#registrant} - the domain owner handle</li>
  * <li>{@link DomainCreateRequest#admin} - an administrative contact handle</li>

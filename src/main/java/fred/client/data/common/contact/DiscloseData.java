@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Contact information disclosure settings.
- * <p>
+ *
  * <ul>
  * <li>{@link DiscloseData#addr} – the address disclosure setting as an empty element</li>
  * <li>{@link DiscloseData#voice} – the voice disclosure setting as an empty element</li>
@@ -15,8 +15,9 @@ import java.io.Serializable;
  * <li>{@link DiscloseData#notifyEmail} – the notification email disclosure setting as an empty element</li>
  * <li>{@link DiscloseData#flag} – disclose flag; false – listed items are hidden, true – listed items are published</li>
  * </ul>
- * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
- * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/PoliciesRules.html">Policies & Rules Of Disclosure</a>
+ *
+ * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>,
+ * <a href="https://fred.nic.cz/documentation/html/EPPReference/PoliciesRules.html">Policies & Rules Of Disclosure</a>
  */
 public class DiscloseData implements Serializable {
 

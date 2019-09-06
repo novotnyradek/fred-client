@@ -9,11 +9,10 @@ import java.util.List;
 
 /**
  * A contact check response.
- * <p>
+ *
  * <ul>
  * <li>{@link ContactCheckResponse#checkData} - see {@link ContactCheckData}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckContact.html">FRED documentation</a>
  */

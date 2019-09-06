@@ -8,13 +8,12 @@ import java.io.Serializable;
 
 /**
  * Event: Client’s credit has dropped below the stated limit.
- * <p>
+ *
  * <ul>
  * <li>{@link LowCreditPollResponse#zone} - FQDN of the zone in question</li>
  * <li>{@link LowCreditPollResponse#limit} - the stated limit, see {@link ZoneCredit}</li>
  * <li>{@link LowCreditPollResponse#credit} - amount of credit, see {@link ZoneCredit}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#low-credit">FRED documentation</a>
  */

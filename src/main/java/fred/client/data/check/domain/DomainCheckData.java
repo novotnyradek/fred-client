@@ -4,13 +4,12 @@ import java.io.Serializable;
 
 /**
  * Domain check data.
- * <p>
+ *
  * <ul>
  * <li>{@link DomainCheckData#id} - the domain name</li>
  * <li>{@link DomainCheckData#avail} - availability; true – available, false – not available</li>
  * <li>{@link DomainCheckData#reason} - if the availability is negative, this element contains an explanation why the domain name is not available</li>
  * </ul>
- * </p>
  *
  *  @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckDomain.html">FRED documentation</a>
  */

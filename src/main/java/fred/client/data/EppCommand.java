@@ -4,7 +4,7 @@ import fred.client.eppClient.objectStrategy.ServerObjectType;
 
 /**
  * For every command we defines object type.
- * <p>
+ *
  * <ul>
  * <li>{@link EppCommand#serverObjectType}</li>
  * </ul>

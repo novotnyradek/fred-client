@@ -48,7 +48,7 @@ public interface FredClient {
      *
      * @param infoRequest subclass of {@link InfoRequest} interface.
      * @return subclass of {@link InfoResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException;
 
@@ -63,7 +63,7 @@ public interface FredClient {
      *
      * @param sendAuthInfoRequest subclass of {@link SendAuthInfoRequest} interface.
      * @return subclass of {@link SendAuthInfoResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     SendAuthInfoResponse callSendAuthInfo(SendAuthInfoRequest sendAuthInfoRequest) throws FredClientException;
 
@@ -78,7 +78,7 @@ public interface FredClient {
      *
      * @param listRequest subclass of {@link ListRequest} interface.
      * @return subclass of {@link ListResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     ListResponse callList(ListRequest listRequest) throws FredClientException;
 
@@ -93,7 +93,7 @@ public interface FredClient {
      *
      * @param checkRequest subclass of {@link CheckRequest} interface.
      * @return subclass of {@link CheckResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     CheckResponse callCheck(CheckRequest checkRequest) throws FredClientException;
 
@@ -108,7 +108,7 @@ public interface FredClient {
      *
      * @param createRequest subclass of {@link CreateRequest} interface.
      * @return subclass of {@link CreateResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     CreateResponse callCreate(CreateRequest createRequest) throws FredClientException;
 
@@ -117,7 +117,7 @@ public interface FredClient {
      *
      * @param renewRequest {@link DomainRenewRequest}.
      * @return {@link DomainRenewResponse}.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException;
 
@@ -132,7 +132,7 @@ public interface FredClient {
      *
      * @param transferRequest subclass of {@link TransferRequest} interface.
      * @return subclass of {@link TransferResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     TransferResponse callTransfer(TransferRequest transferRequest) throws FredClientException;
 
@@ -147,7 +147,7 @@ public interface FredClient {
      *
      * @param deleteRequest subclass of {@link DeleteRequest} interface.
      * @return subclass of {@link DeleteResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     DeleteResponse callDelete(DeleteRequest deleteRequest) throws FredClientException;
 
@@ -165,7 +165,7 @@ public interface FredClient {
      *
      * @param testNssetRequest {@link TestNssetRequest}.
      * @return {@link TestNssetResponse}
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException;
 
@@ -184,7 +184,7 @@ public interface FredClient {
      *
      * @param pollAcknowledgementRequest {@link PollAcknowledgementRequest}.
      * @return {@link PollAcknowledgementResponse}.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException;
 
@@ -199,7 +199,7 @@ public interface FredClient {
      *
      * @param updateRequest subclass of {@link UpdateRequest} interface.
      * @return subclass of {@link UpdateResponse} interface corresponding to request.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     UpdateResponse callUpdate(UpdateRequest updateRequest) throws FredClientException;
 
@@ -208,7 +208,7 @@ public interface FredClient {
      *
      * @param loginRequest {@link LoginRequest}
      * @return {@link LoginResponse}
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException;
 
@@ -217,7 +217,7 @@ public interface FredClient {
      *
      * @param logoutRequest {@link LogoutRequest}
      * @return {@link LogoutResponse}
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException;
 }

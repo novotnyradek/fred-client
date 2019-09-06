@@ -2,7 +2,7 @@ package fred.client.data.common.contact;
 
 /**
  * Identity-document identification.
- * <p>
+ *
  * <ul>
  * <li>{@link IdentificationData#type} – the type of the identity document as one of values
  * <ol>
@@ -23,7 +23,8 @@ public class IdentificationData {
 
     private String value;
 
-    protected IdentificationData() {}
+    protected IdentificationData() {
+    }
 
     public IdentificationData(IdentType type, String value) {
         this.setType(type);

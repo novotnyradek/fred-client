@@ -9,12 +9,11 @@ import java.util.Date;
 
 /**
  * Response for keyset create command.
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetCreateResponse#id} - the keyset handle</li>
  * <li>{@link KeysetCreateResponse#crDate} - the timestamp of creation</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Create/CreateKeyset.html">FRED documentation</a>
  */

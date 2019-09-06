@@ -8,11 +8,9 @@ import java.io.Serializable;
 /**
  * Event: An object has been deleted because it had become obsolete.
  *
- * <p>
  * <ul>
  * <li>{@link NssetDeletionPollResponse#id} - the handle of the deleted object</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#epp-poll-type-idle-del">FRED documentation</a>
  */

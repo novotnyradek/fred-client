@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 /**
  * Keyset check data.
- * <p>
+ *
  * <ul>
  * <li>{@link KeysetCheckData#id} - the keyset handle</li>
  * <li>{@link KeysetCheckData#avail} - availability; true – available, false – not available</li>
  * <li>{@link KeysetCheckData#reason} - if the availability is negative, this element contains an explanation why the keyset handle is not available</li>
  * </ul>
- * </p>
+ *
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckKeyset.html">FRED documentation</a>
  */

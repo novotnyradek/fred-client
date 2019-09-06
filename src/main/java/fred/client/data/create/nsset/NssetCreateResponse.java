@@ -9,12 +9,11 @@ import java.util.Date;
 
 /**
  * Response for nsset create command.
- * <p>
+ *
  * <ul>
  * <li>{@link NssetCreateResponse#id} - the nsset handle</li>
  * <li>{@link NssetCreateResponse#crDate} - the timestamp of creation</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Create/CreateNsset.html">FRED documentation</a>
  */

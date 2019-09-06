@@ -9,11 +9,10 @@ import java.util.List;
 
 /**
  * A domain check response.
- * <p>
+ *
  * <ul>
  * <li>{@link DomainCheckResponse#checkData} - see {@link DomainCheckData}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckDomain.html">FRED documentation</a>
  */

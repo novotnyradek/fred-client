@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Response for command info for contact.
- * <p>
+ *
  * <ul>
  * <li>{@link ContactInfoResponse#id} - the contact handle</li>
  * <li>{@link ContactInfoResponse#roid} – the contact repository identifier</li>

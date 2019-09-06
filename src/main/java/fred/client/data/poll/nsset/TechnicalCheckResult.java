@@ -3,13 +3,11 @@ package fred.client.data.poll.nsset;
 /**
  * The result of a single test.
  *
- * <p>
  * <ul>
  * <li>{@link TechnicalCheckResult#testname} - the name of the test</li>
  * <li>{@link TechnicalCheckResult#status} - success of the test</li>
  * <li>{@link TechnicalCheckResult#note} - extended information about the result from the test implementation</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#technical-check-results">FRED documentation</a>
  */

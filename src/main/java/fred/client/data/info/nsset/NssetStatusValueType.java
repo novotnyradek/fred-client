@@ -2,7 +2,7 @@ package fred.client.data.info.nsset;
 
 /**
  * A nsset can have one or more of the following statuses:
- * <p>
+ *
  * <ul>
  * <li>{@link NssetStatusValueType#OK} – no other states are set</li>
  * <li>{@link NssetStatusValueType#LINKED} – the keyset has relation to other records in the Registry</li>

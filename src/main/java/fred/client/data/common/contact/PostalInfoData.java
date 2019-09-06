@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 /**
  * Data about contact postal information.
- * <p>
+ *
  * <ul>
  * <li>{@link PostalInfoData#name} – the person name</li>
  * <li>{@link PostalInfoData#org} – the organization name</li>
  * <li>{@link PostalInfoData#addr} – see {@link AddressData}</li>
- *</ul>
+ * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */
@@ -21,7 +21,8 @@ public class PostalInfoData implements Serializable {
 
     private AddressData addr;
 
-    protected PostalInfoData() {}
+    protected PostalInfoData() {
+    }
 
     public PostalInfoData(String name, AddressData addressData) {
         this.setName(name);

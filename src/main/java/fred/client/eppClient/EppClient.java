@@ -14,16 +14,17 @@ public interface EppClient {
     /**
      * Method executes login command.
      *
-     * @param clientTransactionId
+     * @param clientTransactionId client transaction id.
      * @return ResponseType
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     ResponseType login(String clientTransactionId) throws FredClientException;
 
     /**
      * Method executes logout command and destroys socket connection.
      *
-     * @throws FredClientException
+     * @param clientTransactionId client transaction id.
+     * @throws FredClientException when call failed.
      * @return ResponseType
      */
     ResponseType logout(String clientTransactionId) throws FredClientException;

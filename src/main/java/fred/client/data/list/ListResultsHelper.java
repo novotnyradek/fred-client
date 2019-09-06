@@ -37,7 +37,7 @@ public class ListResultsHelper {
      *
      * @param extcommandType what to list.
      * @return listed items.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     public ListResponse prepareListAndGetResults(ExtcommandType extcommandType) throws FredClientException {
 
@@ -65,7 +65,7 @@ public class ListResultsHelper {
      *
      * @param clientTransactionId from previous step with a list command
      * @return list with data or empty one
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     private ListResponse getResults(String clientTransactionId) throws FredClientException {
         log.debug("getResults called for client transaction id " + clientTransactionId);

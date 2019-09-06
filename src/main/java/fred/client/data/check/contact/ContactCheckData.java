@@ -4,13 +4,12 @@ import java.io.Serializable;
 
 /**
  * Contact check data.
- * <p>
+ *
  * <ul>
  * <li>{@link ContactCheckData#id} - the contact handle</li>
  * <li>{@link ContactCheckData#avail} - availability; true – available, false – not available</li>
  * <li>{@link ContactCheckData#reason} - if the availability is negative, this element contains an explanation why the contact handle is not available</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Check/CheckContact.html">FRED documentation</a>
  */

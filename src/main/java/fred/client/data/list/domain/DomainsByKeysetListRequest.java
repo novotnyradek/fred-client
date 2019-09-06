@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Domain list request - select domains by a keyset which are managed by the authenticated client.
- * <p>
+ *
  * <ul>
  * <li>
  * {@link DomainsByKeysetListRequest#keysetId} - a keyset handle

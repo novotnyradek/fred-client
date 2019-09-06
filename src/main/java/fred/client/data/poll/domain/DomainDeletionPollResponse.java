@@ -9,13 +9,11 @@ import java.util.Date;
 /**
  * Event: Domain expiration.
  *
- * <p>
  * <ul>
  * <li>{@link DomainDeletionPollResponse#name} - the domain name they are referring</li>
  * <li>{@link DomainDeletionPollResponse#exDate} - the expiration date of the domain name</li>
  * <li>{@link DomainDeletionPollResponse#eventType} - event type, see {@link DomainExpirationEventType}</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#domain-expiration">FRED documentation</a>
  */

@@ -9,13 +9,11 @@ import java.io.Serializable;
 /**
  * Event: An object has been updated by the Registry, or a contact linked to a domain of another registrar has been updated by its sponsoring registrar.
  *
- * <p>
  * <ul>
  * <li>{@link ContactUpdatePollResponse#opTRID} - operation transaction identifier (an identification of the operation in the Registry that has caused this message)</li>
  * <li>{@link ContactUpdatePollResponse#oldData} - data before the update</li>
  * <li>{@link ContactUpdatePollResponse#newData} - data after the update</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Poll/MessageTypes.html#object-transfer">FRED documentation</a>
  */
