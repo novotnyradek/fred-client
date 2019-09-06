@@ -591,15 +591,15 @@ public class FredClientDozerMapperTest {
         CrType destination = target.map(nssetCreateRequest, CrType.class);
 
         Assert.assertEquals(nssetId, destination.getId());
+        Assert.assertTrue(destination.getTech().contains(tech1));
+        Assert.assertTrue(destination.getTech().contains(tech2));
+        Assert.assertEquals(authinfo, destination.getAuthInfo());
+        Assert.assertEquals(reportlevel, destination.getReportlevel());
         Assert.assertEquals(ns1Name, destination.getNs().get(0).getName());
         Assert.assertEquals(ns1IpV4, destination.getNs().get(0).getAddr().get(0));
         Assert.assertEquals(ns1IpV6, destination.getNs().get(0).getAddr().get(1));
         Assert.assertEquals(ns2Name, destination.getNs().get(1).getName());
         Assert.assertEquals(ns2IpV4, destination.getNs().get(1).getAddr().get(0));
-        Assert.assertTrue(destination.getTech().contains(tech1));
-        Assert.assertTrue(destination.getTech().contains(tech2));
-        Assert.assertEquals(authinfo, destination.getAuthInfo());
-        Assert.assertEquals(reportlevel, destination.getReportlevel());
     }
 
     /**
@@ -1623,8 +1623,16 @@ public class FredClientDozerMapperTest {
         changeData.setAuthInfo(authinfo);
         nssetUpdateRequest.setChg(changeData);
 
+
+        NameserverData ns1 = new NameserverData("sdaf");
+        ns1.getAddr().add("adf");
+        ns1.getAddr().add("afd");
+        NameserverData ns2 = new NameserverData("af");
+        ns2.getAddr().add("sgf");
+
         NssetAddData addData = new NssetAddData();
         addData.setTech(Arrays.asList(techOld));
+        addData.setNs(Arrays.asList(ns1, ns2));
         nssetUpdateRequest.setAdd(addData);
 
         NssetRemData remData = new NssetRemData();
@@ -1786,5 +1794,19 @@ public class FredClientDozerMapperTest {
         Assert.assertTrue(destination.getStreet().contains(street2));
     }
 
+    @Test
+    public void mapNameserverDataToNsT(){
+        String ns1Name = "ns1.cz", ns1IpV4 = "192.168.0.1", ns1IpV6 = "2001:0db8:0000:0000:0000:0000:1428:57ab";
+
+        NameserverData ns1 = new NameserverData(ns1Name);
+        ns1.getAddr().add(ns1IpV4);
+        ns1.getAddr().add(ns1IpV6);
+
+        NsT destination = target.map(ns1, NsT.class);
+
+        Assert.assertEquals(ns1Name, destination.getName());
+        Assert.assertEquals(ns1IpV4, destination.getAddr().get(0));
+        Assert.assertEquals(ns1IpV6, destination.getAddr().get(1));
+    }
 
 }

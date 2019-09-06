@@ -1,6 +1,5 @@
 package fred.client.eppClient.objectStrategy;
 
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import cz.nic.xml.epp.fred_1.ResCreditType;
 import fred.client.data.check.CheckRequest;
 import fred.client.data.check.CheckResponse;
@@ -40,6 +39,7 @@ import ietf.params.xml.ns.epp_1.MsgQType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Node;
 
 import javax.xml.bind.JAXBElement;
 import java.util.Properties;
@@ -152,7 +152,7 @@ public class OtherStrategy implements ServerObjectStrategy {
 
             MsgQType msgQType = responseType.getMsgQ();
 
-            Object unmarshalledMessage = marshallerHelper.unmarshal((ElementNSImpl) msgQType.getMsg().getContent().get(0));
+            Object unmarshalledMessage = marshallerHelper.unmarshal((Node) msgQType.getMsg().getContent().get(0));
 
             result = mapper.map(unmarshalledMessage, PollResponse.class);
 

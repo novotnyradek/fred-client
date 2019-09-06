@@ -16,6 +16,7 @@ public class NssetStatusValueTypeCustomConverterTest {
 
     public NssetStatusValueTypeCustomConverter target = new NssetStatusValueTypeCustomConverter();
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
@@ -27,6 +28,7 @@ public class NssetStatusValueTypeCustomConverterTest {
         Assert.assertEquals(source.size(), destination.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertStatusTypeToContactStatusValueType() {
 

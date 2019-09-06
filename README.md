@@ -14,6 +14,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 ###### 0.2.2
 * More mapping tests.
 * Created poll responses pojos for contact, keyset and nsset update.
+* Regenerated class diagram.
 ###### 0.2.1
 * Generated class diagram.
 * Changed schemas to accept object update poll message.

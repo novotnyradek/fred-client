@@ -16,14 +16,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.*;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Properties;
 
 /**
  * Helper class to marshal and unmarshal requests and responses.
  */
+@SuppressWarnings("unchecked")
 public class EppClientMarshallerHelper {
 
     private static final Log log = LogFactory.getLog(EppClientMarshallerHelper.class);
@@ -167,16 +168,4 @@ public class EppClientMarshallerHelper {
                 ietf.params.xml.ns.eppcom_1.ObjectFactory.class
         ).toArray();
     }
-
-    public static void main(String[] args) throws SAXException, IOException {
-        Properties properties = new Properties();
-        properties.load(new FileReader("/home/radekn/IdeaProjects/fred-client-github/src/main/resources/fred-client.properties"));
-
-        EppClientMarshallerHelper helper = new EppClientMarshallerHelper(properties);
-        Schema schema = helper.getSchema();
-
-        Validator val = schema.newValidator();
-        System.out.println(val.toString());
-    }
-
 }

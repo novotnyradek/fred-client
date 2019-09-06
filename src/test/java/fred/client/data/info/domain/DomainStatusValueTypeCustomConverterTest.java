@@ -16,6 +16,7 @@ public class DomainStatusValueTypeCustomConverterTest {
 
     public DomainStatusValueTypeCustomConverter target = new DomainStatusValueTypeCustomConverter();
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
@@ -27,6 +28,7 @@ public class DomainStatusValueTypeCustomConverterTest {
         Assert.assertEquals(source.size(), destination.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertStatusTypeToContactStatusValueType() {
 

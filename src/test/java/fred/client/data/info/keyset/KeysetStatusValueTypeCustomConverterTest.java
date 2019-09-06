@@ -16,6 +16,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
 
     public KeysetStatusValueTypeCustomConverter target = new KeysetStatusValueTypeCustomConverter();
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
@@ -27,6 +28,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
         Assert.assertEquals(source.size(), destination.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertStatusTypeToContactStatusValueType() {
 

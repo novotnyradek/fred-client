@@ -213,9 +213,10 @@
     <mapping>
         <class-a>fred.client.data.create.nsset.NssetCreateRequest</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.CrType</class-b>
-        <field map-id="NameserverDataMapping">
+        <field>
             <a>ns</a>
             <b>ns</b>
+            <b-hint>cz.nic.xml.epp.nsset_1.NsT</b-hint>
         </field>
         <field>
             <a>tech</a>
@@ -223,7 +224,7 @@
         </field>
     </mapping>
 
-    <mapping map-id="NameserverDataMapping" map-null="false">
+    <mapping map-null="false">
         <class-a>fred.client.data.common.nsset.NameserverData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.NsT</class-b>
         <field>
@@ -239,13 +240,14 @@
             <a>tech</a>
             <b>tech</b>
         </field>
-        <field map-id="DnsKeyDataMapping">
+        <field>
             <a>dnskey</a>
             <b>dnskey</b>
+            <b-hint>cz.nic.xml.epp.keyset_1.DnskeyT</b-hint>
         </field>
     </mapping>
 
-    <mapping map-id="DnsKeyDataMapping" map-null="false">
+    <mapping map-null="false">
         <class-a>fred.client.data.common.keyset.DnsKeyData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.DnskeyT</class-b>
     </mapping>
@@ -460,9 +462,10 @@
     <mapping map-null="false">
         <class-a>fred.client.data.update.nsset.NssetAddData</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.AddType</class-b>
-        <field map-id="NameserverDataMapping">
+        <field>
             <a>ns</a>
             <b>ns</b>
+            <b-hint>cz.nic.xml.epp.nsset_1.NsT</b-hint>
         </field>
         <field>
             <a>tech</a>
@@ -524,9 +527,10 @@
     <mapping map-null="false">
         <class-a>fred.client.data.update.keyset.KeysetAddData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.AddType</class-b>
-        <field map-id="DnsKeyDataMapping">
+        <field>
             <a>dnskey</a>
             <b>dnskey</b>
+            <b-hint>cz.nic.xml.epp.keyset_1.DnskeyT</b-hint>
         </field>
         <field>
             <a>tech</a>
@@ -537,9 +541,10 @@
     <mapping map-null="false">
         <class-a>fred.client.data.update.keyset.KeysetRemData</class-a>
         <class-b>cz.nic.xml.epp.keyset_1.AddType</class-b>
-        <field map-id="DnsKeyDataMapping">
+        <field>
             <a>dnskey</a>
             <b>dnskey</b>
+            <b-hint>cz.nic.xml.epp.keyset_1.DnskeyT</b-hint>
         </field>
         <field>
             <a>tech</a>

@@ -16,6 +16,7 @@ public class ContactStatusValueTypeCustomConverterTest {
 
     public ContactStatusValueTypeCustomConverter target = new ContactStatusValueTypeCustomConverter();
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
@@ -27,6 +28,7 @@ public class ContactStatusValueTypeCustomConverterTest {
         Assert.assertEquals(source.size(), destination.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void convertStatusTypeToContactStatusValueType() {
 
