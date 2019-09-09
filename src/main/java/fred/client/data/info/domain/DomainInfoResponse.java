@@ -3,7 +3,7 @@ package fred.client.data.info.domain;
 import fred.client.data.EppResponse;
 import fred.client.data.common.domain.EnumValData;
 import fred.client.data.info.InfoResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.Date;

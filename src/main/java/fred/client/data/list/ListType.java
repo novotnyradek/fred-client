@@ -4,7 +4,7 @@ package fred.client.data.list;
  * Enum to determine request to prepare lists of objects which are managed by the authenticated client.
  *
  * <ul>
- * <li>{@link ListType#LIST_ALL} - selects all objects of given type, defined by {@link fred.client.eppClient.objectStrategy.ServerObjectType}</li>
+ * <li>{@link ListType#LIST_ALL} - selects all objects of given type, defined by {@link fred.client.eppclient.objectstrategy.ServerObjectType}</li>
  * <li>{@link ListType#DOMAINS_BY_CONTACTS} - select domains by a contact (registrant or administrative contact)</li>
  * <li>{@link ListType#DOMAINS_BY_NSSETS} - select domains by an nsset</li>
  * <li>{@link ListType#DOMAINS_BY_KEYSET} - select domains by a keyset</li>

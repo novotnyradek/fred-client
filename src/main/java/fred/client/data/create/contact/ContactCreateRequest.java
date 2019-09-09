@@ -1,12 +1,12 @@
 package fred.client.data.create.contact;
 
 import fred.client.data.EppRequest;
-import fred.client.data.create.CreateRequest;
 import fred.client.data.common.contact.AddressData;
 import fred.client.data.common.contact.DiscloseData;
 import fred.client.data.common.contact.IdentificationData;
 import fred.client.data.common.contact.PostalInfoData;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.data.create.CreateRequest;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@ package fred.client.data.delete.domain;
 
 import fred.client.data.EppResponse;
 import fred.client.data.delete.DeleteResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 package fred.client.data;
 
-import fred.client.eppClient.SuccessfulResponse;
+import fred.client.eppclient.SuccessfulResponse;
 import ietf.params.xml.ns.epp_1.ResponseType;
 
 /**

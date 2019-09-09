@@ -1,6 +1,6 @@
 package fred.client.data;
 
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 /**
  * For every command we defines object type.

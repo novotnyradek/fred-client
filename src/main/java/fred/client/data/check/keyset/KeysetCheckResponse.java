@@ -2,7 +2,7 @@ package fred.client.data.check.keyset;
 
 import fred.client.data.EppResponse;
 import fred.client.data.check.CheckResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.List;

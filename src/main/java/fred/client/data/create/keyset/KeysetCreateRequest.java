@@ -3,7 +3,7 @@ package fred.client.data.create.keyset;
 import fred.client.data.EppRequest;
 import fred.client.data.common.keyset.DnsKeyData;
 import fred.client.data.create.CreateRequest;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.ArrayList;

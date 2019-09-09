@@ -3,7 +3,7 @@ package fred.client.data.renew.domain;
 import fred.client.data.EppRequest;
 import fred.client.data.common.domain.EnumValData;
 import fred.client.data.common.domain.PeriodType;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.Date;

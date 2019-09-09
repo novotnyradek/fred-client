@@ -1,7 +1,7 @@
 package fred.client.data.logout.other;
 
 import fred.client.data.EppResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

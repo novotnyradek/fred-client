@@ -1,6 +1,6 @@
 package fred.client.exception;
 
-import fred.client.eppClient.ErrorResponse;
+import fred.client.eppclient.ErrorResponse;
 
 import java.util.List;
 

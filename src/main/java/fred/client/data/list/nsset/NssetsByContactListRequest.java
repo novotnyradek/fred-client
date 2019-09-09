@@ -3,7 +3,7 @@ package fred.client.data.list.nsset;
 import fred.client.data.EppRequest;
 import fred.client.data.list.ListRequest;
 import fred.client.data.list.ListType;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

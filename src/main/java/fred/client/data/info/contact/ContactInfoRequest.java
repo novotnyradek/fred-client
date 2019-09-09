@@ -2,7 +2,7 @@ package fred.client.data.info.contact;
 
 import fred.client.data.EppRequest;
 import fred.client.data.info.InfoRequest;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

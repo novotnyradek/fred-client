@@ -1,8 +1,8 @@
 package fred.client.data.poll;
 
 import fred.client.data.EppResponse;
-import fred.client.eppClient.objectStrategy.PollMessageType;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.PollMessageType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -6,7 +6,7 @@ import fred.client.data.common.contact.DiscloseData;
 import fred.client.data.common.contact.IdentificationData;
 import fred.client.data.common.contact.PostalInfoData;
 import fred.client.data.info.InfoResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.Date;

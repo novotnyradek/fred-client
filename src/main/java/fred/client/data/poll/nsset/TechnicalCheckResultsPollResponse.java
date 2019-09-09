@@ -1,7 +1,7 @@
 package fred.client.data.poll.nsset;
 
 import fred.client.data.poll.PollResponse;
-import fred.client.eppClient.objectStrategy.PollMessageType;
+import fred.client.eppclient.objectstrategy.PollMessageType;
 
 import java.io.Serializable;
 import java.util.List;

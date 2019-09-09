@@ -320,7 +320,7 @@
     </mapping>
 
     <mapping>
-        <class-a>fred.client.data.testNsset.nsset.TestNssetRequest</class-a>
+        <class-a>fred.client.data.testnsset.nsset.TestNssetRequest</class-a>
         <class-b>cz.nic.xml.epp.nsset_1.TestType</class-b>
         <field>
             <a>nssetId</a>

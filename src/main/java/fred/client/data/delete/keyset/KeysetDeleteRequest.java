@@ -2,7 +2,7 @@ package fred.client.data.delete.keyset;
 
 import fred.client.data.EppRequest;
 import fred.client.data.delete.DeleteRequest;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

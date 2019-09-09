@@ -2,7 +2,7 @@ package fred.client.data.poll.contact;
 
 import fred.client.data.info.contact.ContactInfoResponse;
 import fred.client.data.poll.PollResponse;
-import fred.client.eppClient.objectStrategy.PollMessageType;
+import fred.client.eppclient.objectstrategy.PollMessageType;
 
 import java.io.Serializable;
 

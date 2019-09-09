@@ -2,7 +2,7 @@ package fred.client.data.transfer.nsset;
 
 import fred.client.data.EppResponse;
 import fred.client.data.transfer.TransferResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

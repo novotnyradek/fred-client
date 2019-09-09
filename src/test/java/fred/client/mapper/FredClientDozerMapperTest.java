@@ -58,7 +58,7 @@ import fred.client.data.poll.nsset.TechnicalCheckResultsPollResponse;
 import fred.client.data.poll.other.LowCreditPollResponse;
 import fred.client.data.poll.other.RequestUsagePollResponse;
 import fred.client.data.renew.domain.DomainRenewRequest;
-import fred.client.data.testNsset.nsset.TestNssetRequest;
+import fred.client.data.testnsset.nsset.TestNssetRequest;
 import fred.client.data.transfer.contact.ContactTransferRequest;
 import fred.client.data.transfer.domain.DomainTransferRequest;
 import fred.client.data.transfer.keyset.KeysetTransferRequest;
@@ -793,7 +793,7 @@ public class FredClientDozerMapperTest {
 
     /**
      * <mapping>
-     * <class-a>fred.client.data.testNsset.nsset.TestNssetRequest</class-a>
+     * <class-a>TestNssetRequest</class-a>
      * <class-b>cz.nic.xml.epp.nsset_1.TestType</class-b>
      * </mapping>
      */

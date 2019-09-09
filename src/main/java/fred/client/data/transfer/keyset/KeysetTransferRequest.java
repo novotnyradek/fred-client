@@ -2,7 +2,7 @@ package fred.client.data.transfer.keyset;
 
 import fred.client.data.EppRequest;
 import fred.client.data.transfer.TransferRequest;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 

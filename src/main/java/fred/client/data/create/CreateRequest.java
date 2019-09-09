@@ -1,6 +1,6 @@
 package fred.client.data.create;
 
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 /**
  * Marker interface, marks all create requests.

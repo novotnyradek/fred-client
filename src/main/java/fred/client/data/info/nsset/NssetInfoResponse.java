@@ -3,7 +3,7 @@ package fred.client.data.info.nsset;
 import fred.client.data.EppResponse;
 import fred.client.data.common.nsset.NameserverData;
 import fred.client.data.info.InfoResponse;
-import fred.client.eppClient.objectStrategy.ServerObjectType;
+import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.Date;
