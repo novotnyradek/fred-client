@@ -156,7 +156,7 @@ public interface FredClient {
      *
      * @param creditInfoRequest {@link CreditInfoRequest}.
      * @return {@link CreditInfoResponse}.
-     * @throws FredClientException
+     * @throws FredClientException when call failed.
      */
     CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException;
 

@@ -36,7 +36,6 @@ import java.util.List;
  * <li>{@link ContactInfoResponse#notifyEmail} – a comma-separated list of email addresses for notification</li>
  * <li>{@link ContactInfoResponse#mailingAddress} – mailing address container</li>
  * </ul>
- * </p>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
  */

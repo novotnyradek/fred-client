@@ -55,7 +55,7 @@ Add as maven dependency to your project.
 
 ```xml
 <dependency>
-    <groupId>cz.nic.clients</groupId>
+    <groupId>io.github.novotnyradek</groupId>
     <artifactId>fred-client</artifactId>
     <version>0.2-SNAPSHOT</version>
 </dependency>
