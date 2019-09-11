@@ -9,9 +9,10 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 
-**Version: `0.2.2 (0.2-SNAPSHOT)`**
+**Version: `0.2.2`**
 > Changes
 ###### 0.2.2
+* RELEASED to central repository.
 * More mapping tests.
 * Created poll responses pojos for contact, keyset and nsset update.
 * Regenerated class diagram.
@@ -49,7 +50,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
     * Test nsset
     * Listing
 
-> Installation (Not avaliable yet)
+> Installation
 
 Add as maven dependency to your project.
 
@@ -57,7 +58,7 @@ Add as maven dependency to your project.
 <dependency>
     <groupId>io.github.novotnyradek</groupId>
     <artifactId>fred-client</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
 </dependency>
 ```
 
