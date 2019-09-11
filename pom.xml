@@ -20,6 +20,13 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Radek Novotný</name>
+            <email>novotny.radek24@seznam.cz</email>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:git://github.com/novotnyradek/fred-client.git</connection>
         <developerConnection>scm:git:git@github.com:novotnyradek/fred-client.git</developerConnection>
