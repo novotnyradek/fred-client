@@ -7,7 +7,9 @@ FRED is open-source software for running a domain and ENUM Registry, developed b
 Documentation for the whole FRED project is available on-line, visit https://fred.nic.cz/documentation.
 
 [![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
+[![Javadocs](https://www.javadoc.io/badge/io.github.novotnyradek/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
 **Version: `0.2.2`**
 > Changes
