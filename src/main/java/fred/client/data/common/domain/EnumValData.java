@@ -30,7 +30,7 @@ public class EnumValData implements Serializable {
         return valExDate;
     }
 
-    protected void setValExDate(Date valExDate) {
+    public void setValExDate(Date valExDate) {
         this.valExDate = valExDate;
     }
 
