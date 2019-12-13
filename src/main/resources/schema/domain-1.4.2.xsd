@@ -355,7 +355,7 @@
     <complexType name="handleDateT">
       <sequence>
         <element name="name" type="eppcom:labelType"/>
-        <element name="trDate" type="dateTime"/>
+        <element name="trDate" type="date"/>
         <element name="clID" type="eppcom:clIDType"/>
       </sequence>
     </complexType>

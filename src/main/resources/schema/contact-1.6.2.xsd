@@ -469,7 +469,7 @@
     <complexType name="handleDateT">
       <sequence>
         <element name="id" type="fredcom:objIDType"/>
-        <element name="trDate" type="dateTime"/>
+        <element name="trDate" type="date"/>
         <element name="clID" type="eppcom:clIDType"/>
       </sequence>
     </complexType>
