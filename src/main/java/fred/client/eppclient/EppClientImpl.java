@@ -333,15 +333,7 @@ public class EppClientImpl implements EppClient {
             log.error(message);
             throw new SystemException(message);
         }
-        byte[] buff = this.readInputBuffer(reader, len);
-        String value;
-        try {
-            value = new String(buff, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.error("UnsupportedEncodingException", e);
-            throw new SystemException("UnsupportedEncodingException", e);
-        }
-        return value;
+        return this.readInputBuffer(reader, len);
     }
 
     private int readBufferSize() throws SystemException {
@@ -369,25 +361,22 @@ public class EppClientImpl implements EppClient {
 
     }
 
-    private byte[] readInputBuffer(BufferedInputStream in, int inbuf_sz) throws SystemException {
-        byte[] in_buf = new byte[inbuf_sz];
+    private String readInputBuffer(BufferedInputStream input, int length) throws SystemException {
+        try {
+            byte[] buffer = new byte[1024];
+            int totalBytesRead = 0;
+            StringBuffer sb = new StringBuffer();
 
-        int len;
-        int bytesRead = 0;
-        while (bytesRead < inbuf_sz) {
-            try {
-                len = in.read(in_buf, bytesRead, inbuf_sz - bytesRead);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-                throw new SystemException(e.getMessage(), e);
+            while (length != totalBytesRead) {
+                int bytesRead = input.read(buffer);
+                sb.append(new String(buffer, 0, bytesRead));
+                totalBytesRead += bytesRead;
             }
-            if (len < 0) {
-                String message = "EOF reading buffer!";
-                log.error(message);
-                throw new SystemException(message);
-            }
-            bytesRead += len;
+            return sb.toString();
+        } catch (IOException e) {
+            String message = "Problem while reading input stream!";
+            log.error(message);
+            throw new SystemException(message);
         }
-        return in_buf;
     }
 }
