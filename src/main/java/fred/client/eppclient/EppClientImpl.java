@@ -369,7 +369,7 @@ public class EppClientImpl implements EppClient {
 
             while (length != totalBytesRead) {
                 int bytesRead = input.read(buffer);
-                sb.append(new String(buffer, 0, bytesRead));
+                sb.append(new String(buffer, 0, bytesRead, "utf-8"));
                 totalBytesRead += bytesRead;
             }
             return sb.toString();
