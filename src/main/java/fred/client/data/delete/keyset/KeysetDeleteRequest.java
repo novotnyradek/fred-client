@@ -18,7 +18,7 @@ public class KeysetDeleteRequest extends EppRequest implements Serializable, Del
 
     private String keysetId;
 
-    public KeysetDeleteRequest(String keysetId, String authInfo) {
+    public KeysetDeleteRequest(String keysetId) {
         setServerObjectType(ServerObjectType.KEYSET);
 
         this.keysetId = keysetId;
