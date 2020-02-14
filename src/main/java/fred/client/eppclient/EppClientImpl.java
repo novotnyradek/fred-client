@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.net.ssl.*;
 import javax.xml.bind.JAXBElement;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -275,9 +276,9 @@ public class EppClientImpl implements EppClient {
      */
     private void disconnect() throws SystemException {
         try {
-            if (socket != null) socket.close();
             if (reader != null) reader.close();
             if (writer != null) writer.close();
+            if (socket != null) socket.close();
         } catch (IOException e) {
             log.debug("Unable to close socket");
             throw new SystemException("Unable to close socket");
@@ -295,7 +296,7 @@ public class EppClientImpl implements EppClient {
      * @return XML representation of response.
      * @throws SystemException
      */
-    private String proceedCommand(String xmlCommand) throws SystemException {
+    private synchronized String proceedCommand(String xmlCommand) throws FredClientException {
         log.debug("REQUEST:\n" + xmlCommand);
         this.write(xmlCommand);
         String xmlResponse = this.read();
@@ -303,9 +304,9 @@ public class EppClientImpl implements EppClient {
         return xmlResponse;
     }
 
-    private void write(String xml) throws SystemException {
+    private synchronized void write(String xml) throws SystemException {
         try {
-            byte[] byteArr = xml.getBytes("utf-8");
+            byte[] byteArr = xml.getBytes("UTF-8");
             this.writeBufferSize(byteArr.length + HEADER);
             writer.write(byteArr, 0, byteArr.length);
             writer.flush();
@@ -315,7 +316,7 @@ public class EppClientImpl implements EppClient {
         }
     }
 
-    private void writeBufferSize(int buf_sz) throws IOException {
+    private synchronized void writeBufferSize(int buf_sz) throws IOException {
         byte[] out_buf = new byte[HEADER];
         out_buf[0] = (byte) (0xff & (buf_sz >> 24));
         out_buf[1] = (byte) (0xff & (buf_sz >> 16));
@@ -325,7 +326,7 @@ public class EppClientImpl implements EppClient {
         writer.write(out_buf, 0, HEADER);
     }
 
-    private String read() throws SystemException {
+    private synchronized String read() throws FredClientException {
         int len = this.readBufferSize();
         len -= HEADER;
         if (len < 0) {
@@ -333,10 +334,10 @@ public class EppClientImpl implements EppClient {
             log.error(message);
             throw new SystemException(message);
         }
-        return this.readInputBuffer(reader, len);
+        return this.readInputBuffer(len);
     }
 
-    private int readBufferSize() throws SystemException {
+    private synchronized int readBufferSize() throws SystemException {
         byte[] in_buf = new byte[HEADER];
 
         int len;
@@ -361,20 +362,21 @@ public class EppClientImpl implements EppClient {
 
     }
 
-    private String readInputBuffer(BufferedInputStream input, int length) throws SystemException {
+    private synchronized String readInputBuffer(int length) throws FredClientException {
+        StringBuffer sb = new StringBuffer();
+
         try {
-            byte[] buffer = new byte[1024];
             int totalBytesRead = 0;
-            StringBuffer sb = new StringBuffer();
 
             while (length != totalBytesRead) {
-                int bytesRead = input.read(buffer);
-                sb.append(new String(buffer, 0, bytesRead, "utf-8"));
+                byte[] buffer = new byte[128];
+                int bytesRead = reader.read(buffer);
+                sb.append(new String(buffer, 0, bytesRead, "UTF-8"));
                 totalBytesRead += bytesRead;
             }
             return sb.toString();
         } catch (IOException e) {
-            String message = "Problem while reading input stream!";
+            String message = "Problem while reading input stream, disconnecting! Corrupted message: " + sb.toString();
             log.error(message);
             throw new SystemException(message);
         }
