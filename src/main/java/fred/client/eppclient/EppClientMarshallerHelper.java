@@ -79,7 +79,7 @@ public class EppClientMarshallerHelper {
             JAXBContext jaxbContext = getJaxbContext();
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-            if (validateSchema()) {
+            if (validateRequestAgainstSchema()) {
                 jaxbMarshaller.setSchema(getSchema());
             }
 
@@ -101,8 +101,12 @@ public class EppClientMarshallerHelper {
         }
     }
 
-    private boolean validateSchema() {
-        return properties.getProperty("schema.validation").equalsIgnoreCase("true");
+    private boolean validateRequestAgainstSchema() {
+        return properties.getProperty("schema.validation.request").equalsIgnoreCase("true");
+    }
+
+    private boolean validateResponseAgainstSchema() {
+        return properties.getProperty("schema.validation.response").equalsIgnoreCase("true");
     }
 
     private Unmarshaller getUnmarshaller() throws SystemException {
@@ -110,7 +114,7 @@ public class EppClientMarshallerHelper {
             JAXBContext jaxbContext = getJaxbContext();
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
-            if (validateSchema()) {
+            if (validateResponseAgainstSchema()) {
                 jaxbUnmarshaller.setSchema(getSchema());
             }
 
