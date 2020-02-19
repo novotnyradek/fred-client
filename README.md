@@ -11,8 +11,12 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/io.github.novotnyradek/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
-**Version: `0.2.2`**
+**Version: `0.2.3`**
 > Changes
+###### 0.2.3
+* Add option turn on validation of responses and requests separately
+* Add support for multithread systems
+* Other small improvements and fixes
 ###### 0.2.2
 * RELEASED to central repository.
 * More mapping tests.
@@ -98,8 +102,9 @@ keystore.instance = JKS
 sslsocket.instance = TLSv1.2
 keymanager.instance = SunX509
 
-# Enable/disable the validation of messages (true enabled, false disabled)
-schema.validation = true
+# Enable/disable the validation of messages (true enabled, false disabled) - for requests and responses
+schema.validation.request = true
+schema.validation.response = false
 ```
 
 > Creating your own java keystore file
@@ -130,4 +135,3 @@ Note: works only for open instance environment - on production instance you'll g
 * If you keep your current instance of FredClient class, it reuses created connection.
 
 > Enjoy!
-

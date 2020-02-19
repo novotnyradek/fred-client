@@ -56,7 +56,9 @@ public class ListResultsHelper {
             return this.getResults(responseType.getTrID().getClTRID());
         }
 
-        return new ListResultsResponse();
+        ListResultsResponse result = new ListResultsResponse();
+        result.addResponseInfo(responseType);
+        return result;
     }
 
     /**
