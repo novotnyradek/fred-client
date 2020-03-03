@@ -237,7 +237,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         if (renewRequest.getEnumValData() != null) {
             ExValType exValType = mapper.map(renewRequest.getEnumValData(), ExValType.class);
 
-            JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createCreate(exValType);
+            JAXBElement<ExValType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createRenew(exValType);
 
             ExtAnyType extAnyType = new ExtAnyType();
             extAnyType.getAny().add(enumWrapper);
