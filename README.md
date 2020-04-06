@@ -11,9 +11,12 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/io.github.novotnyradek/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
-**Version: `0.2.3`**
+**Version: `0.3.1`**
 > Changes
-###### 0.2.3
+###### 0.3.1
+* Change postal info data for update
+* Change version number to correct one
+###### 0.3.0
 * Add option turn on validation of responses and requests separately
 * Add support for multithread systems
 * Other small improvements and fixes

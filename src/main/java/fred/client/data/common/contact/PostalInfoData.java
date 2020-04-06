@@ -21,7 +21,7 @@ public class PostalInfoData implements Serializable {
 
     private AddressData addr;
 
-    protected PostalInfoData() {
+    public PostalInfoData() {
     }
 
     public PostalInfoData(String name, AddressData addressData) {

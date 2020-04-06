@@ -63,6 +63,8 @@ public class EppClientImpl implements EppClient {
             return login(greeting, clientTransactionId);
         }
 
+        disconnect();
+
         return initialize(clientTransactionId);
     }
 
