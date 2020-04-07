@@ -5,7 +5,7 @@ import fred.client.data.check.CheckRequest;
 import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +19,7 @@ public class NssetCheckRequest extends EppRequest implements Serializable, Check
 
     public NssetCheckRequest(List<String> nssetIds) {
         setServerObjectType(ServerObjectType.NSSET);
-        setNssetIds(nssetIds);
-    }
-
-    public NssetCheckRequest(String... nssetIds) {
-        this(Arrays.asList(nssetIds));
+        setNssetIds(nssetIds == null ? new ArrayList<String>() : nssetIds);
     }
 
     public List<String> getNssetIds() {

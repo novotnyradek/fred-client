@@ -1,7 +1,6 @@
 package fred.client.data.common.contact;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,11 +30,11 @@ public class AddressData implements Serializable {
 
     protected AddressData(){}
 
-    public AddressData(String city, String pc, String cc, String... street) {
+    public AddressData(String city, String pc, String cc, List<String> street) {
         this.setCc(cc);
         this.setCity(city);
         this.setPc(pc);
-        this.setStreet(Arrays.asList(street));
+        this.setStreet(street);
     }
 
     public List<String> getStreet() {

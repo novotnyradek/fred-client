@@ -14,6 +14,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 **Version: `0.3.1`**
 > Changes
 ###### 0.3.1
+* Remove varargs from constructors to keep clean design
 * Change postal info data for update
 * Change version number to correct one
 ###### 0.3.0

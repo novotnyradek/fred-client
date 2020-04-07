@@ -5,7 +5,7 @@ import fred.client.data.check.CheckRequest;
 import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +19,7 @@ public class KeysetCheckRequest extends EppRequest implements Serializable, Chec
 
     public KeysetCheckRequest(List<String> keysetIds) {
         setServerObjectType(ServerObjectType.KEYSET);
-        setKeysetIds(keysetIds);
-    }
-
-    public KeysetCheckRequest(String... keysetIds) {
-        this(Arrays.asList(keysetIds));
+        setKeysetIds(keysetIds == null ? new ArrayList<String>() : keysetIds);
     }
 
     public List<String> getKeysetIds() {

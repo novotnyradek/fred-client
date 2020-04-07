@@ -5,7 +5,7 @@ import fred.client.data.check.CheckRequest;
 import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +19,7 @@ public class DomainCheckRequest extends EppRequest implements Serializable, Chec
 
     public DomainCheckRequest(List<String> domainNames) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setNames(domainNames);
-    }
-
-    public DomainCheckRequest(String... domainNames) {
-        this(Arrays.asList(domainNames));
+        setNames(domainNames == null ? new ArrayList<String>() : domainNames);
     }
 
     public List<String> getNames() {

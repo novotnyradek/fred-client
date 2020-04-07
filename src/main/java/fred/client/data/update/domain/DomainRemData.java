@@ -1,7 +1,6 @@
 package fred.client.data.update.domain;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,8 +19,8 @@ public class DomainRemData implements Serializable {
     public DomainRemData() {
     }
 
-    public DomainRemData(String... adminContacts) {
-        admin = Arrays.asList(adminContacts);
+    public DomainRemData(List<String> adminContacts) {
+        admin = adminContacts;
     }
 
     public List<String> getAdmin() {

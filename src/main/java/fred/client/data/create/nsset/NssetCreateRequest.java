@@ -6,7 +6,7 @@ import fred.client.data.create.CreateRequest;
 import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,11 +39,7 @@ public class NssetCreateRequest extends EppRequest implements Serializable, Crea
 
         this.setId(nssetId);
         this.setNs(nameservers);
-        this.setTech(technicalContacts);
-    }
-
-    public NssetCreateRequest(String nssetId, List<NameserverData> nameservers, String... technicalContacts) {
-        this(nssetId, nameservers, Arrays.asList(technicalContacts));
+        this.setTech(technicalContacts == null ? new ArrayList<String>() : technicalContacts);
     }
 
     public String getId() {

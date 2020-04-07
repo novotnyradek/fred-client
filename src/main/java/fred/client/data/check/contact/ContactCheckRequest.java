@@ -5,7 +5,7 @@ import fred.client.data.check.CheckRequest;
 import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +19,7 @@ public class ContactCheckRequest extends EppRequest implements Serializable, Che
 
     public ContactCheckRequest(List<String> contactIds) {
         setServerObjectType(ServerObjectType.CONTACT);
-        setContactIds(contactIds);
-    }
-
-    public ContactCheckRequest(String... contactIds) {
-        this(Arrays.asList(contactIds));
+        setContactIds(contactIds == null ? new ArrayList<String>() : contactIds);
     }
 
     public List<String> getContactIds() {

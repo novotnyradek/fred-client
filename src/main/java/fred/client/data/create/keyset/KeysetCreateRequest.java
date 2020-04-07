@@ -7,7 +7,6 @@ import fred.client.eppclient.objectstrategy.ServerObjectType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,12 +35,8 @@ public class KeysetCreateRequest extends EppRequest implements Serializable, Cre
         setServerObjectType(ServerObjectType.KEYSET);
 
         this.setId(keysetId);
-        this.setTech(technicalContacts);
+        this.setTech(technicalContacts == null ? new ArrayList<String>() : technicalContacts);
         this.dnskey = new ArrayList<DnsKeyData>();
-    }
-
-    public KeysetCreateRequest(String keysetId, String... technicalContacts) {
-        this(keysetId, Arrays.asList(technicalContacts));
     }
 
     public String getId() {

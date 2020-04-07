@@ -530,7 +530,7 @@ public class FredClientDozerMapperTest {
     @Test
     public void mapAddressDataToExtraAddrTypeAddr() {
         String city = "Praha", pc = "19000", cc = "CZ", street1 = "Sokolovska", street2 = "Kytlicka";
-        AddressData addressData = new AddressData(city, pc, cc, street1, street2);
+        AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
         AddrType.Addr destination = target.map(addressData, AddrType.Addr.class);
 
@@ -551,7 +551,7 @@ public class FredClientDozerMapperTest {
     @Test
     public void mapAddressDataToAddrType() {
         String city = "Praha", pc = "19000", cc = "CZ", street1 = "Sokolovska", street2 = "Kytlicka";
-        AddressData addressData = new AddressData(city, pc, cc, street1, street2);
+        AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
         cz.nic.xml.epp.contact_1.AddrType destination = target.map(addressData, cz.nic.xml.epp.contact_1.AddrType.class);
 
@@ -584,7 +584,7 @@ public class FredClientDozerMapperTest {
         NameserverData ns2 = new NameserverData(ns2Name);
         ns2.getAddr().add(ns2IpV4);
 
-        NssetCreateRequest nssetCreateRequest = new NssetCreateRequest(nssetId, Arrays.asList(ns1, ns2), tech1, tech2);
+        NssetCreateRequest nssetCreateRequest = new NssetCreateRequest(nssetId, Arrays.asList(ns1, ns2), Arrays.asList(tech1, tech2));
         nssetCreateRequest.setAuthInfo(authinfo);
         nssetCreateRequest.setReportLevel(reportlevel);
 
@@ -620,7 +620,7 @@ public class FredClientDozerMapperTest {
         DnsKeyData dnsKeyData1 = new DnsKeyData(flags1, protocol1, alg1, dnsKey);
         DnsKeyData dnsKeyData2 = new DnsKeyData(flags2, protocol2, alg2, dnsKey);
 
-        KeysetCreateRequest keysetCreateRequest = new KeysetCreateRequest(keysetId, tech1, tech2);
+        KeysetCreateRequest keysetCreateRequest = new KeysetCreateRequest(keysetId, Arrays.asList(tech1, tech2));
         keysetCreateRequest.setAuthInfo(authinfo);
         keysetCreateRequest.getDnskey().add(dnsKeyData1);
         keysetCreateRequest.getDnskey().add(dnsKeyData2);
@@ -689,7 +689,7 @@ public class FredClientDozerMapperTest {
                 contactId,
                 new PostalInfoData(
                         name, new AddressData(
-                                city, pc, cc, street1, street2)
+                                city, pc, cc, Arrays.asList(street1, street2))
                 ),
                 email
         );
@@ -1755,7 +1755,7 @@ public class FredClientDozerMapperTest {
     public void mapAddressDataToAddrTypeAddr() {
         String city = "Prague", pc = "19000", cc = "CZ", street1 = "Street 1", street2 = "Street 2";
 
-        AddressData addressData = new AddressData(city, pc, cc, street1, street2);
+        AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
         cz.nic.xml.epp.extra_addr_1.AddrType.Addr destination = target.map(addressData, cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
 
