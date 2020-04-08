@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.net.ssl.*;
 import javax.xml.bind.JAXBElement;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -57,15 +56,12 @@ public class EppClientImpl implements EppClient {
         return eppClient;
     }
 
-    public ResponseType login(String clientTransactionId) throws FredClientException {
+    public ResponseType login(String newPw, String clientTransactionId) throws FredClientException {
         if (isConnected()) {
-            GreetingType greeting = hello();
-            return login(greeting, clientTransactionId);
+            disconnect();
         }
 
-        disconnect();
-
-        return initialize(clientTransactionId);
+        return initialize(newPw, clientTransactionId);
     }
 
     public ResponseType logout(String clientTransactionId) throws FredClientException {
@@ -129,7 +125,7 @@ public class EppClientImpl implements EppClient {
     private void checkSession() throws FredClientException {
         if (!isConnected()) {
             log.debug("Connection not established or wrong, try to initialize");
-            initialize(null);
+            initialize(null, null);
         }
     }
 
@@ -184,7 +180,7 @@ public class EppClientImpl implements EppClient {
      * @return
      * @throws FredClientException
      */
-    private ResponseType initialize(String clientTransactionId) throws FredClientException {
+    private ResponseType initialize(String newPw, String clientTransactionId) throws FredClientException {
         try {
             connect();
         } catch (Exception e) {
@@ -195,7 +191,7 @@ public class EppClientImpl implements EppClient {
 
         EppType eppType = marshallerHelper.unmarshal(greetingXml);
 
-        return login(eppType.getGreeting(), clientTransactionId);
+        return login(eppType.getGreeting(), newPw, clientTransactionId);
     }
 
     /**
@@ -247,7 +243,7 @@ public class EppClientImpl implements EppClient {
         log.debug("Connected to: " + socket.getInetAddress());
     }
 
-    private ResponseType login(GreetingType greeting, String clientTransactionId) throws FredClientException {
+    private ResponseType login(GreetingType greeting, String newPw, String clientTransactionId) throws FredClientException {
         String apiKey = properties.getProperty("apiKey.id");
         String apiKeyPassword = properties.getProperty("apiKey.secret");
 
@@ -260,6 +256,10 @@ public class EppClientImpl implements EppClient {
 
         loginType.setClID(apiKey);
         loginType.setPw(apiKeyPassword);
+
+        if (newPw != null && !newPw.isEmpty()){
+            loginType.setNewPW(newPw);
+        }
 
         CredsOptionsType credsOptionsType = new CredsOptionsType();
         credsOptionsType.setLang(greeting.getSvcMenu().getLang().get(0));

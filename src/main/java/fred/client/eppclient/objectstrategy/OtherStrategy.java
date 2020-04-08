@@ -193,7 +193,7 @@ public class OtherStrategy implements ServerObjectStrategy {
     public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
         log.debug("callLogin called with request(" + loginRequest + ")");
 
-        ResponseType responseType = client.login(loginRequest.getClientTransactionId());
+        ResponseType responseType = client.login(loginRequest.getNewPw(), loginRequest.getClientTransactionId());
 
         LoginResponse result = new LoginResponse();
         result.addResponseInfo(responseType);

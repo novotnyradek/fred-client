@@ -10,12 +10,26 @@ import java.io.Serializable;
  * The login command must be sent to the server before any other EPP command and
  * identifies and authenticates the client identifier to be used by the session.
  *
+ * <ul>
+ * <li>{@link LoginRequest#newPw} - a new password to be used for subsequent login commands as epp:pwType, case sensitive</li>
+ * </ul>
+ *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Login.html">FRED documentation</a>
  */
 public class LoginRequest extends EppRequest implements Serializable {
 
+    private String newPw;
+
     public LoginRequest() {
         setServerObjectType(ServerObjectType.OTHER);
+    }
+
+    public String getNewPw() {
+        return newPw;
+    }
+
+    public void setNewPw(String newPw) {
+        this.newPw = newPw;
     }
 
     @Override

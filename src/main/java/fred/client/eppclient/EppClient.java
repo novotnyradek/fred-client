@@ -2,6 +2,7 @@ package fred.client.eppclient;
 
 import fred.client.exception.FredClientException;
 import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.LoginType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 
 import javax.xml.bind.JAXBElement;
@@ -14,11 +15,12 @@ public interface EppClient {
     /**
      * Method executes login command.
      *
+     * @param newPw new password, use it for next login.
      * @param clientTransactionId client transaction id.
      * @return ResponseType
      * @throws FredClientException when call failed.
      */
-    ResponseType login(String clientTransactionId) throws FredClientException;
+    ResponseType login(String newPw, String clientTransactionId) throws FredClientException;
 
     /**
      * Method executes logout command and destroys socket connection.
