@@ -281,6 +281,7 @@ public class EppClientImpl implements EppClient {
             if (reader != null) reader.close();
             if (writer != null) writer.close();
             if (socket != null) socket.close();
+            if (eppClient != null) eppClient = null;
         } catch (IOException e) {
             log.debug("Unable to close socket");
             throw new SystemException("Unable to close socket");
@@ -288,6 +289,7 @@ public class EppClientImpl implements EppClient {
             socket = null;
             reader = null;
             writer = null;
+            eppClient = null;
         }
     }
 
@@ -365,17 +367,22 @@ public class EppClientImpl implements EppClient {
     }
 
     private synchronized String readInputBuffer(int length) throws FredClientException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         try {
             int totalBytesRead = 0;
+            ByteArrayOutputStream wholeMessage = new ByteArrayOutputStream();
 
             while (length != totalBytesRead) {
                 byte[] buffer = new byte[128];
                 int bytesRead = reader.read(buffer);
-                sb.append(new String(buffer, 0, bytesRead, "UTF-8"));
+                wholeMessage.write(buffer);
+
                 totalBytesRead += bytesRead;
             }
+
+            sb.append(new String(wholeMessage.toByteArray(), 0, totalBytesRead, "UTF-8"));
+
             return sb.toString();
         } catch (IOException e) {
             String message = "Problem while reading input stream, disconnecting! Corrupted message: " + sb.toString();
