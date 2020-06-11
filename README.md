@@ -15,6 +15,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 > Changes
 ###### 2.41
 * Change version to be same as FRED system for compatibility
+* Change groupId and package names to official one
 ###### 0.3.1
 * Add ability to change registrar password via login request
 * Remove varargs from constructors to keep clean design
