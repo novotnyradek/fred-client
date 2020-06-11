@@ -11,8 +11,10 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/io.github.novotnyradek/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
-**Version: `0.3.1`**
+**Version: `2.41`**
 > Changes
+###### 2.41
+* Change version to be same as FRED system for compatibility
 ###### 0.3.1
 * Add ability to change registrar password via login request
 * Remove varargs from constructors to keep clean design
