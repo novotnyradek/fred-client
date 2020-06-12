@@ -4,7 +4,7 @@
 
     <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>2.41-SNAPSHOT</version>
+    <version>2.41</version>
     <packaging>jar</packaging>
 
     <name>FRED client</name>
@@ -29,7 +29,7 @@
         <connection>scm:git:git://github.com/novotnyradek/fred-client.git</connection>
         <developerConnection>scm:git:git@github.com:novotnyradek/fred-client.git</developerConnection>
         <url>https://github.com/novotnyradek/fred-client</url>
-        <tag>HEAD</tag>
+        <tag>fred-client-2.41</tag>
     </scm>
 
     <distributionManagement>
