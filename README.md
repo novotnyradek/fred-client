@@ -6,6 +6,11 @@ FRED is open-source software for running a domain and ENUM Registry, developed b
 
 Documentation for the whole FRED project is available on-line, visit https://fred.nic.cz/documentation.
 
+[![NIC.CZ](https://upload.wikimedia.org/wikipedia/commons/f/f8/Logo_CZ.NIC.svg)](https://nic.cz)
+<img src="https://www.iconsdb.com/icons/preview/green/ok-xxl.png" width="35">
+
+Client was tested by CZ.NIC, the national registry of .cz domain. 
+
 [![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
@@ -14,6 +19,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 **Version: `2.41`**
 > Changes
 ###### 2.41
+* Released to Central repository.
 * Change version to be same as FRED system for compatibility
 * Change groupId and package names to official one
 ###### 0.3.1
@@ -70,9 +76,9 @@ Add as maven dependency to your project.
 
 ```xml
 <dependency>
-    <groupId>io.github.novotnyradek</groupId>
+    <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>0.2</version>
+    <version>2.41</version>
 </dependency>
 ```
 
@@ -143,3 +149,7 @@ Note: works only for open instance environment - on production instance you'll g
 * If you keep your current instance of FredClient class, it reuses created connection.
 
 > Enjoy!
+
+_Developed with support of_
+
+<a href="active24.cz"><img src="https://www.active24.cz/-a613---ulAbDIG8/logo-active24-og.png?_linka=a1695" width="100" alt="active24.cz"></a>
