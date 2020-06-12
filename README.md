@@ -20,17 +20,17 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 > Changes
 ###### 2.41
 * Released to Central repository.
-* Change version to be same as FRED system for compatibility
-* Change groupId and package names to official one
+* Change version to be same as FRED system for compatibility.
+* Change groupId and package names to official one.
 ###### 0.3.1
-* Add ability to change registrar password via login request
-* Remove varargs from constructors to keep clean design
-* Change postal info data for update
-* Change version number to correct one
+* Add ability to change registrar password via login request.
+* Remove varargs from constructors to keep clean design.
+* Change postal info data for update.
+* Change version number to correct one.
 ###### 0.3.0
-* Add option turn on validation of responses and requests separately
-* Add support for multithread systems
-* Other small improvements and fixes
+* Add option turn on validation of responses and requests separately.
+* Add support for multithread systems.
+* Other small improvements and fixes.
 ###### 0.2.2
 * RELEASED to central repository.
 * More mapping tests.
@@ -48,7 +48,7 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 ###### 0.1.0
 * Removed clientTransactionId attribute from constructors. Can be set using setClientTransactionId method on any request, otherwise will be generated automatically.
 * First version.
-* Possibility to connect to epp.demo.regtest.nic.cz from main method or your application
+* Possibility to connect to epp.demo.regtest.nic.cz from main method or your application.
 
 > Commands
 * Session management commands
