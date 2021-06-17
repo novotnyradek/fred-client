@@ -1,4 +1,4 @@
-[![FRED](https://fred.nic.cz/documentation/html/_static/fred-logo.png)](https://fred.nic.cz)
+[![FRED](https://fred.nic.cz/documentation/html/_static/fred-logo.svg)](https://fred.nic.cz)
 # fred-client 
 > A Java EPP client for FRED (Free Registry for ENUM and Domains)
 
@@ -16,8 +16,13 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
-**Version: `2.41`**
+**Version: `2.42`**
 > Changes
+###### 2.42
+* Implement new schemas.
+* Add option to trust all servers.
+* Fix security issues from dependabot.
+* Add .gitignore file.
 ###### 2.41
 * Released to Central repository.
 * Change version to be same as FRED system for compatibility.
@@ -115,6 +120,8 @@ certificate.secret = changeit
 keystore.instance = JKS
 sslsocket.instance = TLSv1.2
 keymanager.instance = SunX509
+# Trust all servers
+trust.managers.verify = false
 
 # Enable/disable the validation of messages (true enabled, false disabled) - for requests and responses
 schema.validation.request = true

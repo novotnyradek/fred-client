@@ -210,6 +210,7 @@ public class EppClientImpl implements EppClient {
         String certificateFile = properties.getProperty("certificate.file");
         String certificatePassword = properties.getProperty("certificate.secret");
         String keyManagerInstance = properties.getProperty("keymanager.instance");
+        String trustManagersVerify = properties.getProperty("trust.managers.verify");
 
         String server = properties.getProperty("host");
         String port = properties.getProperty("port");
@@ -223,10 +224,15 @@ public class EppClientImpl implements EppClient {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(keyManagerInstance);
         keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
 
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(keyManagerInstance);
-        tmf.init(keyStore);
+        TrustManager[] tm;
+        if (trustManagersVerify.equalsIgnoreCase("true")) {
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(keyManagerInstance);
+            tmf.init(keyStore);
 
-        TrustManager[] tm = tmf.getTrustManagers();
+            tm = tmf.getTrustManagers();
+        } else {
+            tm = this.getOwnTrustManager();
+        }
 
         sslContext.init(keyManagerFactory.getKeyManagers(), tm, null);
 
@@ -257,7 +263,7 @@ public class EppClientImpl implements EppClient {
         loginType.setClID(apiKey);
         loginType.setPw(apiKeyPassword);
 
-        if (newPw != null && !newPw.isEmpty()){
+        if (newPw != null && !newPw.isEmpty()) {
             loginType.setNewPW(newPw);
         }
 
@@ -390,4 +396,31 @@ public class EppClientImpl implements EppClient {
             throw new SystemException(message);
         }
     }
+
+    /**
+     * Accepts all issuers.
+     *
+     * @return own trust manager.
+     */
+    private TrustManager[] getOwnTrustManager() {
+        return new TrustManager[]{new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws CertificateException {
+                log.debug("Checking if client is trusted, overriding and returning OK");
+            }
+
+            @Override
+            public void checkServerTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws CertificateException {
+                log.debug("Checking if server is trusted, overriding and returning OK");
+            }
+
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                log.debug("Overriding accepted issuers , returning null");
+                return null;
+            }
+        }
+        };
+    }
 }
+
