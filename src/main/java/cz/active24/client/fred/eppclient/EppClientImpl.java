@@ -225,7 +225,7 @@ public class EppClientImpl implements EppClient {
         keyManagerFactory.init(keyStore, certificatePassword.toCharArray());
 
         TrustManager[] tm;
-        if (trustManagersVerify.equalsIgnoreCase("true")) {
+        if ("true".equalsIgnoreCase(trustManagersVerify)) {
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(keyManagerInstance);
             tmf.init(keyStore);
 
