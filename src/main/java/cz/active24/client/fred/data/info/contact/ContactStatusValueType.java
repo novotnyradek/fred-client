@@ -14,6 +14,10 @@ package cz.active24.client.fred.data.info.contact;
  * <li>{@link ContactStatusValueType#IDENTIFIED_CONTACT} – the contact’s identity is fully verified</li>
  * <li>{@link ContactStatusValueType#VALIDATED_CONTACT} – the contact is validated</li>
  * <li>{@link ContactStatusValueType#MOJEID_CONTACT} – the contact is used in the mojeID extension and has more attributes and possibilities than a regular contact</li>
+ * <li>{@link ContactStatusValueType#SERVER_CONTACT_NAME_CHANGE_PROHIBITED}</li>
+ * <li>{@link ContactStatusValueType#SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED}</li>
+ * <li>{@link ContactStatusValueType#SERVER_CONTACT_IDENT_CHANGE_PROHIBITED}</li>
+ * <li>{@link ContactStatusValueType#SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED}</li>
  * <li>SERVER_BLOCKED – the contact is blocked by administration - not used in schemas</li>
  * </ul>
  *
@@ -30,7 +34,11 @@ public enum ContactStatusValueType {
     CONDITIONALLY_IDENTIFIED_CONTACT("conditionallyIdentifiedContact"),
     IDENTIFIED_CONTACT("identifiedContact"),
     VALIDATED_CONTACT("validatedContact"),
-    MOJEID_CONTACT("mojeidContact");
+    MOJEID_CONTACT("mojeidContact"),
+    SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited"),
+    SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited"),
+    SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited"),
+    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited");
     // SERVER_BLOCKED("serverBlocked");
 
     private String message;

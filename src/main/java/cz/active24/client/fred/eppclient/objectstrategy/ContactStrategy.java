@@ -93,10 +93,11 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactInfoRequest contactInfoRequest = (ContactInfoRequest) infoRequest;
 
-        SIDType sidType = new SIDType();
-        sidType.setId(contactInfoRequest.getContactId());
+        InfoType infoType = new InfoType();
+        infoType.setId(contactInfoRequest.getContactId());
+        infoType.setAuthInfo(contactInfoRequest.getAuthInfo());
 
-        JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
+        JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);
 
         JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, contactInfoRequest.getClientTransactionId());
 

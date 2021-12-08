@@ -177,7 +177,7 @@ public class EppClientImpl implements EppClient {
     /**
      * Initializes new connection to server.
      *
-     * @return
+     * @return positive response on login command.
      * @throws FredClientException
      */
     private ResponseType initialize(String newPw, String clientTransactionId) throws FredClientException {

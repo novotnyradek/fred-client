@@ -11,6 +11,8 @@ import java.io.Serializable;
  *
  * <ul>
  * <li>{@link ContactInfoRequest#contactId} - the contact handle</li>
+ * <li>{@link ContactInfoRequest#authInfo} - the contact's authorization information (transfer password) - optional,
+ * use for reading disclosed data if you are not the designated registrar</li>
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
@@ -18,6 +20,8 @@ import java.io.Serializable;
 public class ContactInfoRequest extends EppRequest implements Serializable, InfoRequest {
 
     private String contactId;
+
+    private String authInfo;
 
     public ContactInfoRequest(String contactId) {
         setServerObjectType(ServerObjectType.CONTACT);
@@ -30,6 +34,14 @@ public class ContactInfoRequest extends EppRequest implements Serializable, Info
 
     protected void setContactId(String contactId) {
         this.contactId = contactId;
+    }
+
+    public String getAuthInfo() {
+        return authInfo;
+    }
+
+    public void setAuthInfo(String authInfo) {
+        this.authInfo = authInfo;
     }
 
     @Override
