@@ -518,7 +518,7 @@
     <complexType name="newData">
         <sequence>
             <element name="infData" type="contact:infDataType"/>
-      </sequence>
+        </sequence>
     </complexType>
 
   </schema>

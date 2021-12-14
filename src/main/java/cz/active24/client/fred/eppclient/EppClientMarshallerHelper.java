@@ -145,7 +145,7 @@ public class EppClientMarshallerHelper {
                     new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.2.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.4.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.2.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.2.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
