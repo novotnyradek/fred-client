@@ -11,17 +11,19 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 
 Client was tested by CZ.NIC, the national registry of .cz domain. 
 
-[![Build Status](https://travis-ci.com/novotnyradek/fred-client.svg?branch=master)](https://travis-ci.com/novotnyradek/fred-client)
+[![Java CI with Maven](https://github.com/novotnyradek/fred-client/actions/workflows/maven.yml/badge.svg)](https://github.com/novotnyradek/fred-client/actions/workflows/maven.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.active24.client.fred/fred-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/io.github.novotnyradek/fred-client)
 
-**Version: `2.42`**
+**Version: `2.44`**
 > Changes
-###### 2.42
-* Implement new schemas.
+###### 2.44
+* Bumb up version to be compatible with [FRED release notes](https://fred.nic.cz/documentation/html/ReleaseNotes/releases-2-44.html).
+* Implement new schemas version 2.42.
 * Add option to trust all servers.
 * Fix security issues from dependabot.
+* Fix security issue CVE-2021-44228 (Log4Shell).
 * Add .gitignore file.
 ###### 2.41
 * Released to Central repository.
