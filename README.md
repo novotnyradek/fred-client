@@ -23,7 +23,8 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 * Implement new schemas version 2.42.
 * Add option to trust all servers.
 * Fix security issues from dependabot.
-* Fix security issue CVE-2021-44228 (Log4Shell).
+* Fix security issue CVE-2021-44228 (Log4Shell) and CVE-2021-45046.
+* Fix for List command in multithread environment.
 * Add .gitignore file.
 ###### 2.41
 * Released to Central repository.

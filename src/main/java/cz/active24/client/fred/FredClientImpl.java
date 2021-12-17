@@ -65,7 +65,7 @@ public class FredClientImpl implements FredClient {
         return serverObjectStrategyContext.callSendAuthInfo(sendAuthInfoRequest);
     }
 
-    public ListResponse callList(ListRequest listRequest) throws FredClientException {
+    public synchronized ListResponse callList(ListRequest listRequest) throws FredClientException {
 
         ServerObjectStrategyContext serverObjectStrategyContext = new ServerObjectStrategyContext(properties, listRequest.getServerObjectType());
 
