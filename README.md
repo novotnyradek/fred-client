@@ -16,16 +16,19 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
-**Version: `2.44`**
+**Version: `2.44.1`**
 > Changes
-###### 2.44
+###### 2.44.1
+* **RELEASED to Central repository.**
+* Patched version with new version of Maven release plugin and JAXB2 Maven plugin.
+###### _~~2.44~~ - Corrupted JAR file. Please do not use it._
 * **RELEASED to Central repository.**
 * Bumb up version to be compatible with [FRED release notes](https://fred.nic.cz/documentation/html/ReleaseNotes/releases-2-44.html).
 * Implement new schemas version 2.42.
 * Add option to trust all servers.
 * Fix security issues from dependabot.
   * Raise log4j version to 2.17.
-  * Bump junit from 4.12 to 4.13.1.
+  * Bump junit from 4.12 to 4.13.2.
 * Fix for List command in multithreaded environment.
 * Add .gitignore file.
 ###### 2.41
