@@ -4,17 +4,23 @@ import cz.active24.client.fred.data.check.CheckRequest;
 import cz.active24.client.fred.data.check.CheckResponse;
 import cz.active24.client.fred.data.check.domain.DomainCheckRequest;
 import cz.active24.client.fred.data.check.domain.DomainCheckResponse;
+import cz.active24.client.fred.data.common.domain.EnumValData;
 import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.domain.DomainCreateRequest;
 import cz.active24.client.fred.data.create.domain.DomainCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
 import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.domain.DomainDeleteRequest;
 import cz.active24.client.fred.data.delete.domain.DomainDeleteResponse;
+import cz.active24.client.fred.data.info.InfoRequest;
+import cz.active24.client.fred.data.info.InfoResponse;
+import cz.active24.client.fred.data.info.domain.DomainInfoRequest;
+import cz.active24.client.fred.data.info.domain.DomainInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.ListType;
 import cz.active24.client.fred.data.list.domain.DomainsByContactListRequest;
 import cz.active24.client.fred.data.list.domain.DomainsByKeysetListRequest;
@@ -30,20 +36,6 @@ import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.nic.xml.epp.domain_1.*;
-import cz.nic.xml.epp.enumval_1.ExValType;
-import cz.nic.xml.epp.fred_1.DomainsByContactT;
-import cz.nic.xml.epp.fred_1.DomainsByNssetT;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.active24.client.fred.data.common.domain.EnumValData;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
-import cz.active24.client.fred.data.info.InfoRequest;
-import cz.active24.client.fred.data.info.InfoResponse;
-import cz.active24.client.fred.data.info.domain.DomainInfoRequest;
-import cz.active24.client.fred.data.info.domain.DomainInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.domain.DomainSendAuthInfoRequest;
@@ -54,6 +46,8 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.domain.DomainTransferRequest;
 import cz.active24.client.fred.data.transfer.domain.DomainTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.data.update.domain.DomainUpdateRequest;
 import cz.active24.client.fred.data.update.domain.DomainUpdateResponse;
 import cz.active24.client.fred.eppclient.EppClient;
@@ -61,6 +55,11 @@ import cz.active24.client.fred.eppclient.EppClientImpl;
 import cz.active24.client.fred.eppclient.EppCommandHelper;
 import cz.active24.client.fred.exception.FredClientException;
 import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.nic.xml.epp.domain_1.*;
+import cz.nic.xml.epp.enumval_1.ExValType;
+import cz.nic.xml.epp.fred_1.DomainsByContactT;
+import cz.nic.xml.epp.fred_1.DomainsByNssetT;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
@@ -82,14 +81,12 @@ public class DomainStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private ListResultsHelper listResultsHelper;
 
     private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
     DomainStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -147,6 +144,7 @@ public class DomainStrategy implements ServerObjectStrategy {
     @Override
     public ListResponse callList(ListRequest listRequest) throws FredClientException {
         log.debug("callList for domain called with request(" + listRequest + ")");
+
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
@@ -165,7 +163,7 @@ public class DomainStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareDomainsByNssetCommand((DomainsByNssetListRequest) listRequest);
         }
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override

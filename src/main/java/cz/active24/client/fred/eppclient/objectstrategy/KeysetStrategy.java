@@ -8,6 +8,8 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.keyset.KeysetCreateRequest;
 import cz.active24.client.fred.data.create.keyset.KeysetCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
 import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.keyset.KeysetDeleteRequest;
@@ -18,7 +20,6 @@ import cz.active24.client.fred.data.info.keyset.KeysetInfoRequest;
 import cz.active24.client.fred.data.info.keyset.KeysetInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.ListType;
 import cz.active24.client.fred.data.list.keyset.KeysetsByContactListRequest;
 import cz.active24.client.fred.data.list.keyset.KeysetsListRequest;
@@ -32,15 +33,6 @@ import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.active24.client.fred.eppclient.EppClientImpl;
-import cz.active24.client.fred.exception.FredClientException;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.nic.xml.epp.fred_1.NssetsByContactT;
-import cz.nic.xml.epp.keyset_1.*;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.keyset.KeysetSendAuthInfoRequest;
@@ -51,11 +43,18 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.keyset.KeysetTransferRequest;
 import cz.active24.client.fred.data.transfer.keyset.KeysetTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.data.update.keyset.KeysetUpdateRequest;
 import cz.active24.client.fred.data.update.keyset.KeysetUpdateResponse;
 import cz.active24.client.fred.eppclient.EppClient;
+import cz.active24.client.fred.eppclient.EppClientImpl;
 import cz.active24.client.fred.eppclient.EppCommandHelper;
+import cz.active24.client.fred.exception.FredClientException;
 import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.NssetsByContactT;
+import cz.nic.xml.epp.keyset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
@@ -78,12 +77,9 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
     private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    private ListResultsHelper listResultsHelper;
-
     KeysetStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -141,7 +137,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareKeysetsByContactCommand((KeysetsByContactListRequest) listRequest);
         }
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override

@@ -9,36 +9,29 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.contact.ContactCreateRequest;
 import cz.active24.client.fred.data.create.contact.ContactCreateResponse;
-import cz.active24.client.fred.data.delete.DeleteResponse;
-import cz.active24.client.fred.data.delete.contact.ContactDeleteResponse;
-import cz.active24.client.fred.data.login.other.LoginRequest;
-import cz.active24.client.fred.data.login.other.LoginResponse;
-import cz.active24.client.fred.data.logout.other.LogoutRequest;
-import cz.active24.client.fred.data.logout.other.LogoutResponse;
-import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
-import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.nic.xml.epp.contact_1.*;
-import cz.nic.xml.epp.extra_addr_1.AddrListType;
-import cz.nic.xml.epp.extra_addr_1.RemType;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
 import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
+import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.contact.ContactDeleteRequest;
+import cz.active24.client.fred.data.delete.contact.ContactDeleteResponse;
 import cz.active24.client.fred.data.info.InfoRequest;
 import cz.active24.client.fred.data.info.InfoResponse;
 import cz.active24.client.fred.data.info.contact.ContactInfoRequest;
 import cz.active24.client.fred.data.info.contact.ContactInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.contact.ContactsListRequest;
+import cz.active24.client.fred.data.login.other.LoginRequest;
+import cz.active24.client.fred.data.login.other.LoginResponse;
+import cz.active24.client.fred.data.logout.other.LogoutRequest;
+import cz.active24.client.fred.data.logout.other.LogoutResponse;
 import cz.active24.client.fred.data.poll.PollAcknowledgementRequest;
 import cz.active24.client.fred.data.poll.PollAcknowledgementResponse;
 import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
+import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
+import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.contact.ContactSendAuthInfoRequest;
@@ -49,6 +42,8 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferRequest;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.data.update.contact.ContactUpdateRequest;
 import cz.active24.client.fred.data.update.contact.ContactUpdateResponse;
 import cz.active24.client.fred.data.update.contact.ExtraAddressUpdateData;
@@ -56,6 +51,10 @@ import cz.active24.client.fred.eppclient.EppClientImpl;
 import cz.active24.client.fred.eppclient.EppCommandHelper;
 import cz.active24.client.fred.exception.FredClientException;
 import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.nic.xml.epp.contact_1.*;
+import cz.nic.xml.epp.extra_addr_1.AddrListType;
+import cz.nic.xml.epp.extra_addr_1.RemType;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
@@ -77,14 +76,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private ListResultsHelper listResultsHelper;
 
     private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
     public ContactStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     @Override
@@ -148,7 +145,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = eppCommandHelper.createListContactsExtCommand(contactsListRequest.getClientTransactionId());
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -326,7 +323,7 @@ public class ContactStrategy implements ServerObjectStrategy {
     /**
      * Adds extra address extension for update command.
      *
-     * @param requestElement element to decore.
+     * @param requestElement     element to decore.
      * @param extraAddressUpdate extra address to set.
      */
     private void setExtraAddressUpdateExtension(JAXBElement<EppType> requestElement, ExtraAddressUpdateData extraAddressUpdate) {

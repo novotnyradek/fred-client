@@ -8,6 +8,8 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.nsset.NssetCreateRequest;
 import cz.active24.client.fred.data.create.nsset.NssetCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
 import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.nsset.NssetDeleteRequest;
@@ -18,7 +20,6 @@ import cz.active24.client.fred.data.info.nsset.NssetInfoRequest;
 import cz.active24.client.fred.data.info.nsset.NssetInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.ListType;
 import cz.active24.client.fred.data.list.nsset.NssetsByContactListRequest;
 import cz.active24.client.fred.data.list.nsset.NssetsByNsListRequest;
@@ -33,19 +34,6 @@ import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
-import cz.active24.client.fred.eppclient.EppClientImpl;
-import cz.active24.client.fred.eppclient.EppCommandHelper;
-import cz.active24.client.fred.exception.FredClientException;
-import cz.active24.client.fred.mapper.FredClientDozerMapper;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.nic.xml.epp.fred_1.NssetsByContactT;
-import cz.nic.xml.epp.fred_1.NssetsByNsT;
-import cz.nic.xml.epp.nsset_1.*;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.nsset.NssetSendAuthInfoRequest;
@@ -56,7 +44,18 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.nsset.NssetTransferRequest;
 import cz.active24.client.fred.data.transfer.nsset.NssetTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
+import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
 import cz.active24.client.fred.data.update.nsset.NssetUpdateResponse;
+import cz.active24.client.fred.eppclient.EppClientImpl;
+import cz.active24.client.fred.eppclient.EppCommandHelper;
+import cz.active24.client.fred.exception.FredClientException;
+import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.NssetsByContactT;
+import cz.nic.xml.epp.fred_1.NssetsByNsT;
+import cz.nic.xml.epp.nsset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
@@ -79,12 +78,9 @@ public class NssetStrategy implements ServerObjectStrategy {
 
     private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
 
-    private ListResultsHelper listResultsHelper;
-
     NssetStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -146,7 +142,7 @@ public class NssetStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareNssetsByNsCommand((NssetsByNsListRequest) listRequest);
         }
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override
