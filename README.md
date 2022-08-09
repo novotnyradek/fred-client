@@ -19,6 +19,7 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 **Version: `2.46`**
 > Changes
 ###### 2.46
+* **RELEASED to Central repository.**
 * Implement new schemas version 2.4.3.
 * Switch mapper tool to MapStruct.
  
