@@ -14,15 +14,13 @@ import java.util.List;
  */
 public class KeysetStatusValueTypeCustomConverterTest {
 
-    public KeysetStatusValueTypeCustomConverter target = new KeysetStatusValueTypeCustomConverter();
-
     @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
         List<KeysetStatusValueType> source = new ArrayList<KeysetStatusValueType>(Arrays.asList(KeysetStatusValueType.values()));
 
-        List<StatusType> destination = (List<StatusType>) target.convert(null, source, List.class, List.class);
+        List<StatusType> destination = KeysetStatusValueTypeCustomConverter.toStatusTypes(source);
 
         Assert.assertEquals(6, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -41,16 +39,16 @@ public class KeysetStatusValueTypeCustomConverterTest {
             source.add(statusType);
         }
 
-        List<KeysetStatusValueType> destination = (List<KeysetStatusValueType>) target.convert(null, source, List.class, List.class);
+        List<KeysetStatusValueType> destination = KeysetStatusValueTypeCustomConverter.toKeysetStatusValueTypes(source);
 
         Assert.assertEquals(6, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 
     @Test
-    public void convertNull(){
+    public void convertNull() {
 
-        Object result = target.convert(null, null, null, null);
+        Object result = KeysetStatusValueTypeCustomConverter.toKeysetStatusValueTypes(null);
 
         Assert.assertNull(result);
     }

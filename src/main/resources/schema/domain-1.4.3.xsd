@@ -33,7 +33,7 @@
     <element name="check" type="domain:mNameType"/>
     <element name="create" type="domain:createType"/>
     <element name="delete" type="domain:sNameType"/>
-    <element name="info" type="domain:sNameType"/>
+    <element name="info" type="domain:infoType"/>
     <element name="renew" type="domain:renewType"/>
     <element name="transfer" type="domain:transferType"/>
     <element name="update" type="domain:updateType"/>
@@ -91,6 +91,16 @@
     <complexType name="sNameType">
       <sequence>
         <element name="name" type="eppcom:labelType"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    Child element of <info> command.
+    -->
+    <complexType name="infoType">
+      <sequence>
+        <element name="name" type="eppcom:labelType"/>
+        <element name="authInfo" type="fredcom:authInfoType" minOccurs="0"/>
       </sequence>
     </complexType>
 

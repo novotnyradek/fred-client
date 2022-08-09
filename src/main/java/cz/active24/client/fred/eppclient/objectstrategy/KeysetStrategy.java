@@ -8,6 +8,8 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.keyset.KeysetCreateRequest;
 import cz.active24.client.fred.data.create.keyset.KeysetCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
 import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.keyset.KeysetDeleteRequest;
@@ -32,15 +34,6 @@ import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.active24.client.fred.eppclient.EppClientImpl;
-import cz.active24.client.fred.exception.FredClientException;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.nic.xml.epp.fred_1.NssetsByContactT;
-import cz.nic.xml.epp.keyset_1.*;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.keyset.KeysetSendAuthInfoRequest;
@@ -51,15 +44,23 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.keyset.KeysetTransferRequest;
 import cz.active24.client.fred.data.transfer.keyset.KeysetTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.data.update.keyset.KeysetUpdateRequest;
 import cz.active24.client.fred.data.update.keyset.KeysetUpdateResponse;
 import cz.active24.client.fred.eppclient.EppClient;
+import cz.active24.client.fred.eppclient.EppClientImpl;
 import cz.active24.client.fred.eppclient.EppCommandHelper;
-import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.active24.client.fred.exception.FredClientException;
+import cz.active24.client.fred.mapper.FredClientMapStructMapper;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.NssetsByContactT;
+import cz.nic.xml.epp.keyset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
@@ -76,7 +77,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
+    private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     private ListResultsHelper listResultsHelper;
 
@@ -91,10 +92,11 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         KeysetInfoRequest keysetInfoRequest = (KeysetInfoRequest) infoRequest;
 
-        SIDType sidType = new SIDType();
-        sidType.setId(keysetInfoRequest.getId());
+        InfoType infoType = new InfoType();
+        infoType.setId(keysetInfoRequest.getId());
+        infoType.setAuthInfo(keysetInfoRequest.getAuthInfo());
 
-        JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
+        JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);
 
         JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, keysetInfoRequest.getClientTransactionId());
 
@@ -102,7 +104,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        KeysetInfoResponse result = mapper.map(infDataType, KeysetInfoResponse.class);
+        KeysetInfoResponse result = mapper.map(infDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -161,7 +163,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        KeysetCheckResponse result = mapper.map(chkDataType, KeysetCheckResponse.class);
+        KeysetCheckResponse result = mapper.map(chkDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -173,7 +175,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         KeysetCreateRequest keysetCreateRequest = (KeysetCreateRequest) createRequest;
 
-        CrType crType = mapper.map(keysetCreateRequest, CrType.class);
+        CrType crType = mapper.map(keysetCreateRequest);
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 
@@ -183,7 +185,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         CreDataType creDataType = (CreDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        KeysetCreateResponse result = mapper.map(creDataType, KeysetCreateResponse.class);
+        KeysetCreateResponse result = mapper.map(creDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -201,7 +203,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         KeysetTransferRequest keysetTransferRequest = (KeysetTransferRequest) transferRequest;
 
-        TransferType transferType = mapper.map(keysetTransferRequest, TransferType.class);
+        TransferType transferType = mapper.map(keysetTransferRequest);
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
@@ -266,7 +268,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         KeysetUpdateRequest keysetUpdateRequest = (KeysetUpdateRequest) updateRequest;
 
-        UpdateType updateType = mapper.map(keysetUpdateRequest, UpdateType.class);
+        UpdateType updateType = mapper.map(keysetUpdateRequest);
 
         JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
 

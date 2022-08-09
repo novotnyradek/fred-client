@@ -2,7 +2,6 @@ package cz.active24.client.fred.data.common.contact;
 
 import cz.nic.xml.epp.contact_1.DiscloseType;
 import cz.nic.xml.epp.contact_1.InfupdDiscloseType;
-import org.dozer.MappingException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,8 +9,6 @@ import org.junit.Test;
  * Tests for {@link DiscloseDataCustomConverter}.
  */
 public class DiscloseDataCustomConverterTest {
-
-    public DiscloseDataCustomConverter target = new DiscloseDataCustomConverter();
 
     @Test
     public void convertDiscloseDataToDiscloseType() {
@@ -27,7 +24,7 @@ public class DiscloseDataCustomConverterTest {
         discloseData.setVoice(null);
         discloseData.setAddr(notNullValue);
 
-        DiscloseType converted = (DiscloseType) target.convert(null, discloseData, DiscloseType.class, DiscloseData.class);
+        DiscloseType converted = DiscloseDataCustomConverter.toDiscloseType(discloseData);
 
         Assert.assertTrue(converted.isFlag());
         Assert.assertNotNull(converted.getFax());
@@ -51,7 +48,7 @@ public class DiscloseDataCustomConverterTest {
         discloseType.setVat(null);
         discloseType.setVoice(null);
 
-        DiscloseData converted = (DiscloseData) target.convert(null, discloseType, DiscloseData.class, DiscloseType.class);
+        DiscloseData converted = DiscloseDataCustomConverter.toDiscloseData(discloseType);
 
         Assert.assertTrue(converted.getFlag());
         Assert.assertNotNull(converted.getFax());
@@ -77,7 +74,7 @@ public class DiscloseDataCustomConverterTest {
         discloseData.setVoice(null);
         discloseData.setAddr(notNullValue);
 
-        InfupdDiscloseType converted = (InfupdDiscloseType) target.convert(null, discloseData, InfupdDiscloseType.class, DiscloseData.class);
+        InfupdDiscloseType converted = DiscloseDataCustomConverter.toInfupdDiscloseType(discloseData);
 
         Assert.assertTrue(converted.isFlag());
         Assert.assertNotNull(converted.getFax());
@@ -103,7 +100,7 @@ public class DiscloseDataCustomConverterTest {
         infupdDiscloseType.setVoice(null);
         infupdDiscloseType.setAddr(notNullValue);
 
-        DiscloseData converted = (DiscloseData) target.convert(null, infupdDiscloseType, DiscloseData.class, InfupdDiscloseType.class);
+        DiscloseData converted = DiscloseDataCustomConverter.toDiscloseData(infupdDiscloseType);
 
         Assert.assertTrue(converted.getFlag());
         Assert.assertNotNull(converted.getFax());
@@ -116,18 +113,9 @@ public class DiscloseDataCustomConverterTest {
     }
 
     @Test
-    public void wrongUsageOfConverter() {
-        try {
-            target.convert(null, "Something to map", DiscloseData.class, InfupdDiscloseType.class);
-            Assert.fail("Exception should be thrown!");
-        } catch (MappingException ignored) {
-        }
-    }
-
-    @Test
     public void convertNull() {
 
-        Object result = target.convert(null, null, null, null);
+        Object result = DiscloseDataCustomConverter.toDiscloseType(null);
 
         Assert.assertNull(result);
     }

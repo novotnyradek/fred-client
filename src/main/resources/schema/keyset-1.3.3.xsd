@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<schema targetNamespace="http://www.nic.cz/xml/epp/nsset-1.2"
-        xmlns:nsset="http://www.nic.cz/xml/epp/nsset-1.2"
+<schema targetNamespace="http://www.nic.cz/xml/epp/keyset-1.3"
+        elementFormDefault="qualified"
+        xmlns:keyset="http://www.nic.cz/xml/epp/keyset-1.3"
         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
         xmlns:fredcom="http://www.nic.cz/xml/epp/fredcom-1.2"
-        xmlns="http://www.w3.org/2001/XMLSchema"
-        elementFormDefault="qualified">
+        xmlns="http://www.w3.org/2001/XMLSchema">
 
     <!--
     This schema defines object extension of EPP.
 
-    Nsset encapsulates a set of nameservers and this set can be manipulated
+    Keyset encapsulates a set of DNS keys and this set can be manipulated
     as a whole.
     -->
     <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"
@@ -21,7 +21,7 @@
     <annotation>
         <documentation>
             Extension to Extensible Provisioning Protocol v1.0
-            nsset provisioning schema.
+            keyset provisioning schema.
         </documentation>
     </annotation>
 
@@ -30,17 +30,17 @@
     These elements are input elements - it means, they are generated on
     client's side and sent to server.
     -->
-    <element name="check" type="nsset:mNameType"/>
-    <element name="create" type="nsset:crType"/>
-    <element name="delete" type="nsset:sIDType"/>
-    <element name="info" type="nsset:sIDType"/>
-    <element name="transfer" type="nsset:transferType"/>
-    <element name="update" type="nsset:updateType"/>
+    <element name="check" type="keyset:mNameType"/>
+    <element name="create" type="keyset:crType"/>
+    <element name="delete" type="keyset:sIDType"/>
+    <element name="info" type="keyset:infoType"/>
+    <element name="transfer" type="keyset:transferType"/>
+    <element name="update" type="keyset:updateType"/>
     <!-- list command is DEPRECATED and will be removed in future -->
     <element name="list"/>
     <!-- extension commands -->
-    <element name="sendAuthInfo" type="nsset:sendAuthInfoType"/>
-    <element name="test" type="nsset:testType"/>
+    <element name="sendAuthInfo" type="keyset:sendAuthInfoType"/>
+    <element name="test" type="keyset:testType"/>
 
     <!--
     Child elements of the <create> command.
@@ -48,35 +48,33 @@
     <complexType name="crType">
         <sequence>
             <element name="id" type="fredcom:objIDCreateType"/>
-            <element name="ns" type="nsset:nsT"
-                     maxOccurs="10"/>
+            <element name="dnskey" type="keyset:dnskeyT"
+                     minOccurs="0" maxOccurs="10"/>
             <element name="tech" type="fredcom:objIDType"
-                     maxOccurs="unbounded"/>
+                     maxOccurs="10"/>
             <element name="authInfo" type="fredcom:authInfoType"
-                     minOccurs="0"/>
-            <element name="reportlevel" type="nsset:reportlevelType"
                      minOccurs="0"/>
         </sequence>
     </complexType>
 
-    <simpleType name="reportlevelType">
-        <restriction base="unsignedByte">
-            <maxInclusive value="10"/>
+    <simpleType name="maxSigLifeType">
+        <restriction base="int">
+            <minInclusive value="1"/>
         </restriction>
     </simpleType>
 
-    <complexType name="nsT">
+    <complexType name="dnskeyT">
         <sequence>
-            <element name="name" type="eppcom:labelType"/>
-            <element name="addr" type="nsset:addrStringType"
-                     minOccurs="0" maxOccurs="unbounded"/>
+            <element name="flags" type="unsignedShort"/>
+            <element name="protocol" type="unsignedByte"/>
+            <element name="alg" type="unsignedByte"/>
+            <element name="pubKey" type="keyset:keyT"/>
         </sequence>
     </complexType>
 
-    <simpleType name="addrStringType">
-        <restriction base="token">
-            <minLength value="3"/>
-            <maxLength value="45"/>
+    <simpleType name="keyT">
+        <restriction base="base64Binary">
+            <minLength value="1"/>
         </restriction>
     </simpleType>
 
@@ -87,6 +85,16 @@
         <sequence>
             <element name="id" type="fredcom:objIDType"/>
         </sequence>
+    </complexType>
+
+    <!--
+    Child element of <info> command.
+    -->
+    <complexType name="infoType">
+      <sequence>
+        <element name="id" type="fredcom:objIDType"/>
+        <element name="authInfo" type="fredcom:authInfoType" minOccurs="0"/>
+      </sequence>
     </complexType>
 
     <!--
@@ -115,38 +123,38 @@
     <complexType name="updateType">
         <sequence>
             <element name="id" type="fredcom:objIDType"/>
-            <element name="add" type="nsset:addType"
+            <element name="add" type="keyset:addType"
                      minOccurs="0"/>
-            <element name="rem" type="nsset:remType"
+            <element name="rem" type="keyset:addType"
                      minOccurs="0"/>
-            <element name="chg" type="nsset:chgType"
+            <element name="chg" type="keyset:chgType"
                      minOccurs="0"/>
         </sequence>
     </complexType>
 
     <complexType name="addType">
         <sequence>
-            <element name="ns" type="nsset:nsT"
+            <element name="dnskey" type="keyset:dnskeyT"
                      minOccurs="0" maxOccurs="10"/>
             <element name="tech" type="fredcom:objIDType"
                      minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
+    <!--
     <complexType name="remType">
-        <sequence>
-            <element name="name" type="eppcom:labelType"
-                     minOccurs="0" maxOccurs="10"/>
-            <element name="tech" type="fredcom:objIDType"
-                     minOccurs="0" maxOccurs="unbounded"/>
-        </sequence>
+      <sequence>
+        <element name="name" type="eppcom:labelType"
+         minOccurs="0" maxOccurs="10"/>
+        <element name="tech" type="fredcom:objIDType"
+         minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
     </complexType>
+    -->
 
     <complexType name="chgType">
         <sequence>
             <element name="authInfo" type="fredcom:authInfoType"
-                     minOccurs="0"/>
-            <element name="reportlevel" type="nsset:reportlevelType"
                      minOccurs="0"/>
         </sequence>
     </complexType>
@@ -160,8 +168,6 @@
     <complexType name="testType">
         <sequence>
             <element name="id" type="fredcom:objIDType"/>
-            <element name="level" type="nsset:reportlevelType"
-                     minOccurs="0"/>
             <element name="name" type="eppcom:labelType"
                      minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
@@ -172,25 +178,25 @@
     These elements are output elements - it means, they are generated on
     server's side and sent to client.
     -->
-    <element name="chkData" type="nsset:chkDataType"/>
-    <element name="creData" type="nsset:creDataType"/>
-    <element name="infData" type="nsset:infDataType"/>
+    <element name="chkData" type="keyset:chkDataType"/>
+    <element name="creData" type="keyset:creDataType"/>
+    <element name="infData" type="keyset:infDataType"/>
     <!-- list response is DEPRECATED and will be removed in future -->
-    <element name="listData" type="nsset:listDataType"/>
+    <element name="listData" type="keyset:listDataType"/>
 
     <!--
     <check> response elements.
     -->
     <complexType name="chkDataType">
         <sequence>
-            <element name="cd" type="nsset:checkType"
+            <element name="cd" type="keyset:checkType"
                      maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
     <complexType name="checkType">
         <sequence>
-            <element name="id" type="nsset:checkNameType"/>
+            <element name="id" type="keyset:checkNameType"/>
             <element name="reason" type="fredcom:msgType"
                      minOccurs="0"/>
         </sequence>
@@ -221,7 +227,7 @@
         <sequence>
             <element name="id" type="fredcom:objIDType"/>
             <element name="roid" type="eppcom:roidType"/>
-            <element name="status" type="nsset:statusType"
+            <element name="status" type="keyset:statusType"
                      minOccurs="0" maxOccurs="6"/>
             <element name="clID" type="eppcom:clIDType"/>
             <element name="crID" type="eppcom:clIDType"
@@ -236,10 +242,10 @@
                      minOccurs="0"/>
             <element name="authInfo" type="fredcom:authInfoType"
                      minOccurs="0"/>
-            <element name="ns" type="nsset:nsT" minOccurs="0" maxOccurs="10"/>
+            <element name="dnskey" type="keyset:dnskeyT"
+                     minOccurs="0" maxOccurs="10"/>
             <element name="tech" type="fredcom:objIDType"
                      maxOccurs="unbounded"/>
-            <element name="reportlevel" type="nsset:reportlevelType"/>
         </sequence>
     </complexType>
 
@@ -250,7 +256,7 @@
     <complexType name="statusType">
         <simpleContent>
             <extension base="normalizedString">
-                <attribute name="s" type="nsset:statusValueType"
+                <attribute name="s" type="keyset:statusValueType"
                            use="required"/>
                 <attribute name="lang" type="language"
                            default="en"/>
@@ -277,15 +283,15 @@
     </complexType>
 
     <!--
-    Definition of nsset specific poll messages:
+    Definition of keyset specific poll messages:
       completed transfer
-      deletion of nsset because it was not used
+      deletion of keyset because it was not used
       result of technical test
     -->
-    <element name="trnData" type="nsset:handleDateT"/>
-    <element name="idleDelData" type="nsset:idleDelDataT"/>
-    <element name="testData" type="nsset:testDataT"/>
-    <element name="updateData" type="nsset:updateDataT"/>
+    <element name="trnData" type="keyset:handleDateT"/>
+    <element name="idleDelData" type="keyset:idleDelDataT"/>
+    <element name="testData" type="keyset:testDataT"/>
+    <element name="updateData" type="keyset:updateDataT"/>
 
     <complexType name="handleDateT">
         <sequence>
@@ -303,12 +309,12 @@
 
     <complexType name="testDataT">
         <sequence>
-            <element name="cltestid" type="nsset:trIDStringType"
+            <element name="cltestid" type="keyset:trIDStringType"
                      minOccurs="0"/>
             <element name="id" type="fredcom:objIDType"/>
             <element name="name" type="eppcom:labelType"
                      minOccurs="0" maxOccurs="unbounded"/>
-            <element name="result" type="nsset:resultType"
+            <element name="result" type="keyset:resultType"
                      minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
@@ -331,21 +337,22 @@
 
     <complexType name="updateDataT">
         <sequence>
-            <element name="opTRID" type="nsset:trIDStringType"/>
-            <element name="oldData" type="nsset:oldData"/>
-            <element name="newData" type="nsset:newData"/>
+            <element name="opTRID" type="keyset:trIDStringType"/>
+            <element name="oldData" type="keyset:oldData"/>
+            <element name="newData" type="keyset:newData"/>
         </sequence>
     </complexType>
 
     <complexType name="oldData">
         <sequence>
-            <element name="infData" type="nsset:infDataType"/>
+            <element name="infData" type="keyset:infDataType"/>
         </sequence>
     </complexType>
 
     <complexType name="newData">
         <sequence>
-            <element name="infData" type="nsset:infDataType"/>
+            <element name="infData" type="keyset:infDataType"/>
         </sequence>
     </complexType>
+
 </schema>

@@ -1,7 +1,7 @@
 package cz.active24.client.fred.data.common.domain;
 
-import org.dozer.CustomConverter;
-import org.dozer.MappingException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -11,32 +11,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Transforms {@link java.util.Date} into {@link javax.xml.datatype.XMLGregorianCalendar} date with date format "yyyy-MM-dd" and vice versa.
+ * Transforms {@link Date} into {@link XMLGregorianCalendar} date with date format "yyyy-MM-dd".
  */
-public class DateToXmlGregorianCalendarCustomConverter implements CustomConverter {
+public class DateToXmlGregorianCalendarCustomConverter {
 
-    public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source == null) {
+    private static final Log log = LogFactory.getLog(DateToXmlGregorianCalendarCustomConverter.class);
+
+    public static XMLGregorianCalendar toXMLGregorianCalendar(Date date) {
+        if (date == null) {
             return null;
         }
 
-        if (source instanceof Date) {
-            Date date = (Date) source;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-            try {
-                return DatatypeFactory.newInstance().newXMLGregorianCalendar(format.format(date));
-            } catch (DatatypeConfigurationException e) {
-                throw new MappingException("Unable to get XML gregorian date for input " + date);
-            }
-        } else if (source instanceof XMLGregorianCalendar) {
-
-            XMLGregorianCalendar xmlDate = (XMLGregorianCalendar) source;
-
-            return xmlDate.toGregorianCalendar().getTime();
+        try {
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(format.format(date));
+        } catch (DatatypeConfigurationException e) {
+            log.error("Unable to convert date " + date + " to XML Gregorian Calendar, return null", e);
+            return null;
         }
-
-        throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
     }
 }

@@ -22,7 +22,7 @@ public class ContactStatusValueTypeCustomConverterTest {
 
         List<ContactStatusValueType> source = new ArrayList<ContactStatusValueType>(Arrays.asList(ContactStatusValueType.values()));
 
-        List<StatusType> destination = (List<StatusType>) target.convert(null, source, List.class, List.class);
+        List<StatusType> destination = ContactStatusValueTypeCustomConverter.toStatusTypes(source);
 
         Assert.assertEquals(14, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -41,7 +41,7 @@ public class ContactStatusValueTypeCustomConverterTest {
             source.add(statusType);
         }
 
-        List<ContactStatusValueType> destination = (List<ContactStatusValueType>) target.convert(null, source, List.class, List.class);
+        List<ContactStatusValueType> destination = ContactStatusValueTypeCustomConverter.toContactStatusValueTypes(source);
 
         Assert.assertEquals(14, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -50,7 +50,7 @@ public class ContactStatusValueTypeCustomConverterTest {
     @Test
     public void convertNull(){
 
-        Object result = target.convert(null, null, null, null);
+        Object result = ContactStatusValueTypeCustomConverter.toContactStatusValueTypes(null);
 
         Assert.assertNull(result);
     }

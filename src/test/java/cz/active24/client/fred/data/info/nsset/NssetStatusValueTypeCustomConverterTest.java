@@ -14,15 +14,13 @@ import java.util.List;
  */
 public class NssetStatusValueTypeCustomConverterTest {
 
-    public NssetStatusValueTypeCustomConverter target = new NssetStatusValueTypeCustomConverter();
-
     @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
         List<NssetStatusValueType> source = new ArrayList<NssetStatusValueType>(Arrays.asList(NssetStatusValueType.values()));
 
-        List<StatusType> destination = (List<StatusType>) target.convert(null, source, List.class, List.class);
+        List<StatusType> destination = NssetStatusValueTypeCustomConverter.toStatusTypes(source);
 
         Assert.assertEquals(6, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -41,7 +39,7 @@ public class NssetStatusValueTypeCustomConverterTest {
             source.add(statusType);
         }
 
-        List<NssetStatusValueType> destination = (List<NssetStatusValueType>) target.convert(null, source, List.class, List.class);
+        List<NssetStatusValueType> destination = NssetStatusValueTypeCustomConverter.toNssetStatusValueTypes(source);
 
         Assert.assertEquals(6, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -50,7 +48,7 @@ public class NssetStatusValueTypeCustomConverterTest {
     @Test
     public void convertNull() {
 
-        Object result = target.convert(null, null, null, null);
+        Object result = NssetStatusValueTypeCustomConverter.toNssetStatusValueTypes(null);
 
         Assert.assertNull(result);
     }

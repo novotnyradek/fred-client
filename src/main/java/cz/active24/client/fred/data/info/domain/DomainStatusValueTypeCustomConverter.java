@@ -2,8 +2,6 @@ package cz.active24.client.fred.data.info.domain;
 
 import cz.nic.xml.epp.domain_1.StatusType;
 import cz.nic.xml.epp.domain_1.StatusValueType;
-import org.dozer.CustomConverter;
-import org.dozer.MappingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,38 +9,34 @@ import java.util.List;
 /**
  * Converter between {@link cz.nic.xml.epp.domain_1.StatusType} and {@link DomainStatusValueType}.
  */
-public class DomainStatusValueTypeCustomConverter implements CustomConverter {
+public class DomainStatusValueTypeCustomConverter {
 
-    public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source == null) {
-            return null;
-        }
+    public static List<DomainStatusValueType> toDomainStatusValueTypes(List<StatusType> statusTypes){
+        if (statusTypes == null) return null;
 
-        if (source instanceof List) {
-            List sourceList = (List) source;
-            if (!sourceList.isEmpty() && sourceList.get(0) instanceof StatusType) {
-                List<DomainStatusValueType> domainStatuses = new ArrayList<DomainStatusValueType>();
-                for (Object statusType : sourceList) {
-                    StatusType statusType1 = (StatusType) statusType;
-                    DomainStatusValueType domainStatusValueType = DomainStatusValueType.fromValue(statusType1.getS().value());
-                    domainStatusValueType.setMessage(statusType1.getValue());
-                    domainStatuses.add(domainStatusValueType);
-                }
-                return domainStatuses;
-            } else if (!sourceList.isEmpty() && sourceList.get(0) instanceof DomainStatusValueType) {
-                List<StatusType> statusTypes = new ArrayList<StatusType>();
-                for (Object statusType : sourceList) {
-                    DomainStatusValueType domainStatus = (DomainStatusValueType) statusType;
-                    StatusType statusType2 = new StatusType();
-                    statusType2.setS(StatusValueType.fromValue(domainStatus.value()));
-                    statusType2.setLang("en");
-                    statusTypes.add(statusType2);
-                }
-                return statusTypes;
+        List<DomainStatusValueType> domainStatuses = new ArrayList<DomainStatusValueType>();
+        if (!statusTypes.isEmpty()) {
+            for (StatusType statusType : statusTypes) {
+                DomainStatusValueType domainStatusValueType = DomainStatusValueType.fromValue(statusType.getS().value());
+                domainStatusValueType.setMessage(statusType.getValue());
+                domainStatuses.add(domainStatusValueType);
             }
-            return new ArrayList<Object>();
         }
+        return domainStatuses;
+    }
 
-        throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
+    public static List<StatusType> toStatusTypes(List<DomainStatusValueType> domainStatusValueTypes){
+        if (domainStatusValueTypes == null) return null;
+
+        List<StatusType> domainStatuses = new ArrayList<StatusType>();
+        if (!domainStatusValueTypes.isEmpty()) {
+            for (DomainStatusValueType domainStatus : domainStatusValueTypes) {
+                StatusType statusType = new StatusType();
+                statusType.setS(StatusValueType.fromValue(domainStatus.value()));
+                statusType.setLang("en");
+                domainStatuses.add(statusType);
+            }
+        }
+        return domainStatuses;
     }
 }

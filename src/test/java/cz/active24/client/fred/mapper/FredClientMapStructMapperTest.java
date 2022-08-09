@@ -14,9 +14,14 @@ import cz.active24.client.fred.data.common.domain.PeriodUnit;
 import cz.active24.client.fred.data.common.keyset.DnsKeyData;
 import cz.active24.client.fred.data.common.nsset.NameserverData;
 import cz.active24.client.fred.data.create.contact.ContactCreateRequest;
+import cz.active24.client.fred.data.create.contact.ContactCreateResponse;
 import cz.active24.client.fred.data.create.domain.DomainCreateRequest;
+import cz.active24.client.fred.data.create.domain.DomainCreateResponse;
 import cz.active24.client.fred.data.create.keyset.KeysetCreateRequest;
+import cz.active24.client.fred.data.create.keyset.KeysetCreateResponse;
 import cz.active24.client.fred.data.create.nsset.NssetCreateRequest;
+import cz.active24.client.fred.data.create.nsset.NssetCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.info.contact.ContactInfoResponse;
 import cz.active24.client.fred.data.info.contact.ContactStatusValueType;
 import cz.active24.client.fred.data.info.domain.DomainInfoResponse;
@@ -25,12 +30,10 @@ import cz.active24.client.fred.data.info.keyset.KeysetInfoResponse;
 import cz.active24.client.fred.data.info.keyset.KeysetStatusValueType;
 import cz.active24.client.fred.data.info.nsset.NssetInfoResponse;
 import cz.active24.client.fred.data.info.nsset.NssetStatusValueType;
-import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.poll.contact.ContactDeletionPollResponse;
 import cz.active24.client.fred.data.poll.contact.ContactTransferPollResponse;
 import cz.active24.client.fred.data.poll.contact.ContactUpdatePollResponse;
-import cz.active24.client.fred.data.poll.domain.DomainTransferPollResponse;
-import cz.active24.client.fred.data.poll.domain.DomainUpdatePollResponse;
+import cz.active24.client.fred.data.poll.domain.*;
 import cz.active24.client.fred.data.poll.keyset.KeysetDeletionPollResponse;
 import cz.active24.client.fred.data.poll.keyset.KeysetTransferPollResponse;
 import cz.active24.client.fred.data.poll.keyset.KeysetUpdatePollResponse;
@@ -41,25 +44,7 @@ import cz.active24.client.fred.data.poll.nsset.TechnicalCheckResultsPollResponse
 import cz.active24.client.fred.data.poll.other.LowCreditPollResponse;
 import cz.active24.client.fred.data.poll.other.RequestUsagePollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
-import cz.active24.client.fred.data.update.nsset.NssetRemData;
-import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
-import cz.nic.xml.epp.contact_1.CheckType;
-import cz.nic.xml.epp.contact_1.ChkDataType;
-import cz.nic.xml.epp.contact_1.HandleDateT;
-import cz.nic.xml.epp.contact_1.IdleDelDataT;
-import cz.nic.xml.epp.contact_1.*;
-import cz.nic.xml.epp.domain_1.CheckNameType;
-import cz.nic.xml.epp.domain_1.PUnitType;
-import cz.nic.xml.epp.domain_1.RenewType;
-import cz.nic.xml.epp.enumval_1.ExValType;
-import cz.nic.xml.epp.extra_addr_1.AddrType;
-import cz.nic.xml.epp.fred_1.CreditType;
-import cz.nic.xml.epp.fred_1.LowCreditDataT;
-import cz.nic.xml.epp.fred_1.RequestFeeInfoDataT;
-import cz.nic.xml.epp.fredcom_1.MsgType;
-import cz.nic.xml.epp.keyset_1.DnskeyT;
-import cz.nic.xml.epp.nsset_1.UpdateType;
-import cz.nic.xml.epp.nsset_1.*;
+import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
 import cz.active24.client.fred.data.testnsset.nsset.TestNssetRequest;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferRequest;
 import cz.active24.client.fred.data.transfer.domain.DomainTransferRequest;
@@ -74,26 +59,47 @@ import cz.active24.client.fred.data.update.keyset.KeysetAddData;
 import cz.active24.client.fred.data.update.keyset.KeysetUpdateRequest;
 import cz.active24.client.fred.data.update.nsset.NssetAddData;
 import cz.active24.client.fred.data.update.nsset.NssetChangeData;
+import cz.active24.client.fred.data.update.nsset.NssetRemData;
+import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
+import cz.nic.xml.epp.contact_1.ChkDataType;
+import cz.nic.xml.epp.contact_1.HandleDateT;
+import cz.nic.xml.epp.contact_1.IdleDelDataT;
+import cz.nic.xml.epp.contact_1.*;
+import cz.nic.xml.epp.domain_1.CheckNameType;
+import cz.nic.xml.epp.domain_1.*;
+import cz.nic.xml.epp.enumval_1.ExValType;
+import cz.nic.xml.epp.enumval_1.ImpendingValExpDataT;
+import cz.nic.xml.epp.enumval_1.ValExpDataT;
+import cz.nic.xml.epp.fred_1.CreditType;
+import cz.nic.xml.epp.fred_1.LowCreditDataT;
+import cz.nic.xml.epp.fred_1.RequestFeeInfoDataT;
+import cz.nic.xml.epp.fred_1.ResCreditType;
+import cz.nic.xml.epp.fredcom_1.MsgType;
+import cz.nic.xml.epp.keyset_1.CreDataType;
+import cz.nic.xml.epp.keyset_1.DnskeyT;
+import cz.nic.xml.epp.nsset_1.*;
 import org.codehaus.plexus.util.Base64;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mapstruct.factory.Mappers;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Tests mapping of all object which using {@link FredClientDozerMapper}.
+ * @since 31. 03. 2022
  */
-public class FredClientDozerMapperTest {
+public class FredClientMapStructMapperTest {
 
-    public FredClientDozerMapper target = FredClientDozerMapper.getInstance();
+    private final FredClientMapStructMapper target = Mappers.getMapper(FredClientMapStructMapper.class);
 
     /**
      * <mapping>
@@ -107,16 +113,15 @@ public class FredClientDozerMapperTest {
 
         Date date = new Date();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String stringDate = sdf.format(date);
-
-        DomainRenewRequest renewRequest = new DomainRenewRequest(domainName, new Date());
+        DomainRenewRequest renewRequest = new DomainRenewRequest(domainName, date);
         renewRequest.setPeriod(new PeriodType(2, PeriodUnit.Y));
 
-        RenewType destination = target.map(renewRequest, RenewType.class);
+        RenewType destination = target.map(renewRequest);
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         Assert.assertEquals(domainName, destination.getName());
-        Assert.assertEquals(stringDate, destination.getCurExpDate().toString());
+        Assert.assertEquals(format.format(date), format.format(destination.getCurExpDate().toGregorianCalendar().getTime()));
         Assert.assertEquals(2, destination.getPeriod().getValue());
         Assert.assertEquals(PUnitType.Y, destination.getPeriod().getUnit());
     }
@@ -131,15 +136,14 @@ public class FredClientDozerMapperTest {
     public void mapEnumValDataToExValType() {
         Date date = new Date();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String stringDate = sdf.format(date);
-
         EnumValData enumValData = new EnumValData(date);
         enumValData.setPublish(true);
 
-        ExValType destination = target.map(enumValData, ExValType.class);
+        ExValType destination = target.map(enumValData);
 
-        Assert.assertEquals(stringDate, destination.getValExDate().toString());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Assert.assertEquals(format.format(date), format.format(destination.getValExDate().toGregorianCalendar().getTime()));
         Assert.assertEquals(true, destination.getPublish());
     }
 
@@ -178,7 +182,7 @@ public class FredClientDozerMapperTest {
         infDataType.getStatus().add(statusType);
         infDataType.setCrID(clId);
 
-        DomainInfoResponse destination = target.map(infDataType, DomainInfoResponse.class);
+        DomainInfoResponse destination = target.map(infDataType);
 
         Assert.assertEquals(registrant, destination.getRegistrant());
         Assert.assertEquals(roid, destination.getRoid());
@@ -254,7 +258,7 @@ public class FredClientDozerMapperTest {
         infDataType.setVat(vat);
         infDataType.setDisclose(discloseType);
 
-        ContactInfoResponse destination = target.map(infDataType, ContactInfoResponse.class);
+        ContactInfoResponse destination = target.map(infDataType);
 
         Assert.assertEquals(roid, destination.getRoid());
         Assert.assertEquals(xmlDate.toGregorianCalendar().getTime(), destination.getCrDate());
@@ -329,7 +333,7 @@ public class FredClientDozerMapperTest {
         infDataType.getDnskey().add(dnskeyT);
         infDataType.getTech().add(tech);
 
-        KeysetInfoResponse destination = target.map(infDataType, KeysetInfoResponse.class);
+        KeysetInfoResponse destination = target.map(infDataType);
 
         Assert.assertEquals(roid, destination.getRoid());
         Assert.assertEquals(xmlDate.toGregorianCalendar().getTime(), destination.getCrDate());
@@ -384,7 +388,7 @@ public class FredClientDozerMapperTest {
         infDataType.setReportlevel(reportLevel);
         infDataType.getTech().add(tech);
 
-        NssetInfoResponse destination = target.map(infDataType, NssetInfoResponse.class);
+        NssetInfoResponse destination = target.map(infDataType);
 
         Assert.assertEquals(roid, destination.getRoid());
         Assert.assertEquals(xmlDate.toGregorianCalendar().getTime(), destination.getCrDate());
@@ -412,7 +416,7 @@ public class FredClientDozerMapperTest {
         String contactId = "CONTACT1";
         String reason = "reason";
 
-        CheckType checkType = new CheckType();
+        cz.nic.xml.epp.contact_1.CheckType checkType = new cz.nic.xml.epp.contact_1.CheckType();
         CheckIDType checkIDType = new CheckIDType();
         checkIDType.setAvail(false);
         checkIDType.setValue(contactId);
@@ -424,7 +428,7 @@ public class FredClientDozerMapperTest {
         ChkDataType chkDataType = new ChkDataType();
         chkDataType.getCd().add(checkType);
 
-        ContactCheckResponse destination = target.map(chkDataType, ContactCheckResponse.class);
+        ContactCheckResponse destination = target.map(chkDataType);
 
         Assert.assertEquals(false, destination.getCheckData().get(0).getAvail());
         Assert.assertEquals(contactId, destination.getCheckData().get(0).getId());
@@ -454,7 +458,7 @@ public class FredClientDozerMapperTest {
         cz.nic.xml.epp.domain_1.ChkDataType chkDataType = new cz.nic.xml.epp.domain_1.ChkDataType();
         chkDataType.getCd().add(checkType);
 
-        DomainCheckResponse destination = target.map(chkDataType, DomainCheckResponse.class);
+        DomainCheckResponse destination = target.map(chkDataType);
 
         Assert.assertEquals(false, destination.getCheckData().get(0).getAvail());
         Assert.assertEquals(domainName, destination.getCheckData().get(0).getId());
@@ -484,7 +488,7 @@ public class FredClientDozerMapperTest {
         cz.nic.xml.epp.keyset_1.ChkDataType chkDataType = new cz.nic.xml.epp.keyset_1.ChkDataType();
         chkDataType.getCd().add(checkType);
 
-        KeysetCheckResponse destination = target.map(chkDataType, KeysetCheckResponse.class);
+        KeysetCheckResponse destination = target.map(chkDataType);
 
         Assert.assertEquals(false, destination.getCheckData().get(0).getAvail());
         Assert.assertEquals(domainName, destination.getCheckData().get(0).getId());
@@ -514,7 +518,7 @@ public class FredClientDozerMapperTest {
         cz.nic.xml.epp.nsset_1.ChkDataType chkDataType = new cz.nic.xml.epp.nsset_1.ChkDataType();
         chkDataType.getCd().add(checkType);
 
-        NssetCheckResponse destination = target.map(chkDataType, NssetCheckResponse.class);
+        NssetCheckResponse destination = target.map(chkDataType);
 
         Assert.assertEquals(false, destination.getCheckData().get(0).getAvail());
         Assert.assertEquals(domainName, destination.getCheckData().get(0).getId());
@@ -532,7 +536,7 @@ public class FredClientDozerMapperTest {
         String city = "Praha", pc = "19000", cc = "CZ", street1 = "Sokolovska", street2 = "Kytlicka";
         AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
-        AddrType.Addr destination = target.map(addressData, AddrType.Addr.class);
+        cz.nic.xml.epp.extra_addr_1.AddrType.Addr destination = target.mapToExtraAddrType(addressData);
 
         Assert.assertEquals(cc, destination.getCc());
         Assert.assertEquals(pc, destination.getPc());
@@ -553,7 +557,7 @@ public class FredClientDozerMapperTest {
         String city = "Praha", pc = "19000", cc = "CZ", street1 = "Sokolovska", street2 = "Kytlicka";
         AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
-        cz.nic.xml.epp.contact_1.AddrType destination = target.map(addressData, cz.nic.xml.epp.contact_1.AddrType.class);
+        cz.nic.xml.epp.contact_1.AddrType destination = target.map(addressData);
 
         Assert.assertEquals(cc, destination.getCc());
         Assert.assertEquals(pc, destination.getPc());
@@ -588,7 +592,7 @@ public class FredClientDozerMapperTest {
         nssetCreateRequest.setAuthInfo(authinfo);
         nssetCreateRequest.setReportLevel(reportlevel);
 
-        CrType destination = target.map(nssetCreateRequest, CrType.class);
+        CrType destination = target.map(nssetCreateRequest);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertTrue(destination.getTech().contains(tech1));
@@ -625,7 +629,7 @@ public class FredClientDozerMapperTest {
         keysetCreateRequest.getDnskey().add(dnsKeyData1);
         keysetCreateRequest.getDnskey().add(dnsKeyData2);
 
-        cz.nic.xml.epp.keyset_1.CrType destination = target.map(keysetCreateRequest, cz.nic.xml.epp.keyset_1.CrType.class);
+        cz.nic.xml.epp.keyset_1.CrType destination = target.map(keysetCreateRequest);
 
         Assert.assertEquals(keysetId, destination.getId());
         Assert.assertEquals(alg1, destination.getDnskey().get(0).getAlg());
@@ -661,7 +665,7 @@ public class FredClientDozerMapperTest {
         domainCreateRequest.setPeriod(periodType);
         domainCreateRequest.setEnumValData(new EnumValData());
 
-        cz.nic.xml.epp.domain_1.CreateType destination = target.map(domainCreateRequest, cz.nic.xml.epp.domain_1.CreateType.class);
+        cz.nic.xml.epp.domain_1.CreateType destination = target.map(domainCreateRequest);
 
         Assert.assertEquals(domainName, destination.getName());
         Assert.assertEquals(keysetId, destination.getKeyset());
@@ -689,12 +693,19 @@ public class FredClientDozerMapperTest {
                 contactId,
                 new PostalInfoData(
                         name, new AddressData(
-                                city, pc, cc, Arrays.asList(street1, street2))
+                        city, pc, cc, Arrays.asList(street1, street2))
                 ),
                 email
         );
 
-        cz.nic.xml.epp.contact_1.CreateType destination = target.map(contactCreateRequest, cz.nic.xml.epp.contact_1.CreateType.class);
+        DiscloseData discloseData = new DiscloseData();
+        discloseData.setFlag(true);
+        discloseData.setAddr(new Object());
+        discloseData.setEmail(new Object());
+        discloseData.setNotifyEmail(new Object());
+        contactCreateRequest.setDisclose(discloseData);
+
+        cz.nic.xml.epp.contact_1.CreateType destination = target.map(contactCreateRequest);
 
         Assert.assertEquals(contactId, destination.getId());
         Assert.assertEquals(name, destination.getPostalInfo().getName());
@@ -707,7 +718,15 @@ public class FredClientDozerMapperTest {
         Assert.assertTrue(destination.getPostalInfo().getAddr().getStreet().contains(street2));
         Assert.assertEquals(email, destination.getEmail());
         Assert.assertNull(destination.getAuthInfo());
-        Assert.assertNull(destination.getDisclose());
+        Assert.assertNotNull(destination.getDisclose());
+        Assert.assertNotNull(destination.getDisclose().getEmail());
+        Assert.assertNotNull(destination.getDisclose().getNotifyEmail());
+        Assert.assertNull(destination.getDisclose().getFax());
+        Assert.assertNull(destination.getDisclose().getIdent());
+        Assert.assertNull(destination.getDisclose().getVat());
+        Assert.assertNull(destination.getDisclose().getVoice());
+        Assert.assertNull(destination.getDisclose().getVoice());
+        Assert.assertTrue(destination.getDisclose().isFlag());
         Assert.assertNull(destination.getFax());
         Assert.assertNull(destination.getIdent());
         Assert.assertNull(destination.getNotifyEmail());
@@ -728,7 +747,7 @@ public class FredClientDozerMapperTest {
 
         NssetTransferRequest nssetTransferRequest = new NssetTransferRequest(nssetId, authinfo);
 
-        cz.nic.xml.epp.nsset_1.TransferType destination = target.map(nssetTransferRequest, cz.nic.xml.epp.nsset_1.TransferType.class);
+        cz.nic.xml.epp.nsset_1.TransferType destination = target.map(nssetTransferRequest);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertEquals(authinfo, destination.getAuthInfo());
@@ -747,7 +766,7 @@ public class FredClientDozerMapperTest {
 
         KeysetTransferRequest keysetTransferRequest = new KeysetTransferRequest(keysetId, authinfo);
 
-        cz.nic.xml.epp.keyset_1.TransferType destination = target.map(keysetTransferRequest, cz.nic.xml.epp.keyset_1.TransferType.class);
+        cz.nic.xml.epp.keyset_1.TransferType destination = target.map(keysetTransferRequest);
 
         Assert.assertEquals(keysetId, destination.getId());
         Assert.assertEquals(authinfo, destination.getAuthInfo());
@@ -766,7 +785,7 @@ public class FredClientDozerMapperTest {
 
         DomainTransferRequest domainTransferRequest = new DomainTransferRequest(domainName, authinfo);
 
-        cz.nic.xml.epp.domain_1.TransferType destination = target.map(domainTransferRequest, cz.nic.xml.epp.domain_1.TransferType.class);
+        cz.nic.xml.epp.domain_1.TransferType destination = target.map(domainTransferRequest);
 
         Assert.assertEquals(domainName, destination.getName());
         Assert.assertEquals(authinfo, destination.getAuthInfo());
@@ -785,7 +804,7 @@ public class FredClientDozerMapperTest {
 
         ContactTransferRequest contactTransferRequest = new ContactTransferRequest(contactId, authinfo);
 
-        cz.nic.xml.epp.contact_1.TransferType destination = target.map(contactTransferRequest, cz.nic.xml.epp.contact_1.TransferType.class);
+        cz.nic.xml.epp.contact_1.TransferType destination = target.map(contactTransferRequest);
 
         Assert.assertEquals(contactId, destination.getId());
         Assert.assertEquals(authinfo, destination.getAuthInfo());
@@ -807,7 +826,7 @@ public class FredClientDozerMapperTest {
         testNssetRequest.getName().add(name1);
         testNssetRequest.getName().add(name2);
 
-        TestType destination = target.map(testNssetRequest, TestType.class);
+        TestType destination = target.map(testNssetRequest);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertEquals(level, destination.getLevel());
@@ -838,7 +857,7 @@ public class FredClientDozerMapperTest {
         lowCreditDataT.setLimit(limit);
         lowCreditDataT.setZone(zone);
 
-        LowCreditPollResponse destination = (LowCreditPollResponse) target.map(lowCreditDataT, PollResponse.class);
+        LowCreditPollResponse destination = (LowCreditPollResponse) target.map(lowCreditDataT);
 
         Assert.assertEquals(zone, destination.getZone());
         Assert.assertEquals(creditVal, destination.getCredit().getCredit());
@@ -865,7 +884,7 @@ public class FredClientDozerMapperTest {
         handleDateT.setId(contactId);
         handleDateT.setTrDate(xmlDate);
 
-        ContactTransferPollResponse destination = (ContactTransferPollResponse) target.map(handleDateT, PollResponse.class);
+        ContactTransferPollResponse destination = (ContactTransferPollResponse) target.map(handleDateT);
 
         Assert.assertEquals(contactId, destination.getId());
         Assert.assertEquals(clId, destination.getClID());
@@ -890,7 +909,7 @@ public class FredClientDozerMapperTest {
         handleDateT.setName(domainName);
         handleDateT.setTrDate(xmlDate);
 
-        DomainTransferPollResponse destination = (DomainTransferPollResponse) target.map(handleDateT, PollResponse.class);
+        DomainTransferPollResponse destination = (DomainTransferPollResponse) target.map(handleDateT);
 
         Assert.assertEquals(domainName, destination.getName());
         Assert.assertEquals(clId, destination.getClID());
@@ -915,7 +934,7 @@ public class FredClientDozerMapperTest {
         handleDateT.setId(nssetId);
         handleDateT.setTrDate(xmlDate);
 
-        NssetTransferPollResponse destination = (NssetTransferPollResponse) target.map(handleDateT, PollResponse.class);
+        NssetTransferPollResponse destination = (NssetTransferPollResponse) target.mapPollResponse(handleDateT);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertEquals(clId, destination.getClID());
@@ -940,7 +959,7 @@ public class FredClientDozerMapperTest {
         handleDateT.setId(keysetId);
         handleDateT.setTrDate(xmlDate);
 
-        KeysetTransferPollResponse destination = (KeysetTransferPollResponse) target.map(handleDateT, PollResponse.class);
+        KeysetTransferPollResponse destination = (KeysetTransferPollResponse) target.map(handleDateT);
 
         Assert.assertEquals(keysetId, destination.getId());
         Assert.assertEquals(clId, destination.getClID());
@@ -968,7 +987,7 @@ public class FredClientDozerMapperTest {
         requestFeeInfoDataT.setTotalFreeCount(totalFreeCount);
         requestFeeInfoDataT.setUsedCount(usedCount);
 
-        RequestUsagePollResponse destination = (RequestUsagePollResponse) target.map(requestFeeInfoDataT, PollResponse.class);
+        RequestUsagePollResponse destination = (RequestUsagePollResponse) target.mapPollResponse(requestFeeInfoDataT);
 
         Assert.assertEquals(calendar.getTime(), destination.getPeriodFrom());
         Assert.assertEquals(calendar.getTime(), destination.getPeriodTo());
@@ -1043,7 +1062,7 @@ public class FredClientDozerMapperTest {
         newData.setInfData(infDataType2);
         updateDataT.setNewData(newData);
 
-        DomainUpdatePollResponse destination = (DomainUpdatePollResponse) target.map(updateDataT, PollResponse.class);
+        DomainUpdatePollResponse destination = (DomainUpdatePollResponse) target.mapPollResponse(updateDataT);
 
         Assert.assertEquals(opTrId, destination.getOpTRID());
         Assert.assertEquals(crId, destination.getOldData().getCrID());
@@ -1195,7 +1214,7 @@ public class FredClientDozerMapperTest {
         newData.setInfData(infDataType2);
         updateDataT.setNewData(newData);
 
-        ContactUpdatePollResponse destination = (ContactUpdatePollResponse) target.map(updateDataT, PollResponse.class);
+        ContactUpdatePollResponse destination = (ContactUpdatePollResponse) target.mapPollResponse(updateDataT);
 
         Assert.assertEquals(opTrId, destination.getOpTRID());
 
@@ -1342,7 +1361,7 @@ public class FredClientDozerMapperTest {
         newData.setInfData(infDataType2);
         updateDataT.setNewData(newData);
 
-        NssetUpdatePollResponse destination = (NssetUpdatePollResponse) target.map(updateDataT, PollResponse.class);
+        NssetUpdatePollResponse destination = (NssetUpdatePollResponse) target.mapPollResponse(updateDataT);
 
         Assert.assertEquals(opTrId, destination.getOpTRID());
 
@@ -1460,7 +1479,7 @@ public class FredClientDozerMapperTest {
         newData.setInfData(infDataType2);
         updateDataT.setNewData(newData);
 
-        KeysetUpdatePollResponse destination = (KeysetUpdatePollResponse) target.map(updateDataT, PollResponse.class);
+        KeysetUpdatePollResponse destination = (KeysetUpdatePollResponse) target.mapPollResponse(updateDataT);
 
         Assert.assertEquals(opTrId, destination.getOpTRID());
 
@@ -1522,7 +1541,7 @@ public class FredClientDozerMapperTest {
         IdleDelDataT idleDelDataT = new IdleDelDataT();
         idleDelDataT.setId(contactId);
 
-        ContactDeletionPollResponse destination = (ContactDeletionPollResponse) target.map(idleDelDataT, PollResponse.class);
+        ContactDeletionPollResponse destination = (ContactDeletionPollResponse) target.mapPollResponse(idleDelDataT);
 
         Assert.assertEquals(contactId, destination.getId());
     }
@@ -1540,7 +1559,7 @@ public class FredClientDozerMapperTest {
         cz.nic.xml.epp.keyset_1.IdleDelDataT idleDelDataT = new cz.nic.xml.epp.keyset_1.IdleDelDataT();
         idleDelDataT.setId(keysetId);
 
-        KeysetDeletionPollResponse destination = (KeysetDeletionPollResponse) target.map(idleDelDataT, PollResponse.class);
+        KeysetDeletionPollResponse destination = (KeysetDeletionPollResponse) target.map(idleDelDataT);
 
         Assert.assertEquals(keysetId, destination.getId());
     }
@@ -1558,7 +1577,7 @@ public class FredClientDozerMapperTest {
         cz.nic.xml.epp.nsset_1.IdleDelDataT idleDelDataT = new cz.nic.xml.epp.nsset_1.IdleDelDataT();
         idleDelDataT.setId(nssetId);
 
-        NssetDeletionPollResponse destination = (NssetDeletionPollResponse) target.map(idleDelDataT, PollResponse.class);
+        NssetDeletionPollResponse destination = (NssetDeletionPollResponse) target.map(idleDelDataT);
 
         Assert.assertEquals(nssetId, destination.getId());
     }
@@ -1593,7 +1612,7 @@ public class FredClientDozerMapperTest {
         testDataT.getName().add(name1);
         testDataT.getName().add(name2);
 
-        TechnicalCheckResultsPollResponse destination = (TechnicalCheckResultsPollResponse) target.map(testDataT, PollResponse.class);
+        TechnicalCheckResultsPollResponse destination = (TechnicalCheckResultsPollResponse) target.mapPollResponse(testDataT);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertEquals(cltestId, destination.getCltestid());
@@ -1639,7 +1658,7 @@ public class FredClientDozerMapperTest {
         remData.setTech(Arrays.asList(techNew));
         nssetUpdateRequest.setRem(remData);
 
-        UpdateType destination = target.map(nssetUpdateRequest, UpdateType.class);
+        cz.nic.xml.epp.nsset_1.UpdateType destination = target.map(nssetUpdateRequest);
 
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertEquals(authinfo, destination.getChg().getAuthInfo());
@@ -1670,7 +1689,7 @@ public class FredClientDozerMapperTest {
         addData.setAdmin(Arrays.asList(admin));
         domainUpdateRequest.setAdd(addData);
 
-        cz.nic.xml.epp.domain_1.UpdateType destination = target.map(domainUpdateRequest, cz.nic.xml.epp.domain_1.UpdateType.class);
+        cz.nic.xml.epp.domain_1.UpdateType destination = target.map(domainUpdateRequest);
 
         Assert.assertEquals(domainName, destination.getName());
         Assert.assertEquals(keyset, destination.getChg().getKeyset());
@@ -1697,7 +1716,7 @@ public class FredClientDozerMapperTest {
         addData.setTech(Arrays.asList(tech));
         keysetUpdateRequest.setAdd(addData);
 
-        cz.nic.xml.epp.keyset_1.UpdateType destination = target.map(keysetUpdateRequest, cz.nic.xml.epp.keyset_1.UpdateType.class);
+        cz.nic.xml.epp.keyset_1.UpdateType destination = target.map(keysetUpdateRequest);
 
         Assert.assertEquals(keysetId, destination.getId());
         Assert.assertTrue(destination.getAdd().getTech().contains(tech));
@@ -1728,7 +1747,7 @@ public class FredClientDozerMapperTest {
 
         contactUpdateRequest.setChg(changeData);
 
-        cz.nic.xml.epp.contact_1.UpdateType destination = target.map(contactUpdateRequest, cz.nic.xml.epp.contact_1.UpdateType.class);
+        cz.nic.xml.epp.contact_1.UpdateType destination = target.map(contactUpdateRequest);
 
         Assert.assertEquals(contactId, destination.getId());
         Assert.assertNotNull(destination.getChg());
@@ -1757,7 +1776,7 @@ public class FredClientDozerMapperTest {
 
         AddressData addressData = new AddressData(city, pc, cc, Arrays.asList(street1, street2));
 
-        cz.nic.xml.epp.extra_addr_1.AddrType.Addr destination = target.map(addressData, cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
+        cz.nic.xml.epp.extra_addr_1.AddrType.Addr destination = target.mapToExtraAddrType(addressData);
 
         Assert.assertEquals(city, destination.getCity());
         Assert.assertEquals(pc, destination.getPc());
@@ -1777,14 +1796,14 @@ public class FredClientDozerMapperTest {
     public void mapAddrTypeAddrToAddressData() {
         String city = "Prague", pc = "19000", cc = "CZ", street1 = "Street 1", street2 = "Street 2";
 
-        AddrType.Addr addr = new AddrType.Addr();
+        cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = new cz.nic.xml.epp.extra_addr_1.AddrType.Addr();
         addr.setCc(cc);
         addr.setCity(city);
         addr.setPc(pc);
         addr.getStreet().add(street1);
         addr.getStreet().add(street2);
 
-        AddressData destination = target.map(addr, AddressData.class);
+        AddressData destination = target.map(addr);
 
         Assert.assertEquals(city, destination.getCity());
         Assert.assertEquals(pc, destination.getPc());
@@ -1795,18 +1814,330 @@ public class FredClientDozerMapperTest {
     }
 
     @Test
-    public void mapNameserverDataToNsT(){
+    public void mapNameserverDataToNsT() {
         String ns1Name = "ns1.cz", ns1IpV4 = "192.168.0.1", ns1IpV6 = "2001:0db8:0000:0000:0000:0000:1428:57ab";
 
         NameserverData ns1 = new NameserverData(ns1Name);
         ns1.getAddr().add(ns1IpV4);
         ns1.getAddr().add(ns1IpV6);
 
-        NsT destination = target.map(ns1, NsT.class);
+        NsT destination = target.map(ns1);
 
         Assert.assertEquals(ns1Name, destination.getName());
         Assert.assertEquals(ns1IpV4, destination.getAddr().get(0));
         Assert.assertEquals(ns1IpV6, destination.getAddr().get(1));
     }
 
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.ImpendingExpDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapImpendingExpDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        ImpendingExpDataT impendingExpDataT = new ImpendingExpDataT();
+        impendingExpDataT.setName(name);
+        impendingExpDataT.setExDate(xmlDate);
+
+        DomainExpirationPollResponse destination = target.map(impendingExpDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(DomainExpirationEventType.IMPENDING_EXP_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.ExpDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapExpDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        ExpDataT expDataT = new ExpDataT();
+        expDataT.setName(name);
+        expDataT.setExDate(xmlDate);
+
+        DomainExpirationPollResponse destination = target.map(expDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(DomainExpirationEventType.EXP_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.DnsOutageDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapDnsOutageDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        DnsOutageDataT dnsOutageDataT = new DnsOutageDataT();
+        dnsOutageDataT.setName(name);
+        dnsOutageDataT.setExDate(xmlDate);
+
+        DomainExpirationPollResponse destination = target.map(dnsOutageDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(DomainExpirationEventType.DNS_OUTAGE_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.DelDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapDelDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        DelDataT delDataT = new DelDataT();
+        delDataT.setName(name);
+        delDataT.setExDate(xmlDate);
+
+        DomainExpirationPollResponse destination = target.map(delDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(DomainExpirationEventType.DEL_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.ImpendingValExpDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapImpendingValExpDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        ImpendingValExpDataT impendingValExpDataT = new ImpendingValExpDataT();
+        impendingValExpDataT.setName(name);
+        impendingValExpDataT.setValExDate(xmlDate);
+
+        EnumDomainValidationPollResponse destination = target.map(impendingValExpDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(EnumDomainValidationEventType.IMPENDING_VAL_EXP_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getValExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.ValExpDataT</class-a>
+     * <class-b>cz.active24.client.fred.data.poll.PollResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapValExpDataToPollResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domaintoexpire.cz";
+
+        ValExpDataT impendingExpDataT = new ValExpDataT();
+        impendingExpDataT.setName(name);
+        impendingExpDataT.setValExDate(xmlDate);
+
+        EnumDomainValidationPollResponse destination = target.map(impendingExpDataT);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(EnumDomainValidationEventType.VAL_EXP_DATA, destination.getEventType());
+        Assert.assertEquals(calendar.getTime(), destination.getValExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.fred_1.ResCreditType</class-a>
+     * <class-b>cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapResCreditTypeToCreditInfoResponse() {
+        BigDecimal czCredit = BigDecimal.valueOf(12354);
+        BigDecimal enumCredit = BigDecimal.valueOf(12);
+
+        ResCreditType resCreditType = new ResCreditType();
+        CreditType czCreditType = new CreditType();
+        czCreditType.setCredit(czCredit);
+        czCreditType.setZone("cz");
+        resCreditType.getZoneCredit().add(czCreditType);
+        CreditType enumCreditType = new CreditType();
+        enumCreditType.setCredit(enumCredit);
+        enumCreditType.setZone("enum");
+        resCreditType.getZoneCredit().add(enumCreditType);
+
+        CreditInfoResponse destination = target.map(resCreditType);
+
+        Assert.assertEquals(2, destination.getZoneCredit().size());
+        Assert.assertEquals(czCredit, destination.getZoneCredit().get(0).getCredit());
+        Assert.assertEquals("cz", destination.getZoneCredit().get(0).getZone());
+        Assert.assertEquals(enumCredit, destination.getZoneCredit().get(1).getCredit());
+        Assert.assertEquals("enum", destination.getZoneCredit().get(1).getZone());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.keyset_1.CreDataType</class-a>
+     * <class-b>cz.active24.client.fred.data.create.keyset.KeysetCreateResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapCreDataTypeToKeysetCreateResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String keysetId = "KEYSET";
+
+        CreDataType creDataType = new CreDataType();
+        creDataType.setCrDate(xmlDate);
+        creDataType.setId(keysetId);
+
+        KeysetCreateResponse destination = target.map(creDataType);
+
+        Assert.assertEquals(keysetId, destination.getId());
+        Assert.assertEquals(calendar.getTime(), destination.getCrDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.nsset_1.CreDataType</class-a>
+     * <class-b>cz.active24.client.fred.data.create.nsset.NssetCreateResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapCreDataTypeToNssetCreateResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String nssetId = "NSSET";
+
+        cz.nic.xml.epp.nsset_1.CreDataType creDataType = new cz.nic.xml.epp.nsset_1.CreDataType();
+        creDataType.setCrDate(xmlDate);
+        creDataType.setId(nssetId);
+
+        NssetCreateResponse destination = target.map(creDataType);
+
+        Assert.assertEquals(nssetId, destination.getId());
+        Assert.assertEquals(calendar.getTime(), destination.getCrDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.CreDataType</class-a>
+     * <class-b>cz.active24.client.fred.data.create.domain.DomainCreateResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapCreDataTypeToDomainCreateResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domain.cz";
+
+        cz.nic.xml.epp.domain_1.CreDataType creDataType = new cz.nic.xml.epp.domain_1.CreDataType();
+        creDataType.setCrDate(xmlDate);
+        creDataType.setExDate(xmlDate);
+        creDataType.setName(name);
+
+        DomainCreateResponse destination = target.map(creDataType);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(calendar.getTime(), destination.getCrDate());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.contact_1.CreDataType</class-a>
+     * <class-b>cz.active24.client.fred.data.create.contact.ContactCreateResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapCreDataTypeToContactCreateResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String contactId = "CONTACT";
+
+        cz.nic.xml.epp.contact_1.CreDataType creDataType = new cz.nic.xml.epp.contact_1.CreDataType();
+        creDataType.setCrDate(xmlDate);
+        creDataType.setId(contactId);
+
+        ContactCreateResponse destination = target.map(creDataType);
+
+        Assert.assertEquals(contactId, destination.getId());
+        Assert.assertEquals(calendar.getTime(), destination.getCrDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.enumval_1.ExValType</class-a>
+     * <class-b>cz.active24.client.fred.data.common.domain.EnumValData</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapExValTypeToEnumValData() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+
+        ExValType exValType = new ExValType();
+        exValType.setPublish(true);
+        exValType.setValExDate(xmlDate);
+
+        EnumValData destination = target.map(exValType);
+
+        Assert.assertTrue(destination.getPublish());
+        Assert.assertEquals(calendar.getTime(), destination.getValExDate());
+    }
+
+    /**
+     * <mapping>
+     * <class-a>cz.nic.xml.epp.domain_1.RenDataType</class-a>
+     * <class-b>cz.active24.client.fred.data.common.domain.DomainRenewResponse</class-b>
+     * </mapping>
+     */
+    @Test
+    public void mapRenDataTypeToDomainRenewResponse() throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        String name = "domain.cz";
+
+        RenDataType renDataType = new RenDataType();
+        renDataType.setName(name);
+        renDataType.setExDate(xmlDate);
+
+        DomainRenewResponse destination = target.map(renDataType);
+
+        Assert.assertEquals(name, destination.getName());
+        Assert.assertEquals(calendar.getTime(), destination.getExDate());
+    }
 }

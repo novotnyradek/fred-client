@@ -9,24 +9,12 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.contact.ContactCreateRequest;
 import cz.active24.client.fred.data.create.contact.ContactCreateResponse;
-import cz.active24.client.fred.data.delete.DeleteResponse;
-import cz.active24.client.fred.data.delete.contact.ContactDeleteResponse;
-import cz.active24.client.fred.data.login.other.LoginRequest;
-import cz.active24.client.fred.data.login.other.LoginResponse;
-import cz.active24.client.fred.data.logout.other.LogoutRequest;
-import cz.active24.client.fred.data.logout.other.LogoutResponse;
-import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
-import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.nic.xml.epp.contact_1.*;
-import cz.nic.xml.epp.extra_addr_1.AddrListType;
-import cz.nic.xml.epp.extra_addr_1.RemType;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
 import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
+import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.contact.ContactDeleteRequest;
+import cz.active24.client.fred.data.delete.contact.ContactDeleteResponse;
 import cz.active24.client.fred.data.info.InfoRequest;
 import cz.active24.client.fred.data.info.InfoResponse;
 import cz.active24.client.fred.data.info.contact.ContactInfoRequest;
@@ -35,10 +23,16 @@ import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
 import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.contact.ContactsListRequest;
+import cz.active24.client.fred.data.login.other.LoginRequest;
+import cz.active24.client.fred.data.login.other.LoginResponse;
+import cz.active24.client.fred.data.logout.other.LogoutRequest;
+import cz.active24.client.fred.data.logout.other.LogoutResponse;
 import cz.active24.client.fred.data.poll.PollAcknowledgementRequest;
 import cz.active24.client.fred.data.poll.PollAcknowledgementResponse;
 import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
+import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
+import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.contact.ContactSendAuthInfoRequest;
@@ -49,18 +43,25 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferRequest;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.data.update.contact.ContactUpdateRequest;
 import cz.active24.client.fred.data.update.contact.ContactUpdateResponse;
 import cz.active24.client.fred.data.update.contact.ExtraAddressUpdateData;
 import cz.active24.client.fred.eppclient.EppClientImpl;
 import cz.active24.client.fred.eppclient.EppCommandHelper;
 import cz.active24.client.fred.exception.FredClientException;
-import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.active24.client.fred.mapper.FredClientMapStructMapper;
+import cz.nic.xml.epp.contact_1.*;
+import cz.nic.xml.epp.extra_addr_1.AddrListType;
+import cz.nic.xml.epp.extra_addr_1.RemType;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
@@ -79,7 +80,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private ListResultsHelper listResultsHelper;
 
-    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
+    private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     public ContactStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
@@ -105,13 +106,13 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        ContactInfoResponse result = mapper.map(infDataType, ContactInfoResponse.class);
+        ContactInfoResponse result = mapper.map(infDataType);
         result.addResponseInfo(responseType);
 
         if (responseType.getExtension() != null) {
             AddrListType addrListType = (AddrListType) JAXBIntrospector.getValue(responseType.getExtension().getAny().get(0));
 
-            AddressData addressData = mapper.map(addrListType.getMailing().getAddr(), AddressData.class);
+            AddressData addressData = mapper.map(addrListType.getMailing().getAddr());
 
             result.setMailingAddress(addressData);
         }
@@ -170,7 +171,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ChkDataType chkDataType = (ChkDataType) wrapperBack.getValue();
 
-        ContactCheckResponse result = mapper.map(chkDataType, ContactCheckResponse.class);
+        ContactCheckResponse result = mapper.map(chkDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -182,14 +183,14 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactCreateRequest contactCreateRequest = (ContactCreateRequest) createRequest;
 
-        CreateType createType = mapper.map(contactCreateRequest, CreateType.class);
+        CreateType createType = mapper.map(contactCreateRequest);
 
         JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
 
         JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, contactCreateRequest.getClientTransactionId());
 
         if (contactCreateRequest.getMailingAddress() != null) {
-            cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.map(contactCreateRequest.getMailingAddress(), cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
+            cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.mapAddressExtension(contactCreateRequest.getMailingAddress());
 
             cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
             addrType.setAddr(addr);
@@ -211,7 +212,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         CreDataType creDataType = (CreDataType) wrapperBack.getValue();
 
-        ContactCreateResponse result = mapper.map(creDataType, ContactCreateResponse.class);
+        ContactCreateResponse result = mapper.map(creDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -229,7 +230,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactTransferRequest contactTransferRequest = (ContactTransferRequest) transferRequest;
 
-        TransferType transferType = mapper.map(contactTransferRequest, TransferType.class);
+        TransferType transferType = mapper.map(contactTransferRequest);
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
@@ -294,7 +295,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactUpdateRequest contactUpdateRequest = (ContactUpdateRequest) updateRequest;
 
-        UpdateType updateType = mapper.map(contactUpdateRequest, UpdateType.class);
+        UpdateType updateType = mapper.map(contactUpdateRequest);
 
         JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
 
@@ -334,7 +335,7 @@ public class ContactStrategy implements ServerObjectStrategy {
             cz.nic.xml.epp.extra_addr_1.UpdateType extraAddrUpdate = new cz.nic.xml.epp.extra_addr_1.UpdateType();
 
             if (extraAddressUpdate.getSet() != null) {
-                cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.map(extraAddressUpdate.getSet(), cz.nic.xml.epp.extra_addr_1.AddrType.Addr.class);
+                cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.mapAddressExtension(extraAddressUpdate.getSet());
 
                 cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
                 addrType.setAddr(addr);

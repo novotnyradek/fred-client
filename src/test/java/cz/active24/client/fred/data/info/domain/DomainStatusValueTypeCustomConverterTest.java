@@ -14,15 +14,13 @@ import java.util.List;
  */
 public class DomainStatusValueTypeCustomConverterTest {
 
-    public DomainStatusValueTypeCustomConverter target = new DomainStatusValueTypeCustomConverter();
-
     @SuppressWarnings("unchecked")
     @Test
     public void convertContactStatusValueTypeToStatusType() {
 
         List<DomainStatusValueType> source = new ArrayList<DomainStatusValueType>(Arrays.asList(DomainStatusValueType.values()));
 
-        List<StatusType> destination = (List<StatusType>) target.convert(null, source, List.class, List.class);
+        List<StatusType> destination = DomainStatusValueTypeCustomConverter.toStatusTypes(source);
 
         Assert.assertEquals(13, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -41,7 +39,7 @@ public class DomainStatusValueTypeCustomConverterTest {
             source.add(statusType);
         }
 
-        List<DomainStatusValueType> destination = (List<DomainStatusValueType>) target.convert(null, source, List.class, List.class);
+        List<DomainStatusValueType> destination = DomainStatusValueTypeCustomConverter.toDomainStatusValueTypes(source);
 
         Assert.assertEquals(13, destination.size());
         Assert.assertEquals(source.size(), destination.size());
@@ -50,7 +48,7 @@ public class DomainStatusValueTypeCustomConverterTest {
     @Test
     public void convertNull(){
 
-        Object result = target.convert(null, null, null, null);
+        Object result = DomainStatusValueTypeCustomConverter.toDomainStatusValueTypes(null);
 
         Assert.assertNull(result);
     }

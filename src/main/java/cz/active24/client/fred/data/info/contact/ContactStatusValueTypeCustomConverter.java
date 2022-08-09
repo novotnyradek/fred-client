@@ -2,8 +2,6 @@ package cz.active24.client.fred.data.info.contact;
 
 import cz.nic.xml.epp.contact_1.StatusType;
 import cz.nic.xml.epp.contact_1.StatusValueType;
-import org.dozer.CustomConverter;
-import org.dozer.MappingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,36 +9,34 @@ import java.util.List;
 /**
  * Converter between {@link StatusType} and {@link ContactStatusValueType}.
  */
-public class ContactStatusValueTypeCustomConverter implements CustomConverter {
+public class ContactStatusValueTypeCustomConverter {
 
-    public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source == null) {
-            return null;
-        }
+    public static List<ContactStatusValueType> toContactStatusValueTypes(List<StatusType> statusTypes){
+        if (statusTypes == null) return null;
 
-        if (source instanceof List) {
-            List sourceList = (List) source;
-            if (sourceList.get(0) != null && sourceList.get(0) instanceof StatusType) {
-                List<ContactStatusValueType> contactStatusValueTypes = new ArrayList<ContactStatusValueType>();
-                for (Object statusType : sourceList) {
-                    StatusType statusType1 = (StatusType) statusType;
-                    ContactStatusValueType contactStatusValueType = ContactStatusValueType.fromValue(statusType1.getS().value());
-                    contactStatusValueType.setMessage(statusType1.getValue());
-                    contactStatusValueTypes.add(contactStatusValueType);
-                }
-                return contactStatusValueTypes;
-            } else if (sourceList.get(0) != null && sourceList.get(0) instanceof ContactStatusValueType) {
-                List<StatusType> statusTypes = new ArrayList<StatusType>();
-                for (Object statusType : sourceList) {
-                    ContactStatusValueType contactStatusValueType = (ContactStatusValueType) statusType;
-                    StatusType statusType2 = new StatusType();
-                    statusType2.setS(StatusValueType.fromValue(contactStatusValueType.value()));
-                    statusType2.setLang("en");
-                    statusTypes.add(statusType2);
-                }
-                return statusTypes;
+        List<ContactStatusValueType> contactStatuses = new ArrayList<ContactStatusValueType>();
+        if (!statusTypes.isEmpty()) {
+            for (StatusType statusType : statusTypes) {
+                ContactStatusValueType contactStatusValueType = ContactStatusValueType.fromValue(statusType.getS().value());
+                contactStatusValueType.setMessage(statusType.getValue());
+                contactStatuses.add(contactStatusValueType);
             }
         }
-        throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
+        return contactStatuses;
+    }
+
+    public static List<StatusType> toStatusTypes(List<ContactStatusValueType> contactStatusValueTypes){
+        if (contactStatusValueTypes == null) return null;
+
+        List<StatusType> contactStatuses = new ArrayList<StatusType>();
+        if (!contactStatusValueTypes.isEmpty()) {
+            for (ContactStatusValueType contactStatus : contactStatusValueTypes) {
+                StatusType statusType = new StatusType();
+                statusType.setS(StatusValueType.fromValue(contactStatus.value()));
+                statusType.setLang("en");
+                contactStatuses.add(statusType);
+            }
+        }
+        return contactStatuses;
     }
 }

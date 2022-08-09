@@ -8,6 +8,8 @@ import cz.active24.client.fred.data.create.CreateRequest;
 import cz.active24.client.fred.data.create.CreateResponse;
 import cz.active24.client.fred.data.create.nsset.NssetCreateRequest;
 import cz.active24.client.fred.data.create.nsset.NssetCreateResponse;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
+import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.delete.DeleteRequest;
 import cz.active24.client.fred.data.delete.DeleteResponse;
 import cz.active24.client.fred.data.delete.nsset.NssetDeleteRequest;
@@ -33,19 +35,6 @@ import cz.active24.client.fred.data.poll.PollRequest;
 import cz.active24.client.fred.data.poll.PollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
-import cz.active24.client.fred.data.update.UpdateRequest;
-import cz.active24.client.fred.data.update.UpdateResponse;
-import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
-import cz.active24.client.fred.eppclient.EppClientImpl;
-import cz.active24.client.fred.eppclient.EppCommandHelper;
-import cz.active24.client.fred.exception.FredClientException;
-import cz.active24.client.fred.mapper.FredClientDozerMapper;
-import cz.nic.xml.epp.fred_1.ExtcommandType;
-import cz.nic.xml.epp.fred_1.NssetsByContactT;
-import cz.nic.xml.epp.fred_1.NssetsByNsT;
-import cz.nic.xml.epp.nsset_1.*;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoRequest;
-import cz.active24.client.fred.data.creditinfo.other.CreditInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoRequest;
 import cz.active24.client.fred.data.sendauthinfo.SendAuthInfoResponse;
 import cz.active24.client.fred.data.sendauthinfo.nsset.NssetSendAuthInfoRequest;
@@ -56,11 +45,23 @@ import cz.active24.client.fred.data.transfer.TransferRequest;
 import cz.active24.client.fred.data.transfer.TransferResponse;
 import cz.active24.client.fred.data.transfer.nsset.NssetTransferRequest;
 import cz.active24.client.fred.data.transfer.nsset.NssetTransferResponse;
+import cz.active24.client.fred.data.update.UpdateRequest;
+import cz.active24.client.fred.data.update.UpdateResponse;
+import cz.active24.client.fred.data.update.nsset.NssetUpdateRequest;
 import cz.active24.client.fred.data.update.nsset.NssetUpdateResponse;
+import cz.active24.client.fred.eppclient.EppClientImpl;
+import cz.active24.client.fred.eppclient.EppCommandHelper;
+import cz.active24.client.fred.exception.FredClientException;
+import cz.active24.client.fred.mapper.FredClientMapStructMapper;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.NssetsByContactT;
+import cz.nic.xml.epp.fred_1.NssetsByNsT;
+import cz.nic.xml.epp.nsset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
@@ -77,7 +78,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
+    private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     private ListResultsHelper listResultsHelper;
 
@@ -92,10 +93,11 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         NssetInfoRequest nssetInfoRequest = (NssetInfoRequest) infoRequest;
 
-        SIDType sidType = new SIDType();
-        sidType.setId(nssetInfoRequest.getId());
+        InfoType infoType = new InfoType();
+        infoType.setId(nssetInfoRequest.getId());
+        infoType.setAuthInfo(nssetInfoRequest.getAuthInfo());
 
-        JAXBElement<SIDType> wrapper = new ObjectFactory().createInfo(sidType);
+        JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);
 
         JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, nssetInfoRequest.getClientTransactionId());
 
@@ -103,7 +105,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         InfDataType infDataType = (InfDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        NssetInfoResponse result = mapper.map(infDataType, NssetInfoResponse.class);
+        NssetInfoResponse result = mapper.map(infDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -166,7 +168,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        NssetCheckResponse result = mapper.map(chkDataType, NssetCheckResponse.class);
+        NssetCheckResponse result = mapper.map(chkDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -178,7 +180,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         NssetCreateRequest nssetCreateRequest = (NssetCreateRequest) createRequest;
 
-        CrType crType = mapper.map(nssetCreateRequest, CrType.class);
+        CrType crType = mapper.map(nssetCreateRequest);
 
         JAXBElement<CrType> wrapper = new ObjectFactory().createCreate(crType);
 
@@ -188,7 +190,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         CreDataType creDataType = (CreDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
 
-        NssetCreateResponse result = mapper.map(creDataType, NssetCreateResponse.class);
+        NssetCreateResponse result = mapper.map(creDataType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -206,7 +208,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         NssetTransferRequest nssetTransferRequest = (NssetTransferRequest) transferRequest;
 
-        TransferType transferType = mapper.map(nssetTransferRequest, TransferType.class);
+        TransferType transferType = mapper.map(nssetTransferRequest);
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
@@ -251,7 +253,7 @@ public class NssetStrategy implements ServerObjectStrategy {
     public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
         log.debug("callTestNsset called with request(" + testNssetRequest + ")");
 
-        TestType testType = mapper.map(testNssetRequest, TestType.class);
+        TestType testType = mapper.map(testNssetRequest);
 
         JAXBElement<TestType> wrapper = new ObjectFactory().createTest(testType);
 
@@ -283,7 +285,7 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         NssetUpdateRequest nssetUpdateRequest = (NssetUpdateRequest) updateRequest;
 
-        UpdateType updateType = mapper.map(nssetUpdateRequest, UpdateType.class);
+        UpdateType updateType = mapper.map(nssetUpdateRequest);
 
         JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
 

@@ -2,8 +2,6 @@ package cz.active24.client.fred.data.info.nsset;
 
 import cz.nic.xml.epp.nsset_1.StatusType;
 import cz.nic.xml.epp.nsset_1.StatusValueType;
-import org.dozer.CustomConverter;
-import org.dozer.MappingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,37 +9,34 @@ import java.util.List;
 /**
  * Converter between {@link StatusType} and {@link NssetStatusValueType}.
  */
-public class NssetStatusValueTypeCustomConverter implements CustomConverter {
+public class NssetStatusValueTypeCustomConverter {
 
-    public Object convert(Object destination, Object source, Class<?> destClass, Class<?> sourceClass) {
-        if (source == null) {
-            return null;
-        }
+    public static List<NssetStatusValueType> toNssetStatusValueTypes(List<StatusType> statusTypes){
+        if (statusTypes == null) return null;
 
-        if (source instanceof List) {
-            List sourceList = (List) source;
-            if (sourceList.get(0) != null && sourceList.get(0) instanceof StatusType) {
-                List<NssetStatusValueType> nssetStatuses = new ArrayList<NssetStatusValueType>();
-                for (Object statusType : sourceList) {
-                    StatusType statusType1 = (StatusType) statusType;
-                    NssetStatusValueType nssetStatusValueType = NssetStatusValueType.fromValue(statusType1.getS().value());
-                    nssetStatusValueType.setMessage(statusType1.getValue());
-                    nssetStatuses.add(nssetStatusValueType);
-                }
-                return nssetStatuses;
-            } else if (sourceList.get(0) != null && sourceList.get(0) instanceof NssetStatusValueType) {
-                List<StatusType> statusTypes = new ArrayList<StatusType>();
-                for (Object statusType : sourceList) {
-                    NssetStatusValueType nssetStatus = (NssetStatusValueType) statusType;
-                    StatusType statusType2 = new StatusType();
-                    statusType2.setS(StatusValueType.fromValue(nssetStatus.value()));
-                    statusType2.setLang("en");
-                    statusTypes.add(statusType2);
-                }
-                return statusTypes;
+        List<NssetStatusValueType> nssetStatuses = new ArrayList<NssetStatusValueType>();
+        if (!statusTypes.isEmpty()) {
+            for (StatusType statusType : statusTypes) {
+                NssetStatusValueType nssetStatusValueType = NssetStatusValueType.fromValue(statusType.getS().value());
+                nssetStatusValueType.setMessage(statusType.getValue());
+                nssetStatuses.add(nssetStatusValueType);
             }
         }
+        return nssetStatuses;
+    }
 
-        throw new MappingException("Converter " + this.getClass().getSimpleName() + " used incorrectly!");
+    public static List<StatusType> toStatusTypes(List<NssetStatusValueType> nssetStatusValueTypes){
+        if (nssetStatusValueTypes == null) return null;
+
+        List<StatusType> nssetStatuses = new ArrayList<StatusType>();
+        if (!nssetStatusValueTypes.isEmpty()) {
+            for (NssetStatusValueType nssetStatus : nssetStatusValueTypes) {
+                StatusType statusType = new StatusType();
+                statusType.setS(StatusValueType.fromValue(nssetStatus.value()));
+                statusType.setLang("en");
+                nssetStatuses.add(statusType);
+            }
+        }
+        return nssetStatuses;
     }
 }

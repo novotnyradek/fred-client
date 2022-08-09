@@ -32,13 +32,14 @@ import cz.active24.client.fred.data.update.UpdateRequest;
 import cz.active24.client.fred.data.update.UpdateResponse;
 import cz.active24.client.fred.eppclient.*;
 import cz.active24.client.fred.exception.FredClientException;
-import cz.active24.client.fred.mapper.FredClientDozerMapper;
+import cz.active24.client.fred.mapper.FredClientMapStructMapper;
 import cz.nic.xml.epp.fred_1.ResCreditType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.MsgQType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mapstruct.factory.Mappers;
 import org.w3c.dom.Node;
 
 import javax.xml.bind.JAXBElement;
@@ -55,7 +56,7 @@ public class OtherStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private FredClientDozerMapper mapper = FredClientDozerMapper.getInstance();
+    private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     private EppClientMarshallerHelper marshallerHelper;
 
@@ -125,7 +126,7 @@ public class OtherStrategy implements ServerObjectStrategy {
 
         ResCreditType resCreditType = (ResCreditType) wrapperBack.getValue();
 
-        CreditInfoResponse result = mapper.map(resCreditType, CreditInfoResponse.class);
+        CreditInfoResponse result = mapper.map(resCreditType);
         result.addResponseInfo(responseType);
 
         return result;
@@ -146,7 +147,6 @@ public class OtherStrategy implements ServerObjectStrategy {
         ResponseType responseType = client.execute(requestElement);
 
         PollResponse result = new PollResponse();
-        result.addResponseInfo(responseType);
 
         if (SuccessfulResponse.RESPONSE_1301.getCode() == responseType.getResult().get(0).getCode()) {
 
@@ -154,11 +154,14 @@ public class OtherStrategy implements ServerObjectStrategy {
 
             Object unmarshalledMessage = marshallerHelper.unmarshal((Node) msgQType.getMsg().getContent().get(0));
 
-            result = mapper.map(unmarshalledMessage, PollResponse.class);
+            result = mapper.mapPollResponse(unmarshalledMessage);
 
             result.setMessageQDate(msgQType.getQDate().toGregorianCalendar().getTime());
             result.setMessageCount(msgQType.getCount().intValue());
             result.setMessageId(msgQType.getId());
+            result.addResponseInfo(responseType);
+        } else {
+            result.addResponseInfo(responseType);
         }
 
         return result;
