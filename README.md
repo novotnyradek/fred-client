@@ -16,14 +16,17 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
-**Version: `2.46`**
+**Version: `2.46.1`**
 > Changes
+###### 2.46.1
+* **RELEASED to Central repository.**
+* Proper fix of List command in multithreaded environment - thx to [vagnerj](https://github.com/vagnerj)
+
 ###### 2.46
 * **RELEASED to Central repository.**
 * Implement new schemas version 2.4.3.
 * Switch mapper tool to MapStruct.
 * Remove poll message type DOMAIN_DELETION - message is in type DOMAIN_EXPIRATION with event type DEL_DATA.
- 
 ###### 2.44.1
 * **RELEASED to Central repository.**
 * Patched version with new version of Maven release plugin and JAXB2 Maven plugin.
