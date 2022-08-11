@@ -22,6 +22,7 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 * **RELEASED to Central repository.**
 * Implement new schemas version 2.4.3.
 * Switch mapper tool to MapStruct.
+* Remove poll message type DOMAIN_DELETION - message is in type DOMAIN_EXPIRATION with event type DEL_DATA.
  
 ###### 2.44.1
 * **RELEASED to Central repository.**

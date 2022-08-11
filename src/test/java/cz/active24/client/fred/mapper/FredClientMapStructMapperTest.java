@@ -857,7 +857,7 @@ public class FredClientMapStructMapperTest {
         lowCreditDataT.setLimit(limit);
         lowCreditDataT.setZone(zone);
 
-        LowCreditPollResponse destination = (LowCreditPollResponse) target.map(lowCreditDataT);
+        LowCreditPollResponse destination = target.map(lowCreditDataT);
 
         Assert.assertEquals(zone, destination.getZone());
         Assert.assertEquals(creditVal, destination.getCredit().getCredit());
@@ -884,7 +884,7 @@ public class FredClientMapStructMapperTest {
         handleDateT.setId(contactId);
         handleDateT.setTrDate(xmlDate);
 
-        ContactTransferPollResponse destination = (ContactTransferPollResponse) target.map(handleDateT);
+        ContactTransferPollResponse destination = target.map(handleDateT);
 
         Assert.assertEquals(contactId, destination.getId());
         Assert.assertEquals(clId, destination.getClID());
@@ -909,7 +909,7 @@ public class FredClientMapStructMapperTest {
         handleDateT.setName(domainName);
         handleDateT.setTrDate(xmlDate);
 
-        DomainTransferPollResponse destination = (DomainTransferPollResponse) target.map(handleDateT);
+        DomainTransferPollResponse destination = target.map(handleDateT);
 
         Assert.assertEquals(domainName, destination.getName());
         Assert.assertEquals(clId, destination.getClID());
@@ -959,7 +959,7 @@ public class FredClientMapStructMapperTest {
         handleDateT.setId(keysetId);
         handleDateT.setTrDate(xmlDate);
 
-        KeysetTransferPollResponse destination = (KeysetTransferPollResponse) target.map(handleDateT);
+        KeysetTransferPollResponse destination = target.map(handleDateT);
 
         Assert.assertEquals(keysetId, destination.getId());
         Assert.assertEquals(clId, destination.getClID());
@@ -1559,7 +1559,7 @@ public class FredClientMapStructMapperTest {
         cz.nic.xml.epp.keyset_1.IdleDelDataT idleDelDataT = new cz.nic.xml.epp.keyset_1.IdleDelDataT();
         idleDelDataT.setId(keysetId);
 
-        KeysetDeletionPollResponse destination = (KeysetDeletionPollResponse) target.map(idleDelDataT);
+        KeysetDeletionPollResponse destination = target.map(idleDelDataT);
 
         Assert.assertEquals(keysetId, destination.getId());
     }
@@ -1577,7 +1577,7 @@ public class FredClientMapStructMapperTest {
         cz.nic.xml.epp.nsset_1.IdleDelDataT idleDelDataT = new cz.nic.xml.epp.nsset_1.IdleDelDataT();
         idleDelDataT.setId(nssetId);
 
-        NssetDeletionPollResponse destination = (NssetDeletionPollResponse) target.map(idleDelDataT);
+        NssetDeletionPollResponse destination = target.map(idleDelDataT);
 
         Assert.assertEquals(nssetId, destination.getId());
     }

@@ -39,8 +39,6 @@ public enum PollMessageType {
 
     IDLE_KEYSET_DELETION,
 
-    DOMAIN_DELETION,
-
     TECHNICAL_CHECK_RESULTS
 
 }
