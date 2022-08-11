@@ -12,7 +12,7 @@ Documentation for the whole FRED project is available on-line, visit https://fre
 Client was tested by CZ.NIC, the national registry of .cz domain. 
 
 [![Java CI with Maven](https://github.com/novotnyradek/fred-client/actions/workflows/maven.yml/badge.svg)](https://github.com/novotnyradek/fred-client/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.active24.client.fred/fred-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.novotnyradek/fred-client)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.active24.client.fred/fred-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cz.active24.client.fred/fred-client)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
