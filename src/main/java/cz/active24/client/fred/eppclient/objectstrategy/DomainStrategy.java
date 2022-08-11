@@ -21,7 +21,6 @@ import cz.active24.client.fred.data.info.domain.DomainInfoRequest;
 import cz.active24.client.fred.data.info.domain.DomainInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.ListType;
 import cz.active24.client.fred.data.list.domain.DomainsByContactListRequest;
 import cz.active24.client.fred.data.list.domain.DomainsByKeysetListRequest;
@@ -83,14 +82,11 @@ public class DomainStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private ListResultsHelper listResultsHelper;
-
     private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     DomainStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -149,6 +145,7 @@ public class DomainStrategy implements ServerObjectStrategy {
     @Override
     public ListResponse callList(ListRequest listRequest) throws FredClientException {
         log.debug("callList for domain called with request(" + listRequest + ")");
+
         ExtcommandType extcommandType = null;
 
         if (ListType.LIST_ALL.equals(listRequest.getListType())) {
@@ -167,7 +164,7 @@ public class DomainStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareDomainsByNssetCommand((DomainsByNssetListRequest) listRequest);
         }
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override

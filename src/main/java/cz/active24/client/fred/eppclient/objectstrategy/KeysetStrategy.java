@@ -20,7 +20,6 @@ import cz.active24.client.fred.data.info.keyset.KeysetInfoRequest;
 import cz.active24.client.fred.data.info.keyset.KeysetInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.ListType;
 import cz.active24.client.fred.data.list.keyset.KeysetsByContactListRequest;
 import cz.active24.client.fred.data.list.keyset.KeysetsListRequest;
@@ -79,12 +78,9 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
     private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
-    private ListResultsHelper listResultsHelper;
-
     KeysetStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     public InfoResponse callInfo(InfoRequest infoRequest) throws FredClientException {
@@ -143,7 +139,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
             extcommandType = this.prepareKeysetsByContactCommand((KeysetsByContactListRequest) listRequest);
         }
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override

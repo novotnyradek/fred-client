@@ -21,7 +21,6 @@ import cz.active24.client.fred.data.info.contact.ContactInfoRequest;
 import cz.active24.client.fred.data.info.contact.ContactInfoResponse;
 import cz.active24.client.fred.data.list.ListRequest;
 import cz.active24.client.fred.data.list.ListResponse;
-import cz.active24.client.fred.data.list.ListResultsHelper;
 import cz.active24.client.fred.data.list.contact.ContactsListRequest;
 import cz.active24.client.fred.data.login.other.LoginRequest;
 import cz.active24.client.fred.data.login.other.LoginResponse;
@@ -56,6 +55,10 @@ import cz.nic.xml.epp.contact_1.*;
 import cz.nic.xml.epp.extra_addr_1.AddrListType;
 import cz.nic.xml.epp.extra_addr_1.RemType;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.contact_1.*;
+import cz.nic.xml.epp.extra_addr_1.AddrListType;
+import cz.nic.xml.epp.extra_addr_1.RemType;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
@@ -78,14 +81,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
     private EppCommandHelper eppCommandHelper;
 
-    private ListResultsHelper listResultsHelper;
 
     private FredClientMapStructMapper mapper = Mappers.getMapper(FredClientMapStructMapper.class);
 
     public ContactStrategy(Properties properties) {
         this.client = EppClientImpl.getInstance(properties);
         this.eppCommandHelper = new EppCommandHelper();
-        this.listResultsHelper = new ListResultsHelper(client, eppCommandHelper);
     }
 
     @Override
@@ -149,7 +150,7 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ExtcommandType extcommandType = eppCommandHelper.createListContactsExtCommand(contactsListRequest.getClientTransactionId());
 
-        return listResultsHelper.prepareListAndGetResults(extcommandType);
+        return client.prepareListAndGetResults(extcommandType);
     }
 
     @Override
@@ -327,7 +328,7 @@ public class ContactStrategy implements ServerObjectStrategy {
     /**
      * Adds extra address extension for update command.
      *
-     * @param requestElement element to decore.
+     * @param requestElement     element to decore.
      * @param extraAddressUpdate extra address to set.
      */
     private void setExtraAddressUpdateExtension(JAXBElement<EppType> requestElement, ExtraAddressUpdateData extraAddressUpdate) {

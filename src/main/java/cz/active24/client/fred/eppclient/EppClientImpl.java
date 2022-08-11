@@ -1,14 +1,20 @@
 package cz.active24.client.fred.eppclient;
 
+import cz.active24.client.fred.data.list.ListResponse;
+import cz.active24.client.fred.data.list.ListResultsResponse;
 import cz.active24.client.fred.exception.FredClientException;
 import cz.active24.client.fred.exception.ServerResponseException;
 import cz.active24.client.fred.exception.SystemException;
+import cz.nic.xml.epp.fred_1.ExtcommandType;
+import cz.nic.xml.epp.fred_1.InfoResponseT;
+import cz.nic.xml.epp.fred_1.ResultsListT;
 import ietf.params.xml.ns.epp_1.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.net.ssl.*;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
 import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -38,6 +44,7 @@ public class EppClientImpl implements EppClient {
     private EppClientMarshallerHelper marshallerHelper;
 
     private EppCommandHelper eppCommandHelper;
+
 
     private EppClientImpl(Properties properties) {
         this.properties = properties;
@@ -421,6 +428,63 @@ public class EppClientImpl implements EppClient {
             }
         }
         };
+    }
+
+
+    public synchronized ListResponse prepareListAndGetResults(ExtcommandType extcommandType) throws FredClientException {
+
+        JAXBElement<EppType> requestElement = eppCommandHelper.createFredExtensionEppCommand(extcommandType);
+
+        ResponseType responseType = execute(requestElement);
+
+        InfoResponseT countResponse = (InfoResponseT) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
+
+        // get results if count > 0
+        if (countResponse.getCount().intValue() > 0) {
+            return this.getResults(responseType.getTrID().getClTRID());
+        }
+
+        ListResultsResponse result = new ListResultsResponse();
+        result.addResponseInfo(responseType);
+        return result;
+    }
+
+    /**
+     * This command is used to retrieve a chunk of the results that were prepared in a previous step with a list command.
+     * The command must be called repeatedly to collect all results until the returned results list is empty.
+     *
+     * @param clientTransactionId from previous step with a list command
+     * @return list with data or empty one
+     * @throws FredClientException when call failed.
+     */
+    private ListResponse getResults(String clientTransactionId) throws FredClientException {
+        log.debug("getResults called for client transaction id " + clientTransactionId);
+
+        ListResultsResponse result = new ListResultsResponse();
+
+        boolean returnedListEmpty = false;
+
+        do {
+            ExtcommandType extcommandType = new ExtcommandType();
+            extcommandType.setGetResults("");
+            extcommandType.setClTRID(clientTransactionId);
+
+            JAXBElement<EppType> requestElement = eppCommandHelper.createFredExtensionEppCommand(extcommandType);
+
+            ResponseType responseType = execute(requestElement);
+
+            result.addResponseInfo(responseType);
+
+            if (responseType.getResData() != null) {
+                ResultsListT resultsListT = (ResultsListT) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
+
+                result.getResults().addAll(resultsListT.getItem());
+
+                returnedListEmpty = resultsListT.getItem().isEmpty();
+            }
+        } while (!returnedListEmpty);
+
+        return result;
     }
 }
 
