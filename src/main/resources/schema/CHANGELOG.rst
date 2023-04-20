@@ -1,6 +1,22 @@
 ChangeLog
 =========
 
+2.4.5 (2023-04-13)
+-------------------
+
+* Add new domain state flag ``premiumDomain``
+
+2.4.4 (2023-04-04)
+-------------------
+
+* Add new contact state flag ``serverLinkProhibited`` to inform that
+  contact cannot be linked to other registry objects
+
+2.4.3 (2022-09-14)
+-------------------
+
+* Add optional ``authinfo`` parameter to epp info domain/nsset/keyset methods
+
 2.4.2 (2021-09-08)
 ------------------
 

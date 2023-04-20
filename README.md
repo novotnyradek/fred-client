@@ -16,22 +16,20 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
-**Version: `2.46.1`**
+**Version: `2.47`**
 > Changes
+###### 2.47
+* Implement new schemas version 2.4.5.
+* Proper naming of few tests.
 ###### 2.46.1
-* **RELEASED to Central repository.**
 * Proper fix of List command in multithreaded environment - thx to [vagnerj](https://github.com/vagnerj)
-
 ###### 2.46
-* **RELEASED to Central repository.**
 * Implement new schemas version 2.4.3.
 * Switch mapper tool to MapStruct.
 * Remove poll message type DOMAIN_DELETION - message is in type DOMAIN_EXPIRATION with event type DEL_DATA.
 ###### 2.44.1
-* **RELEASED to Central repository.**
 * Patched version with new version of Maven release plugin and JAXB2 Maven plugin.
 ###### _~~2.44~~ - Corrupted JAR file. Please do not use it._
-* **RELEASED to Central repository.**
 * Bumb up version to be compatible with [FRED release notes](https://fred.nic.cz/documentation/html/ReleaseNotes/releases-2-44.html).
 * Implement new schemas version 2.4.2.
 * Add option to trust all servers.
@@ -41,7 +39,6 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 * Fix for List command in multithreaded environment.
 * Add .gitignore file.
 ###### 2.41
-* Released to Central repository.
 * Change version to be same as FRED system for compatibility.
 * Change groupId and package names to official one.
 ###### 0.3.1
@@ -54,7 +51,6 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 * Add support for multithread systems.
 * Other small improvements and fixes.
 ###### 0.2.2
-* RELEASED to central repository.
 * More mapping tests.
 * Created poll responses pojos for contact, keyset and nsset update.
 * Regenerated class diagram.
@@ -100,7 +96,7 @@ Add as maven dependency to your project.
 <dependency>
     <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>2.46.1</version>
+    <version>2.47</version>
 </dependency>
 ```
 

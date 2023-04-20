@@ -16,7 +16,7 @@ public class NssetStatusValueTypeCustomConverterTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertContactStatusValueTypeToStatusType() {
+    public void convertNssetStatusValueTypeToStatusType() {
 
         List<NssetStatusValueType> source = new ArrayList<NssetStatusValueType>(Arrays.asList(NssetStatusValueType.values()));
 
@@ -28,7 +28,7 @@ public class NssetStatusValueTypeCustomConverterTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertStatusTypeToContactStatusValueType() {
+    public void convertStatusTypeToNssetStatusValueType() {
 
         List<StatusType> source = new ArrayList<StatusType>();
 

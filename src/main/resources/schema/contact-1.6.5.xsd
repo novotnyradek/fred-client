@@ -396,7 +396,7 @@
         <element name="id" type="fredcom:objIDType"/>
         <element name="roid" type="eppcom:roidType"/>
         <element name="status" type="contact:statusType"
-         minOccurs="0" maxOccurs="13"/>
+         minOccurs="0" maxOccurs="14"/>
         <element name="postalInfo" type="contact:postalInfoReadType"/>
         <element name="voice" type="contact:e164StringType"
          minOccurs="0"/>
@@ -461,6 +461,7 @@
         <enumeration value="serverContactOrganizationChangeProhibited"/>
         <enumeration value="serverContactIdentChangeProhibited"/>
         <enumeration value="serverContactPermanentAddressChangeProhibited"/>
+        <enumeration value="serverLinkProhibited"/>
       </restriction>
     </simpleType>
 

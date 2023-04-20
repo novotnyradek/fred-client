@@ -16,19 +16,19 @@ public class DomainStatusValueTypeCustomConverterTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertContactStatusValueTypeToStatusType() {
+    public void convertDomainStatusValueTypeToStatusType() {
 
         List<DomainStatusValueType> source = new ArrayList<DomainStatusValueType>(Arrays.asList(DomainStatusValueType.values()));
 
         List<StatusType> destination = DomainStatusValueTypeCustomConverter.toStatusTypes(source);
 
-        Assert.assertEquals(13, destination.size());
+        Assert.assertEquals(14, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertStatusTypeToContactStatusValueType() {
+    public void convertStatusTypeToDomainStatusValueType() {
 
         List<StatusType> source = new ArrayList<StatusType>();
 
@@ -41,7 +41,7 @@ public class DomainStatusValueTypeCustomConverterTest {
 
         List<DomainStatusValueType> destination = DomainStatusValueTypeCustomConverter.toDomainStatusValueTypes(source);
 
-        Assert.assertEquals(13, destination.size());
+        Assert.assertEquals(14, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 

@@ -38,8 +38,8 @@ public enum ContactStatusValueType {
     SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited"),
     SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited"),
     SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited"),
-    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited");
-    // SERVER_BLOCKED("serverBlocked");
+    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited"),
+    SERVER_LINK_PROHIBITED("serverLinkProhibited");
 
     private String message;
 

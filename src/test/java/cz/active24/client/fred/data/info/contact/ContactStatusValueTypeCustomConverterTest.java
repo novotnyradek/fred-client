@@ -24,7 +24,7 @@ public class ContactStatusValueTypeCustomConverterTest {
 
         List<StatusType> destination = ContactStatusValueTypeCustomConverter.toStatusTypes(source);
 
-        Assert.assertEquals(14, destination.size());
+        Assert.assertEquals(15, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 
@@ -43,7 +43,7 @@ public class ContactStatusValueTypeCustomConverterTest {
 
         List<ContactStatusValueType> destination = ContactStatusValueTypeCustomConverter.toContactStatusValueTypes(source);
 
-        Assert.assertEquals(14, destination.size());
+        Assert.assertEquals(15, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 

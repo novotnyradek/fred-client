@@ -311,6 +311,10 @@
       </simpleContent>
     </complexType>
 
+    <!--
+    Do not forget update maxOccurs attribute in status element in infDataType
+    when making changes. (maxOccurs = n - 1, because "ok" flag is exclusive)
+    -->
     <simpleType name="statusValueType">
       <restriction base="token">
         <enumeration value="ok"/>
@@ -326,6 +330,7 @@
         <enumeration value="outzone"/>
         <enumeration value="notValidated"/>
         <enumeration value="deleteCandidate"/>
+        <enumeration value="premiumDomain"/>
       </restriction>
     </simpleType>
 

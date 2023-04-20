@@ -16,7 +16,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertContactStatusValueTypeToStatusType() {
+    public void convertKeysetStatusValueTypeToStatusType() {
 
         List<KeysetStatusValueType> source = new ArrayList<KeysetStatusValueType>(Arrays.asList(KeysetStatusValueType.values()));
 
@@ -28,7 +28,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void convertStatusTypeToContactStatusValueType() {
+    public void convertStatusTypeToKeysetStatusValueType() {
 
         List<StatusType> source = new ArrayList<StatusType>();
 

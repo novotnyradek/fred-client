@@ -35,7 +35,8 @@ public enum DomainStatusValueType {
     EXPIRED("expired"),
     OUTZONE("outzone"),
     NOT_VALIDATED("notValidated"),
-    DELETE_CANDIDATE("deleteCandidate");
+    DELETE_CANDIDATE("deleteCandidate"),
+    PREMIUM_DOMAIN("premiumDomain");
 
     private String message;
 
