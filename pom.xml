@@ -139,7 +139,7 @@
                     <localCheckout>true</localCheckout>
                     <pushChanges>false</pushChanges>
                     <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=</arguments>
+                    <arguments>-Dgpg.passphrase= -Dhttps.protocols=TLSv1.2</arguments>
                 </configuration>
                 <dependencies>
                     <dependency>
