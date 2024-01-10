@@ -89,7 +89,7 @@ public class KeysetStrategy implements ServerObjectStrategy {
         KeysetInfoRequest keysetInfoRequest = (KeysetInfoRequest) infoRequest;
 
         InfoType infoType = new InfoType();
-        infoType.setId(keysetInfoRequest.getId());
+        infoType.setId(keysetInfoRequest.getKeysetId());
         infoType.setAuthInfo(keysetInfoRequest.getAuthInfo());
 
         JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);

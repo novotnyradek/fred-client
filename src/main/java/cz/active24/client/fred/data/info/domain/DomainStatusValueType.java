@@ -23,27 +23,28 @@ package cz.active24.client.fred.data.info.domain;
  */
 public enum DomainStatusValueType {
 
-    OK("ok"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited"),
-    SERVER_RENEW_PROHIBITED("serverRenewProhibited"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited"),
-    SERVER_REGISTRANT_CHANGE_PROHIBITED("serverRegistrantChangeProhibited"),
-    SERVER_BLOCKED("serverBlocked"),
-    SERVER_OUTZONE_MANUAL("serverOutzoneManual"),
-    SERVER_INZONE_MANUAL("serverInzoneManual"),
-    EXPIRED("expired"),
-    OUTZONE("outzone"),
-    NOT_VALIDATED("notValidated"),
-    DELETE_CANDIDATE("deleteCandidate"),
-    PREMIUM_DOMAIN("premiumDomain");
+    OK("ok","Object is without restrictions"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
+    SERVER_RENEW_PROHIBITED("serverRenewProhibited","Renewal of the domain is forbidden"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden"),
+    SERVER_REGISTRANT_CHANGE_PROHIBITED("serverRegistrantChangeProhibited","Registrant change forbidden"),
+    SERVER_BLOCKED("serverBlocked","Administratively blocked"),
+    SERVER_OUTZONE_MANUAL("serverOutzoneManual","The domain is administratively kept out of zone"),
+    SERVER_INZONE_MANUAL("serverInzoneManual","Domain’s presence in the zone is forced by administration"),
+    EXPIRED("expired","Expired"),
+    OUTZONE("outzone","The domain isn't generated in the zone"),
+    NOT_VALIDATED("notValidated","The ENUM domain is not validated"),
+    DELETE_CANDIDATE("deleteCandidate","To be deleted"),
+    PREMIUM_DOMAIN("premiumDomain","premiumDomain"); // state not in doc https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Domains.html#object-states
 
-    private String message;
+    private final String message;
 
     private final String value;
 
-    DomainStatusValueType(String v) {
+    DomainStatusValueType(String v, String m) {
         value = v;
+        message = m;
     }
 
     public String value() {
@@ -63,15 +64,11 @@ public enum DomainStatusValueType {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainStatusValueType{");
-        sb.append("message='").append(message).append('\'');
-        sb.append(", value='").append(value).append('\'');
+        sb.append("value='").append(value).append('\'');
+        sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
     }

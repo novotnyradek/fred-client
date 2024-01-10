@@ -10,7 +10,7 @@ import java.io.Serializable;
  * A keyset update command is used to alter details of a keyset.
  *
  * <ul>
- * <li>{@link KeysetUpdateRequest#id} - an nsset handle</li>
+ * <li>{@link KeysetUpdateRequest#keysetId} - an nsset handle</li>
  * <li>{@link KeysetUpdateRequest#add} - a list of items that will be added to this keyset, see {@link KeysetAddData}d</li>
  * <li>{@link KeysetUpdateRequest#rem} - a list of items that will be removed from this keyset, see {@link KeysetRemData}</li>
  * <li>{@link KeysetUpdateRequest#chg} - the new values of keyset attributes that will be replaced by this update. Omitted attributes will remain unchanged, see {@link KeysetChangeData}</li>
@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 public class KeysetUpdateRequest extends EppRequest implements Serializable, UpdateRequest {
 
-    private String id;
+    private String keysetId;
 
     private KeysetAddData add;
 
@@ -31,15 +31,15 @@ public class KeysetUpdateRequest extends EppRequest implements Serializable, Upd
     public KeysetUpdateRequest(String keysetId) {
         setServerObjectType(ServerObjectType.KEYSET);
 
-        this.id = keysetId;
+        this.keysetId = keysetId;
     }
 
-    public String getId() {
-        return id;
+    public String getKeysetId() {
+        return keysetId;
     }
 
-    protected void setId(String id) {
-        this.id = id;
+    protected void setKeysetId(String keysetId) {
+        this.keysetId = keysetId;
     }
 
     public KeysetAddData getAdd() {
@@ -69,7 +69,7 @@ public class KeysetUpdateRequest extends EppRequest implements Serializable, Upd
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("KeysetUpdateRequest{");
-        sb.append("id='").append(id).append('\'');
+        sb.append("keysetId='").append(keysetId).append('\'');
         sb.append(", add=").append(add);
         sb.append(", rem=").append(rem);
         sb.append(", chg=").append(chg);

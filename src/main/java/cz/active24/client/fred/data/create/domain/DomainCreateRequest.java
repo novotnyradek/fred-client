@@ -14,7 +14,7 @@ import java.util.List;
  * A domain create command is used to register a new domain.
  *
  * <ul>
- * <li>{@link DomainCreateRequest#name} - domain name</li>
+ * <li>{@link DomainCreateRequest#domainName} - domain name</li>
  * <li>{@link DomainCreateRequest#period} - the registration period; if omitted, the domain expiration is set to the minimum (FRED’s default: 1 year)</li>
  * <li>{@link DomainCreateRequest#nsset} - an nsset handle to associate</li>
  * <li>{@link DomainCreateRequest#keyset} - the keyset handle to associate</li>
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class DomainCreateRequest extends EppRequest implements Serializable, CreateRequest {
 
-    private String name;
+    private String domainName;
 
     private PeriodType period;
 
@@ -45,18 +45,18 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
 
     public DomainCreateRequest(String domainName, String registrant) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        this.name = domainName;
+        this.domainName = domainName;
         this.registrant = registrant;
 
         this.admin = new ArrayList<String>();
     }
 
-    public String getName() {
-        return name;
+    public String getDomainName() {
+        return domainName;
     }
 
-    protected void setName(String name) {
-        this.name = name;
+    protected void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 
     public PeriodType getPeriod() {
@@ -118,7 +118,7 @@ public class DomainCreateRequest extends EppRequest implements Serializable, Cre
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainCreateRequest{");
-        sb.append("name='").append(name).append('\'');
+        sb.append("domainName='").append(domainName).append('\'');
         sb.append(", period=").append(period);
         sb.append(", nsset='").append(nsset).append('\'');
         sb.append(", keyset='").append(keyset).append('\'');

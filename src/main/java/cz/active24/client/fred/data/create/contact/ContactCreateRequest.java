@@ -14,8 +14,8 @@ import java.io.Serializable;
  * A contact create command is used to register a new contact.
  *
  * <ul>
- * <li>{@link ContactCreateRequest#id} - the contact handle</li>
- * <li>{@link ContactCreateRequest#postalInfo} - contact’s postal information, see {@link PostalInfoData}</li>
+ * <li>{@link ContactCreateRequest#contactId} - the contact handle</li>
+ * <li>{@link ContactCreateRequest#postalInfoData} - contact’s postal information, see {@link PostalInfoData}</li>
  * <li>{@link ContactCreateRequest#voice} - telephone number</li>
  * <li>{@link ContactCreateRequest#fax} - fax number</li>
  * <li>{@link ContactCreateRequest#email} - a comma-separated list of email addresses</li>
@@ -31,9 +31,9 @@ import java.io.Serializable;
  */
 public class ContactCreateRequest extends EppRequest implements Serializable, CreateRequest {
 
-    private String id;
+    private String contactId;
 
-    private PostalInfoData postalInfo;
+    private PostalInfoData postalInfoData;
 
     private String voice;
 
@@ -56,25 +56,25 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
     public ContactCreateRequest(String contactId, PostalInfoData postalInfoData, String email) {
         setServerObjectType(ServerObjectType.CONTACT);
 
-        this.setId(contactId);
-        this.setPostalInfo(postalInfoData);
+        this.setContactId(contactId);
+        this.setPostalInfoData(postalInfoData);
         this.setEmail(email);
     }
 
-    public String getId() {
-        return id;
+    public String getContactId() {
+        return contactId;
     }
 
-    protected void setId(String id) {
-        this.id = id;
+    protected void setContactId(String contactId) {
+        this.contactId = contactId;
     }
 
-    public PostalInfoData getPostalInfo() {
-        return postalInfo;
+    public PostalInfoData getPostalInfoData() {
+        return postalInfoData;
     }
 
-    protected void setPostalInfo(PostalInfoData postalInfo) {
-        this.postalInfo = postalInfo;
+    protected void setPostalInfoData(PostalInfoData postalInfoData) {
+        this.postalInfoData = postalInfoData;
     }
 
     public String getVoice() {
@@ -152,8 +152,8 @@ public class ContactCreateRequest extends EppRequest implements Serializable, Cr
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactCreateRequest{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", postalInfo=").append(postalInfo);
+        sb.append("contactId='").append(contactId).append('\'');
+        sb.append(", postalInfo=").append(postalInfoData);
         sb.append(", voice='").append(voice).append('\'');
         sb.append(", fax='").append(fax).append('\'');
         sb.append(", email='").append(email).append('\'');

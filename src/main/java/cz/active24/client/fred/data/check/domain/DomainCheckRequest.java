@@ -15,25 +15,25 @@ import java.util.List;
  */
 public class DomainCheckRequest extends EppRequest implements Serializable, CheckRequest {
 
-    private List<String> names;
+    private List<String> domainNames;
 
     public DomainCheckRequest(List<String> domainNames) {
         setServerObjectType(ServerObjectType.DOMAIN);
-        setNames(domainNames == null ? new ArrayList<String>() : domainNames);
+        setDomainNames(domainNames == null ? new ArrayList<String>() : domainNames);
     }
 
-    public List<String> getNames() {
-        return names;
+    public List<String> getDomainNames() {
+        return domainNames;
     }
 
-    protected void setNames(List<String> names) {
-        this.names = names;
+    protected void setDomainNames(List<String> domainNames) {
+        this.domainNames = domainNames;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainCheckRequest{");
-        sb.append("names=").append(names);
+        sb.append("domainNames=").append(domainNames);
         sb.append('}');
         return sb.toString();
     }

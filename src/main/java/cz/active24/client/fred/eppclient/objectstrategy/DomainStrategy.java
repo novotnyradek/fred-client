@@ -174,7 +174,7 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainCheckRequest domainCheckRequest = (DomainCheckRequest) checkRequest;
 
         MNameType mNameType = new MNameType();
-        mNameType.getName().addAll(domainCheckRequest.getNames());
+        mNameType.getName().addAll(domainCheckRequest.getDomainNames());
 
         JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
 

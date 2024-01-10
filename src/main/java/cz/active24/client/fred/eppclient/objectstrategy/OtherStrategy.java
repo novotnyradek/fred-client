@@ -171,7 +171,7 @@ public class OtherStrategy implements ServerObjectStrategy {
     public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createPollAcknowledgementEppCommand(pollAcknowledgementRequest.getMsgID(), pollAcknowledgementRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createPollAcknowledgementEppCommand(pollAcknowledgementRequest.getMessageId(), pollAcknowledgementRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 

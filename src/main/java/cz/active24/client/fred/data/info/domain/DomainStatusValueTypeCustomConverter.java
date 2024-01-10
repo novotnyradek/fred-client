@@ -18,7 +18,6 @@ public class DomainStatusValueTypeCustomConverter {
         if (!statusTypes.isEmpty()) {
             for (StatusType statusType : statusTypes) {
                 DomainStatusValueType domainStatusValueType = DomainStatusValueType.fromValue(statusType.getS().value());
-                domainStatusValueType.setMessage(statusType.getValue());
                 domainStatuses.add(domainStatusValueType);
             }
         }

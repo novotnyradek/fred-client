@@ -18,7 +18,6 @@ public class NssetStatusValueTypeCustomConverter {
         if (!statusTypes.isEmpty()) {
             for (StatusType statusType : statusTypes) {
                 NssetStatusValueType nssetStatusValueType = NssetStatusValueType.fromValue(statusType.getS().value());
-                nssetStatusValueType.setMessage(statusType.getValue());
                 nssetStatuses.add(nssetStatusValueType);
             }
         }

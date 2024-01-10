@@ -25,40 +25,37 @@ package cz.active24.client.fred.data.info.contact;
  */
 public enum ContactStatusValueType {
 
-    OK("ok"),
-    LINKED("linked"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited"),
-    DELETE_CANDIDATE("deleteCandidate"),
-    CONDITIONALLY_IDENTIFIED_CONTACT("conditionallyIdentifiedContact"),
-    IDENTIFIED_CONTACT("identifiedContact"),
-    VALIDATED_CONTACT("validatedContact"),
-    MOJEID_CONTACT("mojeidContact"),
-    SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited"),
-    SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited"),
-    SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited"),
-    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited"),
-    SERVER_LINK_PROHIBITED("serverLinkProhibited");
+    OK("ok","Object is without restrictions"),
+    LINKED("linked","Has relation to other records in the registry"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden<"),
+    DELETE_CANDIDATE("deleteCandidate","To be deleted"),
+    CONDITIONALLY_IDENTIFIED_CONTACT("conditionallyIdentifiedContact","Contact is conditionally identified"),
+    IDENTIFIED_CONTACT("identifiedContact","Contact is identified"),
+    VALIDATED_CONTACT("validatedContact","Contact is validated"),
+    MOJEID_CONTACT("mojeidContact","MojeID contact"),
+    SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited","Change of the contact’s organization is forbidden"),
+    SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited","Change of the contact’s ident atribute is forbidden"),
+    SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited","Change of the contact’s permanent adress is forbidden"),
+    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited","Change of the contact’s name is forbidden"),
+    SERVER_LINK_PROHIBITED("serverLinkProhibited","Contact linking forbidden")
+        ;
 
-    private String message;
+    private final String message;
 
     private final String value;
 
-    ContactStatusValueType(String v) {
+    ContactStatusValueType(String v, String m) {
         value = v;
+        message = m;
     }
-
     public String value() {
         return value;
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public static ContactStatusValueType fromValue(String v) {
@@ -73,8 +70,8 @@ public enum ContactStatusValueType {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactStatusValueType{");
-        sb.append("message='").append(message).append('\'');
-        sb.append(", value='").append(value).append('\'');
+        sb.append("value='").append(value).append('\'');
+        sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
     }

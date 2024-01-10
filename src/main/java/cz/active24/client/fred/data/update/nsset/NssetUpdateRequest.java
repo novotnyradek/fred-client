@@ -10,7 +10,7 @@ import java.io.Serializable;
  * A nsset update command is used to alter details of an nsset.
  *
  * <ul>
- * <li>{@link NssetUpdateRequest#id} - an nsset handle</li>
+ * <li>{@link NssetUpdateRequest#nssetId} - an nsset handle</li>
  * <li>{@link NssetUpdateRequest#add} - a list of items that will be added to this nsset, see {@link NssetAddData}d</li>
  * <li>{@link NssetUpdateRequest#rem} - a list of items that will be removed from this nsset, see {@link NssetRemData}</li>
  * <li>{@link NssetUpdateRequest#chg} - the new values of nsset attributes that will be replaced by this update. Omitted attributes will remain unchanged, see {@link NssetChangeData}</li>
@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 public class NssetUpdateRequest extends EppRequest implements Serializable, UpdateRequest {
 
-    private String id;
+    private String nssetId;
 
     private NssetAddData add;
 
@@ -31,15 +31,15 @@ public class NssetUpdateRequest extends EppRequest implements Serializable, Upda
     public NssetUpdateRequest(String nssetId) {
         setServerObjectType(ServerObjectType.NSSET);
 
-        this.id = nssetId;
+        this.nssetId = nssetId;
     }
 
-    public String getId() {
-        return id;
+    public String getNssetId() {
+        return nssetId;
     }
 
-    protected void setId(String id) {
-        this.id = id;
+    protected void setNssetId(String nssetId) {
+        this.nssetId = nssetId;
     }
 
     public NssetAddData getAdd() {
@@ -69,7 +69,7 @@ public class NssetUpdateRequest extends EppRequest implements Serializable, Upda
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("NssetUpdateRequest{");
-        sb.append("id='").append(id).append('\'');
+        sb.append("nssetId='").append(nssetId).append('\'');
         sb.append(", add=").append(add);
         sb.append(", rem=").append(rem);
         sb.append(", chg=").append(chg);

@@ -18,7 +18,6 @@ public class KeysetStatusValueTypeCustomConverter {
         if (!statusTypes.isEmpty()) {
             for (StatusType statusType : statusTypes) {
                 KeysetStatusValueType keysetStatusValueType = KeysetStatusValueType.fromValue(statusType.getS().value());
-                keysetStatusValueType.setMessage(statusType.getValue());
                 keysetStatuses.add(keysetStatusValueType);
             }
         }

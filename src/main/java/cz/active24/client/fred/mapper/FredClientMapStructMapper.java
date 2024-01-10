@@ -195,17 +195,28 @@ public abstract class FredClientMapStructMapper {
     public abstract cz.nic.xml.epp.contact_1.AddrType map(AddressData addressData);
 
     public abstract cz.nic.xml.epp.extra_addr_1.AddrType.Addr mapAddressExtension(AddressData addressData);
-
-    @Mapping(target = "reportlevel", source = "reportLevel")
+    @Mappings({
+        @Mapping(target = "reportlevel", source = "reportLevel"),
+        @Mapping(target = "id", source = "nssetId"),
+        @Mapping(target = "ns", source = "nameservers"),
+        @Mapping(target = "tech", source = "technicalContacts")
+    })
     public abstract CrType map(NssetCreateRequest nssetCreateRequest);
 
     public abstract NsT map(NameserverData nameserverData);
 
+    @Mapping(target = "id", source = "keysetId")
     public abstract cz.nic.xml.epp.keyset_1.CrType map(KeysetCreateRequest keysetCreateRequest);
 
+    @Mapping(target = "name", source = "domainName")
     public abstract CreateType map(DomainCreateRequest domainCreateRequest);
 
-    @Mapping(target = "disclose", source = "disclose", qualifiedByName = "toDiscloseType")
+    @Mappings({
+        @Mapping(target = "disclose", source = "disclose", qualifiedByName = "toDiscloseType"),
+        @Mapping(target = "id", source = "contactId"),
+        @Mapping(target = "postalInfo", source = "postalInfoData"),
+
+    })
     public abstract cz.nic.xml.epp.contact_1.CreateType map(ContactCreateRequest contactCreateRequest);
 
     @Named("toDiscloseType")
@@ -275,14 +286,19 @@ public abstract class FredClientMapStructMapper {
             @Mapping(target = "testResult", source = "result")
     })
     public abstract TechnicalCheckResultsPollResponse map(TestDataT testDataT);
-
+    @Mapping(target = "id", source = "nssetId")
     public abstract cz.nic.xml.epp.nsset_1.UpdateType map(NssetUpdateRequest nssetUpdateRequest);
 
+    @Mapping(target = "name", source = "domainName")
     public abstract cz.nic.xml.epp.domain_1.UpdateType map(DomainUpdateRequest domainUpdateRequest);
 
+    @Mapping(target = "id", source = "keysetId")
     public abstract cz.nic.xml.epp.keyset_1.UpdateType map(KeysetUpdateRequest keysetUpdateRequest);
 
-    @Mapping(target = "chg.disclose", source = "chg.disclose", qualifiedByName = "toInfupdDiscloseType")
+    @Mappings({
+        @Mapping(target = "chg.disclose", source = "chg.disclose", qualifiedByName = "toInfupdDiscloseType"),
+        @Mapping(target = "id", source = "contactId")
+    })
     public abstract cz.nic.xml.epp.contact_1.UpdateType map(ContactUpdateRequest contactUpdateRequest);
 
     @Named("toInfupdDiscloseType")

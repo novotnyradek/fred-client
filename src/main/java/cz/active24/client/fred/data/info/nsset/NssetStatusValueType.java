@@ -16,19 +16,20 @@ package cz.active24.client.fred.data.info.nsset;
  */
 public enum NssetStatusValueType {
 
-    OK("ok"),
-    LINKED("linked"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited"),
-    DELETE_CANDIDATE("deleteCandidate");
+    OK("ok","Object is without restrictions"),
+    LINKED("linked","Has relation to other records in the registry"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden<"),
+    DELETE_CANDIDATE("deleteCandidate","To be deleted");
 
-    private String message;
+    private final String message;
 
     private final String value;
 
-    NssetStatusValueType(String v) {
+    NssetStatusValueType(String v, String m) {
         value = v;
+        message = m;
     }
 
     public String value() {
@@ -39,9 +40,6 @@ public enum NssetStatusValueType {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public static NssetStatusValueType fromValue(String v) {
         for (NssetStatusValueType c : NssetStatusValueType.values()) {
@@ -55,8 +53,8 @@ public enum NssetStatusValueType {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("NssetStatusValueType{");
-        sb.append("message='").append(message).append('\'');
-        sb.append(", value='").append(value).append('\'');
+        sb.append("value='").append(value).append('\'');
+        sb.append(", message='").append(message).append('\'');
         sb.append('}');
         return sb.toString();
     }

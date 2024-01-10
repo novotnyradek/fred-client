@@ -18,7 +18,6 @@ public class ContactStatusValueTypeCustomConverter {
         if (!statusTypes.isEmpty()) {
             for (StatusType statusType : statusTypes) {
                 ContactStatusValueType contactStatusValueType = ContactStatusValueType.fromValue(statusType.getS().value());
-                contactStatusValueType.setMessage(statusType.getValue());
                 contactStatuses.add(contactStatusValueType);
             }
         }

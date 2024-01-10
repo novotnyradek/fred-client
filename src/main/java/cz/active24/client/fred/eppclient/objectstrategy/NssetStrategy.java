@@ -90,7 +90,7 @@ public class NssetStrategy implements ServerObjectStrategy {
         NssetInfoRequest nssetInfoRequest = (NssetInfoRequest) infoRequest;
 
         InfoType infoType = new InfoType();
-        infoType.setId(nssetInfoRequest.getId());
+        infoType.setId(nssetInfoRequest.getNssetId());
         infoType.setAuthInfo(nssetInfoRequest.getAuthInfo());
 
         JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);

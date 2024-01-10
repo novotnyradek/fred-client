@@ -11,7 +11,7 @@ import java.io.Serializable;
  * A domain update command is used to alter details of a domain.
  *
  * <ul>
- * <li>{@link DomainUpdateRequest#name} - the domain name</li>
+ * <li>{@link DomainUpdateRequest#domainName} - the domain name</li>
  * <li>{@link DomainUpdateRequest#add} -  see {@link DomainAddData}</li>
  * <li>{@link DomainUpdateRequest#rem} -  see {@link DomainRemData}</li>
  * <li>{@link DomainUpdateRequest#chg} - the new values of domain attributes that will be changed by this update. Omitted attributes will remain unchanged, see {@link DomainChangeData}</li>
@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 public class DomainUpdateRequest extends EppRequest implements Serializable, UpdateRequest {
 
-    private String name;
+    private String domainName;
 
     private DomainAddData add;
 
@@ -35,15 +35,15 @@ public class DomainUpdateRequest extends EppRequest implements Serializable, Upd
     public DomainUpdateRequest(String domainName) {
         setServerObjectType(ServerObjectType.DOMAIN);
 
-        this.name = domainName;
+        this.domainName = domainName;
     }
 
-    public String getName() {
-        return name;
+    public String getDomainName() {
+        return domainName;
     }
 
-    protected void setName(String name) {
-        this.name = name;
+    protected void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 
     public DomainAddData getAdd() {
@@ -81,7 +81,7 @@ public class DomainUpdateRequest extends EppRequest implements Serializable, Upd
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainUpdateRequest{");
-        sb.append("name='").append(name).append('\'');
+        sb.append("domainName='").append(domainName).append('\'');
         sb.append(", add=").append(add);
         sb.append(", rem=").append(rem);
         sb.append(", chg=").append(chg);
