@@ -99,7 +99,7 @@ Add as maven dependency to your project.
 <dependency>
     <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>2.47</version>
+    <version>2.48</version>
 </dependency>
 ```
 
