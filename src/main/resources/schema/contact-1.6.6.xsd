@@ -350,6 +350,7 @@
     <element name="infData" type="contact:infDataType"/>
     <!-- list response is DEPRECATED and will be removed in future -->
     <element name="listData" type="contact:listDataType"/>
+    <element name="sendAuthInfoData" type="contact:sendAuthInfoDataType" />
 
     <!--
     <check> response elements.
@@ -469,6 +470,15 @@
       <sequence>
         <element name="id" type="fredcom:objIDType"
          minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    <sendAuthInfo> response elements.
+    -->
+    <complexType name="sendAuthInfoDataType">
+      <sequence>
+        <element name="email" type="contact:emailCommaListType"/>
       </sequence>
     </complexType>
 

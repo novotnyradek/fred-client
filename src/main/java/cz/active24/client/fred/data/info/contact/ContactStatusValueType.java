@@ -25,22 +25,21 @@ package cz.active24.client.fred.data.info.contact;
  */
 public enum ContactStatusValueType {
 
-    OK("ok","Object is without restrictions"),
-    LINKED("linked","Has relation to other records in the registry"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden<"),
-    DELETE_CANDIDATE("deleteCandidate","To be deleted"),
-    CONDITIONALLY_IDENTIFIED_CONTACT("conditionallyIdentifiedContact","Contact is conditionally identified"),
-    IDENTIFIED_CONTACT("identifiedContact","Contact is identified"),
-    VALIDATED_CONTACT("validatedContact","Contact is validated"),
-    MOJEID_CONTACT("mojeidContact","MojeID contact"),
-    SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited","Change of the contact’s organization is forbidden"),
-    SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited","Change of the contact’s ident atribute is forbidden"),
-    SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited","Change of the contact’s permanent adress is forbidden"),
-    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited","Change of the contact’s name is forbidden"),
-    SERVER_LINK_PROHIBITED("serverLinkProhibited","Contact linking forbidden")
-        ;
+    OK("ok", "Object is without restrictions"),
+    LINKED("linked", "Has relation to other records in the registry"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited", "Sponsoring registrar change forbidden"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited", "Deletion forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited", "Update forbidden<"),
+    DELETE_CANDIDATE("deleteCandidate", "To be deleted"),
+    CONDITIONALLY_IDENTIFIED_CONTACT("conditionallyIdentifiedContact", "Contact is conditionally identified"),
+    IDENTIFIED_CONTACT("identifiedContact", "Contact is identified"),
+    VALIDATED_CONTACT("validatedContact", "Contact is validated"),
+    MOJEID_CONTACT("mojeidContact", "MojeID contact"),
+    SERVER_CONTACT_ORGANIZATION_CHANGE_PROHIBITED("serverContactOrganizationChangeProhibited", "Change of the contact’s organization is forbidden"),
+    SERVER_CONTACT_IDENT_CHANGE_PROHIBITED("serverContactIdentChangeProhibited", "Change of the contact’s ident atribute is forbidden"),
+    SERVER_CONTACT_PERMANENT_ADDRESS_CHANGE_PROHIBITED("serverContactPermanentAddressChangeProhibited", "Change of the contact’s permanent adress is forbidden"),
+    SERVER_CONTACT_NAME_CHANGE_PROHIBITED("serverContactNameChangeProhibited", "Change of the contact’s name is forbidden"),
+    SERVER_LINK_PROHIBITED("serverLinkProhibited", "Contact linking forbidden");
 
     private final String message;
 
@@ -50,6 +49,7 @@ public enum ContactStatusValueType {
         value = v;
         message = m;
     }
+
     public String value() {
         return value;
     }

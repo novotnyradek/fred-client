@@ -16,12 +16,12 @@ package cz.active24.client.fred.data.info.nsset;
  */
 public enum NssetStatusValueType {
 
-    OK("ok","Object is without restrictions"),
-    LINKED("linked","Has relation to other records in the registry"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden<"),
-    DELETE_CANDIDATE("deleteCandidate","To be deleted");
+    OK("ok", "Object is without restrictions"),
+    LINKED("linked", "Has relation to other records in the registry"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited", "Deletion forbidden"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited", "Sponsoring registrar change forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited", "Update forbidden"),
+    DELETE_CANDIDATE("deleteCandidate", "To be deleted");
 
     private final String message;
 
@@ -39,7 +39,6 @@ public enum NssetStatusValueType {
     public String getMessage() {
         return message;
     }
-
 
     public static NssetStatusValueType fromValue(String v) {
         for (NssetStatusValueType c : NssetStatusValueType.values()) {

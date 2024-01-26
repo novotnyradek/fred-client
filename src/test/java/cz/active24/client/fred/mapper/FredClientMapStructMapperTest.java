@@ -597,7 +597,7 @@ public class FredClientMapStructMapperTest {
         Assert.assertEquals(nssetId, destination.getId());
         Assert.assertTrue(destination.getTech().contains(tech1));
         Assert.assertTrue(destination.getTech().contains(tech2));
-        Assert.assertEquals(authinfo, destination.getAuthInfo());
+        Assert.assertNull(destination.getAuthInfo());
         Assert.assertEquals(reportlevel, destination.getReportlevel());
         Assert.assertEquals(ns1Name, destination.getNs().get(0).getName());
         Assert.assertEquals(ns1IpV4, destination.getNs().get(0).getAddr().get(0));
@@ -642,7 +642,7 @@ public class FredClientMapStructMapperTest {
         Assert.assertEquals(pubKey, new String(Base64.encodeBase64(destination.getDnskey().get(1).getPubKey())));
         Assert.assertTrue(destination.getTech().contains(tech1));
         Assert.assertTrue(destination.getTech().contains(tech2));
-        Assert.assertEquals(authinfo, destination.getAuthInfo());
+        Assert.assertNull(destination.getAuthInfo());
     }
 
     /**
@@ -675,7 +675,7 @@ public class FredClientMapStructMapperTest {
         Assert.assertTrue(destination.getAdmin().contains(admin2));
         Assert.assertEquals(periodType.getUnit().value(), destination.getPeriod().getUnit().value());
         Assert.assertEquals(periodType.getValue(), destination.getPeriod().getValue());
-        Assert.assertEquals(authinfo, destination.getAuthInfo());
+        Assert.assertNull(destination.getAuthInfo());
     }
 
     /**
@@ -687,7 +687,7 @@ public class FredClientMapStructMapperTest {
     @Test
     public void mapContactCreateRequestToCrType() {
         String contactId = "CONTACTID", name = "Fanda Kocourek", city = "Prague", pc = "19000", cc = "CZ",
-                street1 = "Street 1", street2 = "Street 2", email = "meail@me.co";
+                street1 = "Street 1", street2 = "Street 2", email = "meail@me.co", authInfo = "authInfo";
 
         ContactCreateRequest contactCreateRequest = new ContactCreateRequest(
                 contactId,
@@ -697,6 +697,8 @@ public class FredClientMapStructMapperTest {
                 ),
                 email
         );
+
+        contactCreateRequest.setAuthInfo(authInfo);
 
         DiscloseData discloseData = new DiscloseData();
         discloseData.setFlag(true);

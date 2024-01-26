@@ -54,6 +54,10 @@ import cz.active24.client.fred.data.poll.other.LowCreditPollResponse;
 import cz.active24.client.fred.data.poll.other.RequestUsagePollResponse;
 import cz.active24.client.fred.data.renew.domain.DomainRenewRequest;
 import cz.active24.client.fred.data.renew.domain.DomainRenewResponse;
+import cz.active24.client.fred.data.sendauthinfo.contact.ContactSendAuthInfoResponse;
+import cz.active24.client.fred.data.sendauthinfo.domain.DomainSendAuthInfoResponse;
+import cz.active24.client.fred.data.sendauthinfo.keyset.KeysetSendAuthInfoResponse;
+import cz.active24.client.fred.data.sendauthinfo.nsset.NssetSendAuthInfoResponse;
 import cz.active24.client.fred.data.testnsset.nsset.TestNssetRequest;
 import cz.active24.client.fred.data.transfer.contact.ContactTransferRequest;
 import cz.active24.client.fred.data.transfer.domain.DomainTransferRequest;
@@ -195,27 +199,35 @@ public abstract class FredClientMapStructMapper {
     public abstract cz.nic.xml.epp.contact_1.AddrType map(AddressData addressData);
 
     public abstract cz.nic.xml.epp.extra_addr_1.AddrType.Addr mapAddressExtension(AddressData addressData);
+
     @Mappings({
-        @Mapping(target = "reportlevel", source = "reportLevel"),
-        @Mapping(target = "id", source = "nssetId"),
-        @Mapping(target = "ns", source = "nameservers"),
-        @Mapping(target = "tech", source = "technicalContacts")
+            @Mapping(target = "reportlevel", source = "reportLevel"),
+            @Mapping(target = "id", source = "nssetId"),
+            @Mapping(target = "ns", source = "nameservers"),
+            @Mapping(target = "tech", source = "technicalContacts"),
+            @Mapping(target = "authInfo", ignore = true)
     })
     public abstract CrType map(NssetCreateRequest nssetCreateRequest);
 
     public abstract NsT map(NameserverData nameserverData);
 
-    @Mapping(target = "id", source = "keysetId")
+    @Mappings({
+            @Mapping(target = "id", source = "keysetId"),
+            @Mapping(target = "authInfo", ignore = true)
+    })
     public abstract cz.nic.xml.epp.keyset_1.CrType map(KeysetCreateRequest keysetCreateRequest);
 
-    @Mapping(target = "name", source = "domainName")
+    @Mappings({
+            @Mapping(target = "name", source = "domainName"),
+            @Mapping(target = "authInfo", ignore = true)
+    })
     public abstract CreateType map(DomainCreateRequest domainCreateRequest);
 
     @Mappings({
-        @Mapping(target = "disclose", source = "disclose", qualifiedByName = "toDiscloseType"),
-        @Mapping(target = "id", source = "contactId"),
-        @Mapping(target = "postalInfo", source = "postalInfoData"),
-
+            @Mapping(target = "disclose", source = "disclose", qualifiedByName = "toDiscloseType"),
+            @Mapping(target = "id", source = "contactId"),
+            @Mapping(target = "postalInfo", source = "postalInfoData"),
+            @Mapping(target = "authInfo", ignore = true)
     })
     public abstract cz.nic.xml.epp.contact_1.CreateType map(ContactCreateRequest contactCreateRequest);
 
@@ -286,6 +298,7 @@ public abstract class FredClientMapStructMapper {
             @Mapping(target = "testResult", source = "result")
     })
     public abstract TechnicalCheckResultsPollResponse map(TestDataT testDataT);
+
     @Mapping(target = "id", source = "nssetId")
     public abstract cz.nic.xml.epp.nsset_1.UpdateType map(NssetUpdateRequest nssetUpdateRequest);
 
@@ -296,8 +309,8 @@ public abstract class FredClientMapStructMapper {
     public abstract cz.nic.xml.epp.keyset_1.UpdateType map(KeysetUpdateRequest keysetUpdateRequest);
 
     @Mappings({
-        @Mapping(target = "chg.disclose", source = "chg.disclose", qualifiedByName = "toInfupdDiscloseType"),
-        @Mapping(target = "id", source = "contactId")
+            @Mapping(target = "chg.disclose", source = "chg.disclose", qualifiedByName = "toInfupdDiscloseType"),
+            @Mapping(target = "id", source = "contactId")
     })
     public abstract cz.nic.xml.epp.contact_1.UpdateType map(ContactUpdateRequest contactUpdateRequest);
 
@@ -339,6 +352,14 @@ public abstract class FredClientMapStructMapper {
     public abstract DomainCreateResponse map(CreDataType creDataType);
 
     public abstract DomainRenewResponse map(RenDataType renDataType);
+
+    public abstract ContactSendAuthInfoResponse map(cz.nic.xml.epp.contact_1.SendAuthInfoDataType authInfoDataType);
+
+    public abstract DomainSendAuthInfoResponse map(cz.nic.xml.epp.domain_1.SendAuthInfoDataType authInfoDataType);
+
+    public abstract NssetSendAuthInfoResponse map(cz.nic.xml.epp.nsset_1.SendAuthInfoDataType authInfoDataType);
+
+    public abstract KeysetSendAuthInfoResponse map(cz.nic.xml.epp.keyset_1.SendAuthInfoDataType authInfoDataType);
 
     public PollResponse mapPollResponse(Object message) {
         if (message instanceof cz.nic.xml.epp.keyset_1.UpdateDataT)

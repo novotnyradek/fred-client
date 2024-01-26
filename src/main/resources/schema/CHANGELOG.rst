@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+2.4.6 (2023-11-03)
+-------------------
+
+* Add partially disclosed email addresses to ``sendAuthInfo`` responses
+
 2.4.5 (2023-04-13)
 -------------------
 

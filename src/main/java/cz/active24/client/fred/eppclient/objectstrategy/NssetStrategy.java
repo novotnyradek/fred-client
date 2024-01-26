@@ -57,6 +57,7 @@ import cz.nic.xml.epp.fred_1.NssetsByContactT;
 import cz.nic.xml.epp.fred_1.NssetsByNsT;
 import cz.nic.xml.epp.nsset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,7 +122,14 @@ public class NssetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = client.execute(requestElement);
 
-        NssetSendAuthInfoResponse result = new NssetSendAuthInfoResponse();
+        SendAuthInfoDataType authInfoDataType = new SendAuthInfoDataType();
+
+        ExtAnyType resData = responseType.getResData();
+        if (resData != null) {
+            authInfoDataType = (SendAuthInfoDataType) JAXBIntrospector.getValue(resData.getAny().get(0));
+        }
+
+        NssetSendAuthInfoResponse result = mapper.map(authInfoDataType);
         result.addResponseInfo(responseType);
 
         return result;

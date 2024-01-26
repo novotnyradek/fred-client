@@ -136,7 +136,14 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = client.execute(requestElement);
 
-        ContactSendAuthInfoResponse result = new ContactSendAuthInfoResponse();
+        SendAuthInfoDataType authInfoDataType = new SendAuthInfoDataType();
+
+        ExtAnyType resData = responseType.getResData();
+        if (resData != null) {
+            authInfoDataType = (SendAuthInfoDataType) JAXBIntrospector.getValue(resData.getAny().get(0));
+        }
+
+        ContactSendAuthInfoResponse result = mapper.map(authInfoDataType);
         result.addResponseInfo(responseType);
 
         return result;

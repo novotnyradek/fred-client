@@ -16,12 +16,12 @@ package cz.active24.client.fred.data.info.keyset;
  */
 public enum KeysetStatusValueType {
 
-    OK("ok","Object is without restrictions"),
-    LINKED("linked","Has relation to other records in the registry"),
-    SERVER_DELETE_PROHIBITED("serverDeleteProhibited","Deletion forbidden"),
-    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited","Sponsoring registrar change forbidden"),
-    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited","Update forbidden<"),
-    DELETE_CANDIDATE("deleteCandidate","To be deleted");
+    OK("ok", "Object is without restrictions"),
+    LINKED("linked", "Has relation to other records in the registry"),
+    SERVER_DELETE_PROHIBITED("serverDeleteProhibited", "Deletion forbidden"),
+    SERVER_TRANSFER_PROHIBITED("serverTransferProhibited", "Sponsoring registrar change forbidden"),
+    SERVER_UPDATE_PROHIBITED("serverUpdateProhibited", "Update forbidden"),
+    DELETE_CANDIDATE("deleteCandidate", "To be deleted");
 
     private final String message;
 

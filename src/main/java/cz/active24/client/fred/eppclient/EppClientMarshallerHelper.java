@@ -145,12 +145,12 @@ public class EppClientMarshallerHelper {
                     new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.5.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.4.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.3.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.6.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.5.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.4.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.3.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.4.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
             });
         }

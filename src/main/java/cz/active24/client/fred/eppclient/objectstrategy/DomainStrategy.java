@@ -136,7 +136,14 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = client.execute(requestElement);
 
-        DomainSendAuthInfoResponse result = new DomainSendAuthInfoResponse();
+        SendAuthInfoDataType authInfoDataType = new SendAuthInfoDataType();
+
+        ExtAnyType resData = responseType.getResData();
+        if (resData != null) {
+            authInfoDataType = (SendAuthInfoDataType) JAXBIntrospector.getValue(resData.getAny().get(0));
+        }
+
+        DomainSendAuthInfoResponse result = mapper.map(authInfoDataType);
         result.addResponseInfo(responseType);
 
         return result;

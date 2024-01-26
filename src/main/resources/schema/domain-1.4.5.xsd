@@ -43,6 +43,16 @@
     <element name="sendAuthInfo" type="domain:sendAuthInfoType"/>
 
     <!--
+    Utility types.
+    -->
+     <simpleType name="emailCommaListType">
+      <restriction base="token">
+          <pattern value="[^@, ]{1,64}@[^@, ]+(,[^@, ]{1,64}@[^@, ]+)*"/>
+        <maxLength value="320"/>
+      </restriction>
+    </simpleType>
+
+    <!--
     Child elements of the <create> command.
     -->
     <complexType name="createType">
@@ -215,6 +225,7 @@
     <element name="renData" type="domain:renDataType"/>
     <!-- list response is DEPRECATED and will be removed in future -->
     <element name="listData" type="domain:listDataType"/>
+    <element name="sendAuthInfoData" type="domain:sendAuthInfoDataType" />
 
     <!--
     <check> response elements.
@@ -349,6 +360,15 @@
       <sequence>
         <element name="name" type="eppcom:labelType"
          minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+
+    <!--
+    <sendAuthInfo> response elements.
+    -->
+    <complexType name="sendAuthInfoDataType">
+      <sequence>
+        <element name="email" type="domain:emailCommaListType"/>
       </sequence>
     </complexType>
 

@@ -56,6 +56,7 @@ import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.nic.xml.epp.fred_1.NssetsByContactT;
 import cz.nic.xml.epp.keyset_1.*;
 import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,7 +121,14 @@ public class KeysetStrategy implements ServerObjectStrategy {
 
         ResponseType responseType = client.execute(requestElement);
 
-        KeysetSendAuthInfoResponse result = new KeysetSendAuthInfoResponse();
+        SendAuthInfoDataType authInfoDataType = new SendAuthInfoDataType();
+
+        ExtAnyType resData = responseType.getResData();
+        if (resData != null) {
+            authInfoDataType = (SendAuthInfoDataType) JAXBIntrospector.getValue(resData.getAny().get(0));
+        }
+
+        KeysetSendAuthInfoResponse result = mapper.map(authInfoDataType);
         result.addResponseInfo(responseType);
 
         return result;
