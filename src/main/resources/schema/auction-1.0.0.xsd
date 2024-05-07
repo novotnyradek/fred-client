@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    targetNamespace="http://www.nic.cz/xml/epp/auction-1.0"
+    xmlns:auction="http://www.nic.cz/xml/epp/auction-1.0"
+    xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="eppcom-1.0.xsd"/>
+
+
+    <annotation>
+        <documentation>
+            Extension to Extensible Provisioning Protocol v1.0
+            Extend domain-check with the registrant parameter
+        </documentation>
+    </annotation>
+
+
+    <!--
+    Registrant identifier type.
+    -->
+    <simpleType name="registrantType">
+        <restriction base="token">
+          <minLength value="1"/>
+          <maxLength value="63"/>
+        </restriction>
+      </simpleType>
+
+      <!--
+         check data
+    -->
+    <complexType name="checkType">
+        <sequence>
+            <element name="registrant" type="auction:registrantType"/>
+        </sequence>
+    </complexType>
+
+
+    <!-- commands and data extended -->
+    <element name="check" type="auction:checkType"/>
+
+</schema>

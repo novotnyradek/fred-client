@@ -152,6 +152,7 @@ public class EppClientMarshallerHelper {
                     new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.4.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/auction-1.0.0.xsd")),
             });
         }
 
@@ -169,6 +170,7 @@ public class EppClientMarshallerHelper {
                 cz.nic.xml.epp.fred_1.ObjectFactory.class,
                 cz.nic.xml.epp.extra_addr_1.ObjectFactory.class,
                 cz.nic.xml.epp.fredcom_1.ObjectFactory.class,
+                cz.nic.xml.epp.auction_1.ObjectFactory.class,
                 ietf.params.xml.ns.eppcom_1.ObjectFactory.class
         ).toArray();
     }

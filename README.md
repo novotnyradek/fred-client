@@ -16,8 +16,11 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
-**Version: `2.48`**
+**Version: `2.50`**
 > Changes
+###### 2.50
+* Implement schemas version 2.4.7.
+* Extend domain-check command with the registrant parameter.
 ###### 2.48
 * Implement schemas version 2.4.6.
 * Merge branch - honor enum nature of *StatusValueTypes, align attributes with constructor arguments of various DTO - author [vagnerj](https://github.com/vagnerj)
@@ -99,7 +102,7 @@ Add as maven dependency to your project.
 <dependency>
     <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>2.48</version>
+    <version>2.50</version>
 </dependency>
 ```
 

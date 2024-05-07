@@ -41,6 +41,9 @@
     <!-- extension of additional contact addresses -->
     <import namespace="http://www.nic.cz/xml/epp/extra-addr-1.0"
         schemaLocation="extra-addr-1.0.0.xsd"/>
+    <!-- extension of domain-check due auctions -->
+    <import namespace="http://www.nic.cz/xml/epp/auction-1.0"
+        schemaLocation="auction-1.0.0.xsd"/>
 
     <annotation>
       <documentation>

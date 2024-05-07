@@ -17,6 +17,8 @@ public class DomainCheckRequest extends EppRequest implements Serializable, Chec
 
     private List<String> domainNames;
 
+    private String registrant;
+
     public DomainCheckRequest(List<String> domainNames) {
         setServerObjectType(ServerObjectType.DOMAIN);
         setDomainNames(domainNames == null ? new ArrayList<String>() : domainNames);
@@ -30,10 +32,19 @@ public class DomainCheckRequest extends EppRequest implements Serializable, Chec
         this.domainNames = domainNames;
     }
 
+    public void setRegistrant(String registrant) {
+        this.registrant = registrant;
+    }
+
+    public String getRegistrant() {
+        return registrant;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DomainCheckRequest{");
         sb.append("domainNames=").append(domainNames);
+        sb.append(", registrant='").append(registrant).append('\'');
         sb.append('}');
         return sb.toString();
     }

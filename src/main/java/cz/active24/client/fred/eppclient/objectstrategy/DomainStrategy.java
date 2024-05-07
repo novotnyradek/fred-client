@@ -187,6 +187,18 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, domainCheckRequest.getClientTransactionId());
 
+        if (domainCheckRequest.getRegistrant() != null && !domainCheckRequest.getRegistrant().trim().isEmpty()) {
+            cz.nic.xml.epp.auction_1.ObjectFactory auctionObjectFactory = new cz.nic.xml.epp.auction_1.ObjectFactory();
+            cz.nic.xml.epp.auction_1.CheckType checkType = new cz.nic.xml.epp.auction_1.CheckType();
+            checkType.setRegistrant(domainCheckRequest.getRegistrant());
+            JAXBElement<cz.nic.xml.epp.auction_1.CheckType> checkTypeElement = auctionObjectFactory.createCheck(checkType);
+
+            ExtAnyType extAnyType = new ExtAnyType();
+            extAnyType.getAny().add(checkTypeElement);
+
+            requestElement.getValue().getCommand().setExtension(extAnyType);
+        }
+
         ResponseType responseType = client.execute(requestElement);
 
         ChkDataType chkDataType = (ChkDataType) JAXBIntrospector.getValue(responseType.getResData().getAny().get(0));
