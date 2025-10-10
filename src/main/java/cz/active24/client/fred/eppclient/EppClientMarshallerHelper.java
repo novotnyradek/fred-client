@@ -150,7 +150,7 @@ public class EppClientMarshallerHelper {
                     new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.4.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.4.xsd")),
+                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.5.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
                     new StreamSource(getClass().getResourceAsStream("/schema/auction-1.0.0.xsd")),
             });

@@ -22,7 +22,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
 
         List<StatusType> destination = KeysetStatusValueTypeCustomConverter.toStatusTypes(source);
 
-        Assert.assertEquals(6, destination.size());
+        Assert.assertEquals(7, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 
@@ -41,7 +41,7 @@ public class KeysetStatusValueTypeCustomConverterTest {
 
         List<KeysetStatusValueType> destination = KeysetStatusValueTypeCustomConverter.toKeysetStatusValueTypes(source);
 
-        Assert.assertEquals(6, destination.size());
+        Assert.assertEquals(7, destination.size());
         Assert.assertEquals(source.size(), destination.size());
     }
 

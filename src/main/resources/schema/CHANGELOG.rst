@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+2.4.8 (2025-08-20)
+------------------
+
+* Add new keyset state flag ``serverLinkProhibited`` to inform that
+  keyset cannot be linked to other registry objects
+
+2.4.7 (2024-03-19)
+------------------
+
+* Add auction extension
+
 2.4.6 (2023-11-03)
 -------------------
 

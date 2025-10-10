@@ -1,5 +1,33 @@
 package cz.active24.client.fred.eppclient;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBIntrospector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import cz.active24.client.fred.data.list.ListResponse;
 import cz.active24.client.fred.data.list.ListResultsResponse;
 import cz.active24.client.fred.exception.FredClientException;
@@ -8,19 +36,14 @@ import cz.active24.client.fred.exception.SystemException;
 import cz.nic.xml.epp.fred_1.ExtcommandType;
 import cz.nic.xml.epp.fred_1.InfoResponseT;
 import cz.nic.xml.epp.fred_1.ResultsListT;
-import ietf.params.xml.ns.epp_1.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.net.ssl.*;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBIntrospector;
-import java.io.*;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import ietf.params.xml.ns.epp_1.CredsOptionsType;
+import ietf.params.xml.ns.epp_1.EppType;
+import ietf.params.xml.ns.epp_1.GreetingType;
+import ietf.params.xml.ns.epp_1.LoginSvcType;
+import ietf.params.xml.ns.epp_1.LoginType;
+import ietf.params.xml.ns.epp_1.ObjectFactory;
+import ietf.params.xml.ns.epp_1.ResponseType;
+import ietf.params.xml.ns.epp_1.ResultType;
 
 /**
  * Low level EPP client for FRED.
@@ -83,10 +106,10 @@ public class EppClientImpl implements EppClient {
 
     public ResponseType execute(JAXBElement<EppType> request) throws FredClientException {
 
-        // marshalling request to xml
+        // marshaling request to XML
         String xml = marshallerHelper.marshal(request);
 
-        // check if session is alive via hello command
+        // check if the session is alive via hello command
         this.checkSession();
 
         // execute command
@@ -125,7 +148,7 @@ public class EppClientImpl implements EppClient {
     }
 
     /**
-     * Check if session is still alive - if not, initializes new connection to server.
+     * Check if the session is still alive - if not, initializes new connection to server.
      *
      * @throws FredClientException
      */
@@ -161,7 +184,7 @@ public class EppClientImpl implements EppClient {
     /**
      * Executes hello command.
      *
-     * @return null if response is without greeting.
+     * @return null if the response is without greeting.
      * @throws FredClientException
      */
     private GreetingType hello() throws FredClientException {
@@ -202,7 +225,7 @@ public class EppClientImpl implements EppClient {
     }
 
     /**
-     * Method to connect to server.
+     * Method to connect to the server.
      *
      * @throws NoSuchAlgorithmException
      * @throws KeyStoreException
@@ -376,31 +399,50 @@ public class EppClientImpl implements EppClient {
 
         return (((in_buf[0] & 0xff) << 24) | ((in_buf[1] & 0xff) << 16) |
                 ((in_buf[2] & 0xff) << 8) | (in_buf[3] & 0xff));
-
     }
 
     private synchronized String readInputBuffer(int length) throws FredClientException {
-        StringBuilder sb = new StringBuilder();
 
         try {
             int totalBytesRead = 0;
-            ByteArrayOutputStream wholeMessage = new ByteArrayOutputStream();
+            ByteArrayOutputStream wholeMessage = new ByteArrayOutputStream(length);
 
-            while (length != totalBytesRead) {
-                byte[] buffer = new byte[128];
-                int bytesRead = reader.read(buffer);
-                wholeMessage.write(buffer);
+            while (totalBytesRead < length) {
+                // Calculate how many bytes are left to read
+                int remaining = length - totalBytesRead;
+                int bufferSize = Math.min(remaining, 8192);
+                byte[] buffer = new byte[bufferSize];
 
+                int bytesRead = reader.read(buffer, 0, bufferSize);
+
+                // Check for EOF
+                if (bytesRead < 0) {
+                    String message = String.format(
+                        "EOF while reading input buffer! Expected %d bytes, got only %d. Corrupted message: %s",
+                        length, totalBytesRead, new String(wholeMessage.toByteArray(), 0, totalBytesRead, "UTF-8")
+                    );
+                    log.error(message);
+                    throw new SystemException(message);
+                }
+
+                // Check for no data read
+                if (bytesRead == 0) {
+                    log.warn("Read returned 0 bytes, continuing...");
+                    continue;
+                }
+
+                // Write only the bytes actually read
+                wholeMessage.write(buffer, 0, bytesRead);
                 totalBytesRead += bytesRead;
             }
 
-            sb.append(new String(wholeMessage.toByteArray(), 0, totalBytesRead, "UTF-8"));
+            return new String(wholeMessage.toByteArray(), 0, totalBytesRead, "UTF-8");
 
-            return sb.toString();
         } catch (IOException e) {
-            String message = "Problem while reading input stream, disconnecting! Corrupted message: " + sb.toString();
-            log.error(message);
-            throw new SystemException(message);
+            String message = "Problem while reading input stream, disconnecting! Error: " + e.getMessage();
+            log.error(message, e);
+            disconnect();
+            throw new SystemException(message, e);
         }
     }
 

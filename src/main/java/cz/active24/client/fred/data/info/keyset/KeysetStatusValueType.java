@@ -10,6 +10,7 @@ package cz.active24.client.fred.data.info.keyset;
  * <li>{@link KeysetStatusValueType#SERVER_TRANSFER_PROHIBITED} – transfer of the keyset is forbidden</li>
  * <li>{@link KeysetStatusValueType#SERVER_UPDATE_PROHIBITED} – update of the keyset is forbidden</li>
  * <li>{@link KeysetStatusValueType#DELETE_CANDIDATE} – the keyset is scheduled for deletion</li>
+ * <li>{@link KeysetStatusValueType#SERVER_LINK_PROHIBITED} – the keyset linking is forbidden</li>
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/ManagedObjects/Keysets.html#mng-keyset-stat">FRED documentation</a>
@@ -21,7 +22,8 @@ public enum KeysetStatusValueType {
     SERVER_DELETE_PROHIBITED("serverDeleteProhibited", "Deletion forbidden"),
     SERVER_TRANSFER_PROHIBITED("serverTransferProhibited", "Sponsoring registrar change forbidden"),
     SERVER_UPDATE_PROHIBITED("serverUpdateProhibited", "Update forbidden"),
-    DELETE_CANDIDATE("deleteCandidate", "To be deleted");
+    DELETE_CANDIDATE("deleteCandidate", "To be deleted"),
+    SERVER_LINK_PROHIBITED("serverLinkProhibited", "Keyset linking forbidden");
 
     private final String message;
 
