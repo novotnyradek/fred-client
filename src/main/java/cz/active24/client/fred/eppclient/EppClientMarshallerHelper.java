@@ -172,6 +172,6 @@ public class EppClientMarshallerHelper {
                 cz.nic.xml.epp.fredcom_1.ObjectFactory.class,
                 cz.nic.xml.epp.auction_1.ObjectFactory.class,
                 ietf.params.xml.ns.eppcom_1.ObjectFactory.class
-        ).toArray();
+        ).toArray(new Class[0]); // <-- THE FIX IS APPLIED HERE  
     }
 }
