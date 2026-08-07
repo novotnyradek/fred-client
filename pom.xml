@@ -29,7 +29,7 @@
     <connection>scm:git:git://github.com/novotnyradek/fred-client.git</connection>
     <developerConnection>scm:git:git@github.com:novotnyradek/fred-client.git</developerConnection>
     <url>https://github.com/novotnyradek/fred-client</url>
-    <tag>fred-client-2.50</tag>
+    <tag>fred-client-2.52</tag>
   </scm>
 
   <distributionManagement>
