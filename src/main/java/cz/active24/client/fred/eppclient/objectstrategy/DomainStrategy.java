@@ -63,12 +63,14 @@ import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
+
 import java.util.Properties;
 
 /**
@@ -100,7 +102,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, domainInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper,
+            domainInfoRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -112,11 +115,14 @@ public class DomainStrategy implements ServerObjectStrategy {
         result.addResponseInfo(responseType);
 
         if (responseType.getExtension() != null) {
-            ExValType exValType = (ExValType) JAXBIntrospector.getValue(responseType.getExtension().getAny().get(0));
-
-            EnumValData enumValData = mapper.map(exValType);
-
-            result.setEnumval(enumValData);
+            for (final Object extension : responseType.getExtension().getAny()) {
+                Object extensionValue = JAXBIntrospector.getValue(extension);
+                if (extension instanceof ExValType) {
+                    ExValType exValType = (ExValType) extensionValue;
+                    EnumValData enumValData = mapper.map(exValType);
+                    result.setEnumval(enumValData);
+                }
+            }
         }
 
         return result;
@@ -132,7 +138,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper,
+            request.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -185,13 +192,15 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<MNameType> wrapper = new ObjectFactory().createCheck(mNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, domainCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper,
+            domainCheckRequest.getClientTransactionId());
 
         if (domainCheckRequest.getRegistrant() != null && !domainCheckRequest.getRegistrant().trim().isEmpty()) {
             cz.nic.xml.epp.auction_1.ObjectFactory auctionObjectFactory = new cz.nic.xml.epp.auction_1.ObjectFactory();
             cz.nic.xml.epp.auction_1.CheckType checkType = new cz.nic.xml.epp.auction_1.CheckType();
             checkType.setRegistrant(domainCheckRequest.getRegistrant());
-            JAXBElement<cz.nic.xml.epp.auction_1.CheckType> checkTypeElement = auctionObjectFactory.createCheck(checkType);
+            JAXBElement<cz.nic.xml.epp.auction_1.CheckType> checkTypeElement = auctionObjectFactory.createCheck(
+                checkType);
 
             ExtAnyType extAnyType = new ExtAnyType();
             extAnyType.getAny().add(checkTypeElement);
@@ -219,7 +228,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, domainCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper,
+            domainCreateRequest.getClientTransactionId());
 
         if (domainCreateRequest.getEnumValData() != null) {
             ExValType exValType = mapper.map(domainCreateRequest.getEnumValData());
@@ -250,7 +260,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<RenewType> wrapper = new ObjectFactory().createRenew(renewType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createRenewEppCommand(wrapper, renewRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createRenewEppCommand(wrapper,
+            renewRequest.getClientTransactionId());
 
         if (renewRequest.getEnumValData() != null) {
             ExValType exValType = mapper.map(renewRequest.getEnumValData());
@@ -283,7 +294,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, domainTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper,
+            domainTransferRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -304,7 +316,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<SNameType> wrapper = new ObjectFactory().createDelete(sNameType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, domainDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper,
+            domainDeleteRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -317,25 +330,30 @@ public class DomainStrategy implements ServerObjectStrategy {
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
         log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
-        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " + creditInfoRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " +
+                                                creditInfoRequest.getServerObjectType());
     }
 
     @Override
     public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
         log.debug("callTestNsset called with request(" + testNssetRequest + ")");
-        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " + testNssetRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " +
+                                                testNssetRequest.getServerObjectType());
     }
 
     @Override
     public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
         log.debug("callPollRequest called with request(" + pollRequest + ")");
-        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " + pollRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " +
+                                                pollRequest.getServerObjectType());
     }
 
     @Override
-    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws
+                                                                                                                      FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
-        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " +
+                                                pollAcknowledgementRequest.getServerObjectType());
     }
 
     @Override
@@ -348,7 +366,8 @@ public class DomainStrategy implements ServerObjectStrategy {
 
         JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, domainUpdateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper,
+            domainUpdateRequest.getClientTransactionId());
 
         if (domainUpdateRequest.getEnumValUpdateData() != null) {
             ExValType exValType = mapper.map(domainUpdateRequest.getEnumValUpdateData());
@@ -356,7 +375,9 @@ public class DomainStrategy implements ServerObjectStrategy {
             cz.nic.xml.epp.enumval_1.UpdateType enumUpdate = new cz.nic.xml.epp.enumval_1.UpdateType();
             enumUpdate.setChg(exValType);
 
-            JAXBElement<cz.nic.xml.epp.enumval_1.UpdateType> enumWrapper = new cz.nic.xml.epp.enumval_1.ObjectFactory().createUpdate(enumUpdate);
+            JAXBElement<cz.nic.xml.epp.enumval_1.UpdateType> enumWrapper =
+                new cz.nic.xml.epp.enumval_1.ObjectFactory().createUpdate(
+                enumUpdate);
 
             ExtAnyType extAnyType = new ExtAnyType();
             extAnyType.getAny().add(enumWrapper);
@@ -375,13 +396,15 @@ public class DomainStrategy implements ServerObjectStrategy {
     @Override
     public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
         log.debug("callLogin called with request(" + loginRequest + ")");
-        throw new UnsupportedOperationException("callLogin operation is not supported for object " + loginRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " +
+                                                loginRequest.getServerObjectType());
     }
 
     @Override
     public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
         log.debug("callLogout called with request(" + logoutRequest + ")");
-        throw new UnsupportedOperationException("callLogin operation is not supported for object " + logoutRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " +
+                                                logoutRequest.getServerObjectType());
     }
 
     private ExtcommandType prepareDomainsByNssetCommand(DomainsByNssetListRequest domainsByNssetListRequest) {
@@ -390,7 +413,8 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByNssetT domainsByNssetT = new DomainsByNssetT();
         domainsByNssetT.setId(domainsByNssetListRequest.getNssetId());
 
-        return eppCommandHelper.createDomainsByNssetExtCommand(domainsByNssetT, domainsByNssetListRequest.getClientTransactionId());
+        return eppCommandHelper.createDomainsByNssetExtCommand(domainsByNssetT,
+            domainsByNssetListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareDomainsByKeysetCommand(DomainsByKeysetListRequest domainsByKeysetListRequest) {
@@ -399,7 +423,8 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByNssetT domainsByKeyset = new DomainsByNssetT();
         domainsByKeyset.setId(domainsByKeysetListRequest.getKeysetId());
 
-        return eppCommandHelper.createDomainsByKeysetExtCommand(domainsByKeyset, domainsByKeysetListRequest.getClientTransactionId());
+        return eppCommandHelper.createDomainsByKeysetExtCommand(domainsByKeyset,
+            domainsByKeysetListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareDomainsByContactCommand(DomainsByContactListRequest domainsByContactListRequest) {
@@ -408,7 +433,8 @@ public class DomainStrategy implements ServerObjectStrategy {
         DomainsByContactT domainsByContactT = new DomainsByContactT();
         domainsByContactT.setId(domainsByContactListRequest.getContactId());
 
-        return eppCommandHelper.createDomainsByContactExtCommand(domainsByContactT, domainsByContactListRequest.getClientTransactionId());
+        return eppCommandHelper.createDomainsByContactExtCommand(domainsByContactT,
+            domainsByContactListRequest.getClientTransactionId());
     }
 
     private ExtcommandType prepareListDomainsCommand(DomainsListRequest domainsListRequest) {

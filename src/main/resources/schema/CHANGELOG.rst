@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+2.4.9 (2026-06-11)
+------------------
+
+* Add contact-extra-data extension to add information about contact telephone validity
+
 2.4.8 (2025-08-20)
 ------------------
 

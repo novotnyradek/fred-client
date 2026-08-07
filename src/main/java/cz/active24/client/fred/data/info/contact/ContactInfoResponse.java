@@ -35,6 +35,7 @@ import java.util.List;
  * <li>{@link ContactInfoResponse#ident} – identity-document identification, see {@link IdentificationData}</li>
  * <li>{@link ContactInfoResponse#notifyEmail} – a comma-separated list of email addresses for notification</li>
  * <li>{@link ContactInfoResponse#mailingAddress} – mailing address container</li>
+ * <li>{@link ContactInfoResponse#hasValidVoice} – indicates whether a voice telephone number is present and passes format validation (E.164)</li>
  * </ul>
  *
  * @see <a href="https://fred.nic.cz/documentation/html/EPPReference/CommandStructure/Info/InfoContact.html">FRED documentation</a>
@@ -78,6 +79,8 @@ public class ContactInfoResponse extends EppResponse implements Serializable, In
     private String notifyEmail;
 
     private AddressData mailingAddress;
+
+    private boolean hasValidVoice;
 
     public ContactInfoResponse() {
         setServerObjectType(ServerObjectType.CONTACT);
@@ -235,6 +238,14 @@ public class ContactInfoResponse extends EppResponse implements Serializable, In
         this.mailingAddress = mailingAddress;
     }
 
+    public boolean isHasValidVoice() {
+        return hasValidVoice;
+    }
+
+    public void setHasValidVoice(final boolean hasValidVoice) {
+        this.hasValidVoice = hasValidVoice;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ContactInfoResponse{");
@@ -257,6 +268,7 @@ public class ContactInfoResponse extends EppResponse implements Serializable, In
         sb.append(", ident=").append(ident);
         sb.append(", notifyEmail='").append(notifyEmail).append('\'');
         sb.append(", mailingAddress=").append(mailingAddress);
+        sb.append(", hasValidVoice=").append(hasValidVoice);
         sb.append(", clientTransactionId='").append(getClientTransactionId()).append('\'');
         sb.append(", serverTransactionId='").append(getServerTransactionId()).append('\'');
         sb.append(", result=").append(getResult());

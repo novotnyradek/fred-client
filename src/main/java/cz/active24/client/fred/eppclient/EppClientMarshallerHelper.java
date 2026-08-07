@@ -4,6 +4,7 @@ import cz.active24.client.fred.exception.SchemaValidationException;
 import cz.active24.client.fred.exception.SystemException;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ObjectFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
@@ -16,6 +17,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -142,17 +144,18 @@ public class EppClientMarshallerHelper {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             schema = schemaFactory.newSchema(new Source[]{
-                    new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.6.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.5.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.4.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.5.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
-                    new StreamSource(getClass().getResourceAsStream("/schema/auction-1.0.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/eppcom-1.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/epp-1.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/fredcom-1.2.1.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/contact-1.6.6.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/domain-1.4.5.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/nsset-1.2.4.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/fred-1.5.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/enumval-1.2.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/keyset-1.3.5.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/extra-addr-1.0.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/auction-1.0.0.xsd")),
+                new StreamSource(getClass().getResourceAsStream("/schema/contact-extra-data-1.0.0.xsd")),
             });
         }
 
@@ -161,17 +164,18 @@ public class EppClientMarshallerHelper {
 
     private Class[] getObjectFactories() {
         return (Class[]) Arrays.asList(
-                ObjectFactory.class,
-                cz.nic.xml.epp.domain_1.ObjectFactory.class,
-                cz.nic.xml.epp.nsset_1.ObjectFactory.class,
-                cz.nic.xml.epp.contact_1.ObjectFactory.class,
-                cz.nic.xml.epp.keyset_1.ObjectFactory.class,
-                cz.nic.xml.epp.enumval_1.ObjectFactory.class,
-                cz.nic.xml.epp.fred_1.ObjectFactory.class,
-                cz.nic.xml.epp.extra_addr_1.ObjectFactory.class,
-                cz.nic.xml.epp.fredcom_1.ObjectFactory.class,
-                cz.nic.xml.epp.auction_1.ObjectFactory.class,
-                ietf.params.xml.ns.eppcom_1.ObjectFactory.class
+            ObjectFactory.class,
+            cz.nic.xml.epp.domain_1.ObjectFactory.class,
+            cz.nic.xml.epp.nsset_1.ObjectFactory.class,
+            cz.nic.xml.epp.contact_1.ObjectFactory.class,
+            cz.nic.xml.epp.keyset_1.ObjectFactory.class,
+            cz.nic.xml.epp.enumval_1.ObjectFactory.class,
+            cz.nic.xml.epp.fred_1.ObjectFactory.class,
+            cz.nic.xml.epp.extra_addr_1.ObjectFactory.class,
+            cz.nic.xml.epp.fredcom_1.ObjectFactory.class,
+            cz.nic.xml.epp.auction_1.ObjectFactory.class,
+            ietf.params.xml.ns.eppcom_1.ObjectFactory.class,
+            cz.nic.xml.epp.contact_extra_data_1.ObjectFactory.class
         ).toArray();
     }
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema targetNamespace="http://www.nic.cz/xml/epp/contact-extra-data-1.0"
+        xmlns:contactExtraData="http://www.nic.cz/xml/epp/contact-extra-data-1.0"
+        xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified">
+
+
+  <!--
+  EPP extension schema for additional contact information extra-datas
+  returned in the response to the contact:info command.
+  -->
+  <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" />
+
+
+  <annotation>
+      <documentation>
+          Extension to Extensible Provisioning Protocol v1.0
+          Contact extension for information about valid telephone
+      </documentation>
+  </annotation>
+
+
+  <!--
+  Response element inserted into contact:info resData extension
+  -->
+  <element name="infData" type="contactExtraData:infDataType" />
+
+
+  <!--
+    info data
+      - hasValidVoice - Indicates whether a voice telephone number is present and passes format validation (E.164).
+          - true   - voice number exists and is valid
+          - false  - telephone number does not exists or is invalid
+  -->
+  <complexType name="infDataType">
+    <sequence>
+      <element name="hasValidVoice" type="boolean" minOccurs="0" />
+    </sequence>
+  </complexType>
+
+
+</schema>

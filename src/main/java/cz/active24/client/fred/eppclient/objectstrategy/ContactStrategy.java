@@ -62,12 +62,14 @@ import cz.nic.xml.epp.fred_1.ExtcommandType;
 import ietf.params.xml.ns.epp_1.EppType;
 import ietf.params.xml.ns.epp_1.ExtAnyType;
 import ietf.params.xml.ns.epp_1.ResponseType;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
+
 import java.util.Properties;
 
 /**
@@ -101,7 +103,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<InfoType> wrapper = new ObjectFactory().createInfo(infoType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper, contactInfoRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createInfoEppCommand(wrapper,
+            contactInfoRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -111,11 +114,19 @@ public class ContactStrategy implements ServerObjectStrategy {
         result.addResponseInfo(responseType);
 
         if (responseType.getExtension() != null) {
-            AddrListType addrListType = (AddrListType) JAXBIntrospector.getValue(responseType.getExtension().getAny().get(0));
-
-            AddressData addressData = mapper.map(addrListType.getMailing().getAddr());
-
-            result.setMailingAddress(addressData);
+            for (final Object extension : responseType.getExtension().getAny()) {
+                Object extensionValue = JAXBIntrospector.getValue(extension);
+                if (extensionValue instanceof AddrListType) {
+                    AddrListType addrListType = (AddrListType) extensionValue;
+                    AddressData addressData = mapper.map(addrListType.getMailing().getAddr());
+                    result.setMailingAddress(addressData);
+                }
+                if (extensionValue instanceof cz.nic.xml.epp.contact_extra_data_1.InfDataType) {
+                    final cz.nic.xml.epp.contact_extra_data_1.InfDataType contactExtraInfo =
+                        (cz.nic.xml.epp.contact_extra_data_1.InfDataType) extensionValue;
+                    result.setHasValidVoice(contactExtraInfo.getHasValidVoice());
+                }
+            }
         }
 
         return result;
@@ -132,7 +143,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<SendAuthInfoType> wrapper = new ObjectFactory().createSendAuthInfo(sendAuthInfoType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper, request.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createSendAuthInfoEppCommand(wrapper,
+            request.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -155,7 +167,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         ContactsListRequest contactsListRequest = (ContactsListRequest) listRequest;
 
-        ExtcommandType extcommandType = eppCommandHelper.createListContactsExtCommand(contactsListRequest.getClientTransactionId());
+        ExtcommandType extcommandType =
+            eppCommandHelper.createListContactsExtCommand(contactsListRequest.getClientTransactionId());
 
         return client.prepareListAndGetResults(extcommandType);
     }
@@ -171,7 +184,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<MIDType> wrapper = new ObjectFactory().createCheck(midType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper, contactCheckRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCheckEppCommand(wrapper,
+            contactCheckRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -195,10 +209,12 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<CreateType> wrapper = new ObjectFactory().createCreate(createType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper, contactCreateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createCreateEppCommand(wrapper,
+            contactCreateRequest.getClientTransactionId());
 
         if (contactCreateRequest.getMailingAddress() != null) {
-            cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.mapAddressExtension(contactCreateRequest.getMailingAddress());
+            cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr =
+                mapper.mapAddressExtension(contactCreateRequest.getMailingAddress());
 
             cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
             addrType.setAddr(addr);
@@ -206,7 +222,8 @@ public class ContactStrategy implements ServerObjectStrategy {
             AddrListType addrListType = new AddrListType();
             addrListType.setMailing(addrType);
 
-            JAXBElement<AddrListType> addrWrapper = new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createCreate(addrListType);
+            JAXBElement<AddrListType> addrWrapper = new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createCreate(
+                addrListType);
 
             ExtAnyType extAnyType = new ExtAnyType();
             extAnyType.getAny().add(addrWrapper);
@@ -229,7 +246,8 @@ public class ContactStrategy implements ServerObjectStrategy {
     @Override
     public DomainRenewResponse callRenew(DomainRenewRequest renewRequest) throws FredClientException {
         log.debug("callRenew called with request(" + renewRequest + ")");
-        throw new UnsupportedOperationException("callRenew operation is not supported for object " + renewRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callRenew operation is not supported for object " +
+                                                renewRequest.getServerObjectType());
     }
 
     @Override
@@ -242,7 +260,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<TransferType> wrapper = new ObjectFactory().createTransfer(transferType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper, contactTransferRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createTransferEppCommand(wrapper,
+            contactTransferRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -263,7 +282,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<SIDType> wrapper = new ObjectFactory().createDelete(sidType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper, contactDeleteRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createDeleteEppCommand(wrapper,
+            contactDeleteRequest.getClientTransactionId());
 
         ResponseType responseType = client.execute(requestElement);
 
@@ -276,25 +296,30 @@ public class ContactStrategy implements ServerObjectStrategy {
     @Override
     public CreditInfoResponse callCreditInfo(CreditInfoRequest creditInfoRequest) throws FredClientException {
         log.debug("callCreditInfo called with request(" + creditInfoRequest + ")");
-        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " + creditInfoRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callCreditInfo operation is not supported for object " +
+                                                creditInfoRequest.getServerObjectType());
     }
 
     @Override
     public TestNssetResponse callTestNsset(TestNssetRequest testNssetRequest) throws FredClientException {
         log.debug("callTestNsset called with request(" + testNssetRequest + ")");
-        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " + testNssetRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callTestNsset operation is not supported for object " +
+                                                testNssetRequest.getServerObjectType());
     }
 
     @Override
     public PollResponse callPollRequest(PollRequest pollRequest) throws FredClientException {
         log.debug("callPollRequest called with request(" + pollRequest + ")");
-        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " + pollRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callPollRequest operation is not supported for object " +
+                                                pollRequest.getServerObjectType());
     }
 
     @Override
-    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws FredClientException {
+    public PollAcknowledgementResponse callPollAcknowledgement(PollAcknowledgementRequest pollAcknowledgementRequest) throws
+                                                                                                                      FredClientException {
         log.debug("callPollAcknowledgement called with request(" + pollAcknowledgementRequest + ")");
-        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " + pollAcknowledgementRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callPollAcknowledgement operation is not supported for object " +
+                                                pollAcknowledgementRequest.getServerObjectType());
     }
 
     @Override
@@ -307,7 +332,8 @@ public class ContactStrategy implements ServerObjectStrategy {
 
         JAXBElement<UpdateType> wrapper = new ObjectFactory().createUpdate(updateType);
 
-        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper, contactUpdateRequest.getClientTransactionId());
+        JAXBElement<EppType> requestElement = eppCommandHelper.createUpdateEppCommand(wrapper,
+            contactUpdateRequest.getClientTransactionId());
 
         if (contactUpdateRequest.getExtraAddressUpdateData() != null) {
             this.setExtraAddressUpdateExtension(requestElement, contactUpdateRequest.getExtraAddressUpdateData());
@@ -323,13 +349,15 @@ public class ContactStrategy implements ServerObjectStrategy {
     @Override
     public LoginResponse callLogin(LoginRequest loginRequest) throws FredClientException {
         log.debug("callLogin called with request(" + loginRequest + ")");
-        throw new UnsupportedOperationException("callLogin operation is not supported for object " + loginRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " +
+                                                loginRequest.getServerObjectType());
     }
 
     @Override
     public LogoutResponse callLogout(LogoutRequest logoutRequest) throws FredClientException {
         log.debug("callLogout called with request(" + logoutRequest + ")");
-        throw new UnsupportedOperationException("callLogin operation is not supported for object " + logoutRequest.getServerObjectType());
+        throw new UnsupportedOperationException("callLogin operation is not supported for object " +
+                                                logoutRequest.getServerObjectType());
     }
 
     /**
@@ -338,12 +366,14 @@ public class ContactStrategy implements ServerObjectStrategy {
      * @param requestElement     element to decore.
      * @param extraAddressUpdate extra address to set.
      */
-    private void setExtraAddressUpdateExtension(JAXBElement<EppType> requestElement, ExtraAddressUpdateData extraAddressUpdate) {
+    private void setExtraAddressUpdateExtension(JAXBElement<EppType> requestElement,
+                                                ExtraAddressUpdateData extraAddressUpdate) {
         if (extraAddressUpdate.getSet() != null || extraAddressUpdate.getRem() != null) {
             cz.nic.xml.epp.extra_addr_1.UpdateType extraAddrUpdate = new cz.nic.xml.epp.extra_addr_1.UpdateType();
 
             if (extraAddressUpdate.getSet() != null) {
-                cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr = mapper.mapAddressExtension(extraAddressUpdate.getSet());
+                cz.nic.xml.epp.extra_addr_1.AddrType.Addr addr =
+                    mapper.mapAddressExtension(extraAddressUpdate.getSet());
 
                 cz.nic.xml.epp.extra_addr_1.AddrType addrType = new cz.nic.xml.epp.extra_addr_1.AddrType();
                 addrType.setAddr(addr);
@@ -361,7 +391,9 @@ public class ContactStrategy implements ServerObjectStrategy {
                 extraAddrUpdate.setRem(remType);
             }
 
-            JAXBElement<cz.nic.xml.epp.extra_addr_1.UpdateType> addrWrapper = new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createUpdate(extraAddrUpdate);
+            JAXBElement<cz.nic.xml.epp.extra_addr_1.UpdateType> addrWrapper =
+                new cz.nic.xml.epp.extra_addr_1.ObjectFactory().createUpdate(
+                    extraAddrUpdate);
 
             ExtAnyType extAnyType = new ExtAnyType();
             extAnyType.getAny().add(addrWrapper);

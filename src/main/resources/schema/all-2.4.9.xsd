@@ -44,6 +44,9 @@
     <!-- extension of domain-check due auctions -->
     <import namespace="http://www.nic.cz/xml/epp/auction-1.0"
         schemaLocation="auction-1.0.0.xsd"/>
+    <!-- extension of contact valid telephone -->
+    <import namespace="http://www.nic.cz/xml/epp/contact-extra-data-1.0"
+        schemaLocation="contact-extra-data-1.0.0.xsd"/>
 
     <annotation>
       <documentation>

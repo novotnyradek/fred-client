@@ -16,8 +16,12 @@ Client was tested by CZ.NIC, the national registry of .cz domain.
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/novotnyradek/fred-client/master/LICENSE)
 [![Javadocs](https://www.javadoc.io/badge/cz.active24.client.fred/fred-client.svg)](https://www.javadoc.io/doc/cz.active24.client.fred/fred-client/)
 
-**Version: `2.51`**
+**Version: `2.52`**
 > Changes
+###### 2.52
+* Implement schemas version 2.4.9.
+* Add contact-extra-data extension to add information about contact telephone validity.
+* Bump org.codehaus.plexus:plexus-utils from 3.5.1 to 4.0.3
 ###### 2.51
 * Implement schemas version 2.4.8.
 * Add new keyset state flag ``serverLinkProhibited`` to inform that keyset cannot be linked to other registry objects.
@@ -106,7 +110,7 @@ Add as maven dependency to your project.
 <dependency>
     <groupId>cz.active24.client.fred</groupId>
     <artifactId>fred-client</artifactId>
-    <version>2.51</version>
+    <version>2.52</version>
 </dependency>
 ```
 
